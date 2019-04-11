@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.ReceiveSettingActivity">
+
+    <include layout="@layout/title_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout style="@style/set_ll_style">
+
+            <LinearLayout style="@style/set_Text_style3">
+
+                <TextView
+                    style="@style/set_Text_style"
+                    android:text="接收报警消息" />
+
+                <!--<ToggleButton-->
+                <!--android:id="@+id/tb_alert"-->
+                <!--style="@style/togglebutton_style" />-->
+
+                <com.suke.widget.SwitchButton
+                    android:id="@+id/tb_alert"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:sb_checked="true" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/set_Text_style3"
+                android:layout_marginTop="@dimen/dimen_10dp">
+
+                <TextView
+                    style="@style/set_Text_style"
+                    android:text="报警显示详细信息" />
+
+                <!--<ToggleButton-->
+                <!--android:id="@+id/tb_alert_detail"-->
+                <!--style="@style/togglebutton_style" />-->
+                <com.suke.widget.SwitchButton
+                    android:id="@+id/tb_alert_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:sb_checked="true" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/set_Text_style3"
+                android:layout_marginTop="@dimen/dimen_10dp">
+
+                <TextView
+                    style="@style/set_Text_style"
+                    android:text="接受通知公告信息" />
+
+                <!--<ToggleButton-->
+                <!--android:id="@+id/tb_notice"-->
+                <!--style="@style/togglebutton_style" />-->
+                <com.suke.widget.SwitchButton
+                    android:id="@+id/tb_notice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:sb_checked="true" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/set_Text_style3"
+                android:layout_marginTop="@dimen/dimen_10dp">
+
+                <TextView
+                    style="@style/set_Text_style"
+                    android:text="通知公告显示详细信息" />
+
+                <!--<ToggleButton-->
+                <!--android:id="@+id/tb_notice_detail"-->
+                <!--style="@style/togglebutton_style" />-->
+                <com.suke.widget.SwitchButton
+                    android:id="@+id/tb_notice_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:sb_checked="true" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_warn"
+                style="@style/set_Text_style3"
+                android:layout_marginTop="@dimen/dimen_10dp">
+
+                <TextView
+                    style="@style/set_Text_style"
+                    android:clickable="false"
+                    android:text="@string/voice_notice" />
+
+                <TextView
+                    android:id="@+id/tv_warn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:drawableRight="@drawable/ic_more"
+                    android:text="warning 001"
+                    android:textColor="@color/blue_text" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/layout_notice"
+                style="@style/set_Text_style3"
+                android:layout_marginTop="@dimen/dimen_10dp">
+
+                <TextView
+                    style="@style/set_Text_style"
+                    android:clickable="false"
+                    android:text="@string/new_notice" />
+
+                <TextView
+                    android:id="@+id/tv_notice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:drawableRight="@drawable/ic_more"
+                    android:text="noticing 001"
+                    android:textColor="@color/blue_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_reset"
+                style="@style/set_Text_style3"
+                android:layout_marginTop="@dimen/dimen_10dp">
+
+                <TextView
+                    style="@style/set_Text_style"
+                    android:text="@string/reset" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

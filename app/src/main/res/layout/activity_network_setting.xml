@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.NetworkSettingActivity">
+
+    <include layout="@layout/title_bar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="10dp"
+        android:background="@drawable/bg_password_setting"
+        android:orientation="vertical"
+        android:translationZ="1dp">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_25dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_title_for_task_order"
+            android:gravity="center"
+            android:text="视频接收"
+            android:textColor="@color/white" />
+
+
+        <RadioGroup
+            android:id="@+id/radio_group_internet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <android.support.v7.widget.AppCompatRadioButton
+                android:id="@+id/radio_button_mobile_network"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="3G/4G" />
+
+            <android.support.v7.widget.AppCompatRadioButton
+                android:id="@+id/radio_button_wifi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="WIFI" />
+
+            <android.support.v7.widget.AppCompatRadioButton
+                android:id="@+id/radio_button_all_network"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="3G/4G/WIFI" />
+
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:text="3G/4G网络下可能会产生流量费用，具体扣费标准请咨询网络运营商。"
+            android:textColor="@color/table_black" />
+
+        <Button
+            android:id="@+id/btn_determine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/dimen_30dp"
+            app:corners_radius="8dp"
+            app:pressed_color="@color/orange"
+            app:stroke_width="2dp"
+            app:unpressed_color="@color/blue"
+            android:text="确     定"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_18sp"
+            android:translationZ="2dp"
+            tools:ignore="MissingPrefix" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

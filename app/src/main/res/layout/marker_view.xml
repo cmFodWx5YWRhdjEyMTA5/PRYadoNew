@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_marker"
+    android:orientation="vertical"
+    android:padding="@dimen/dimen_5dp"
+    android:layout_gravity="center"
+    >
+
+    <!--<TextView-->
+        <!--android:id="@+id/tv_date"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textSize="@dimen/sp_12"-->
+        <!--android:text="123"-->
+        <!--android:ellipsize="end"-->
+        <!--android:singleLine="true"-->
+        <!--android:textColor="@android:color/white"-->
+        <!--android:gravity="center"-->
+        <!--android:layout_margin="@dimen/dp_2"-->
+        <!--android:textAppearance="?android:attr/textAppearanceSmall"/>-->
+
+
+    <TextView
+        android:id="@+id/tvContent1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="22"
+        android:textSize="@dimen/sp_12"
+        android:textColor="@android:color/white"
+        android:layout_margin="@dimen/dp_2"
+         />
+
+
+    <!--<TextView-->
+        <!--android:id="@+id/tvContent2"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="456"-->
+        <!--android:textSize="@dimen/sp_14"-->
+        <!--android:ellipsize="end"-->
+        <!--android:singleLine="true"-->
+        <!--android:textColor="@android:color/white"-->
+        <!--android:layout_margin="@dimen/dp_2"-->
+        <!--android:gravity="center"-->
+        <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+        <!--/>-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/tvContent3"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="345"-->
+        <!--android:textSize="@dimen/sp_14"-->
+        <!--android:ellipsize="end"-->
+        <!--android:singleLine="true"-->
+        <!--android:textColor="@android:color/white"-->
+        <!--android:layout_margin="@dimen/dp_2"-->
+        <!--android:gravity="center"-->
+        <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+        <!--/>-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/tvContent4"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="789"-->
+        <!--android:textSize="@dimen/sp_14"-->
+        <!--android:ellipsize="end"-->
+        <!--android:singleLine="true"-->
+        <!--android:textColor="@android:color/white"-->
+        <!--android:layout_margin="@dimen/dp_2"-->
+        <!--android:gravity="center"-->
+        <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+        <!--/>-->
+
+</LinearLayout>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.riskAssessAndDetail.AssessActivity"
+    tools:ignore="MissingPrefix">
+
+    <include layout="@layout/title_bar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_30dp"
+            android:padding="@dimen/dimen_5dp"
+            android:text="选择配电房:" />
+
+
+        <org.angmarch.views.NiceSpinner
+            android:id="@+id/sp_choice_room"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_50dp"
+            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_marginRight="@dimen/dimen_10dp"
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:textAlignment="center"
+            app:arrowTint="@color/white"
+            app:backgroundSelector="@color/gray1"
+            app:textTint="@color/white" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:background="@color/mygray" />
+
+        <LinearLayout
+            android:id="@+id/ll_danger"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <FrameLayout
+                android:id="@+id/fl_progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dimen_5dp">
+
+                <!--<ProgressBar-->
+                <!--android:id="@+id/pb_scanning"-->
+                <!--style="@style/mProgress_horizontal"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:visibility="visible" />-->
+
+                <com.daimajia.numberprogressbar.NumberProgressBar
+                    android:id="@+id/pb_scanning"
+                    style="@style/NumberProgressBar_Relax_Blue"
+                    android:layout_marginTop="@dimen/dimen_20dp"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/tv_scanning"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="正在扫描：。。。。。" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_find"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="已发现" />
+
+                <TextView
+                    android:id="@+id/tv_danger_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="#00ff00"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="个隐患" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/cb_get_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/dimen_5dp"
+                android:text="重新诊断"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dimen_20sp"
+                app:corners_radius="8dp"
+                app:pressed_color="@color/orange"
+                app:stroke_width="2dp"
+                app:unpressed_color="@color/blue" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_dangers"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/dimen_5dp" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_assess1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/dimen_5dp"
+            android:gravity="center"
+            android:enabled="false"
+            android:text="诊断评估"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_20sp"
+            app:corners_radius="8dp"
+            app:pressed_color="@color/orange"
+            app:stroke_width="2dp"
+            app:unpressed_color="@color/blue" />
+    </LinearLayout>
+
+</LinearLayout>

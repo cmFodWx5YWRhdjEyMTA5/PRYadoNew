@@ -1,0 +1,688 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/img_bg"
+    android:orientation="vertical"
+    tools:context=".ui.riskAssessAndDetail.DangerDetailActivity"
+    tools:ignore="MissingPrefix">
+
+    <include
+        layout="@layout/title_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/dimen_10dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_40"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableLeft="@drawable/img_device_info"
+                    android:paddingBottom="2dp"
+                    android:paddingTop="2dp"
+                    android:text="  设备信息"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/dimen_16sp" />
+
+                <LinearLayout
+                    android:id="@+id/ll_open_or_close_device"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="@dimen/dp_2"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/tv_value1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/dimen_5dp"
+                        android:text="收起"
+                        android:textColor="#ffffff"
+                        android:textSize="@dimen/dimen_16sp" />
+
+                    <ImageView
+                        android:id="@+id/icon_value1"
+                        android:layout_width="@dimen/dimen_20dp"
+                        android:layout_height="@dimen/dimen_20dp"
+                        android:layout_marginRight="1dp"
+                        android:src="@drawable/ic_collapse" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <TableLayout
+                android:id="@+id/tl_device"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:corners_radius="6dp"
+                app:stroke_color="#96a0a0a0"
+                app:stroke_width="2dp">
+
+                <TableRow
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:text="设备名称："
+                        android:textColor="@color/white" />
+
+
+                    <TextView
+                        android:id="@+id/tv_device_name"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:textColor="@color/white" />
+
+                </TableRow>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#96a0a0a0" />
+
+                <TableRow
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:text="设备型号："
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_device_model"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:textColor="@color/white" />
+
+                </TableRow>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#96a0a0a0" />
+
+                <TableRow
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:text="电压等级："
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_voltage_level"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:textColor="@color/white" />
+
+                </TableRow>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#96a0a0a0" />
+
+                <TableRow
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/dimen_50dp"
+                        android:gravity="center"
+                        android:text="安装位置："
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_install_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dimen_50dp"
+                        android:width="260dp"
+                        android:gravity="center"
+                        android:lines="2"
+                        android:maxEms="28"
+                        android:singleLine="false"
+                        android:textColor="@color/white" />
+
+                </TableRow>
+
+            </TableLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_40"
+                android:layout_marginBottom="@dimen/dp_2"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableLeft="@drawable/img_caiji_info"
+                    android:paddingBottom="2dp"
+                    android:paddingTop="2dp"
+                    android:text="  缺陷信息"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/dimen_16sp" />
+
+                <LinearLayout
+                    android:id="@+id/ll_open_or_close_defect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_2"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/tv_value2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/dimen_5dp"
+                        android:text="收起"
+                        android:textColor="#ffffff"
+                        android:textSize="@dimen/dimen_16sp" />
+
+                    <ImageView
+                        android:id="@+id/icon_value2"
+                        android:layout_width="@dimen/dimen_20dp"
+                        android:layout_height="@dimen/dimen_20dp"
+                        android:layout_marginRight="1dp"
+                        android:src="@drawable/ic_collapse" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TableLayout
+                android:id="@+id/tl_defect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:corners_radius="6dp"
+                app:stroke_color="#96a0a0a0"
+                app:stroke_width="2dp">
+
+                <TableRow
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:text="报告时间："
+                        android:textColor="@color/white" />
+
+
+                    <TextView
+                        android:id="@+id/tv_report_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:textColor="@color/white" />
+
+                </TableRow>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#96a0a0a0" />
+
+                <TableRow
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:text="报告方式："
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_report_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:textColor="@color/white" />
+
+                </TableRow>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#96a0a0a0" />
+
+                <TableRow
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:text="确认时间："
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_comfirm_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:textColor="@color/white" />
+
+                </TableRow>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#96a0a0a0" />
+
+                <TableRow
+                    android:layout_height="40dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:text="确认人："
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:textColor="@color/white" />
+
+                </TableRow>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#96a0a0a0" />
+
+                <TableRow
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dimen_50dp"
+                        android:gravity="center"
+                        android:text="缺陷部位："
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dimen_50dp"
+                        android:width="260dp"
+                        android:gravity="center"
+                        android:lines="2"
+                        android:maxEms="28"
+                        android:singleLine="false"
+                        android:textColor="@color/white" />
+                </TableRow>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#96a0a0a0" />
+
+                <TableRow
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dimen_50dp"
+                        android:gravity="center"
+                        android:text="缺陷描述："
+                        android:textColor="@color/white" />
+
+
+                    <TextView
+                        android:id="@+id/tv_bug_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:width="260dp"
+                        android:gravity="center"
+                        android:lines="2"
+                        android:maxEms="28"
+                        android:singleLine="false"
+                        android:textColor="@color/white" />
+
+                </TableRow>
+            </TableLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_40"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:layout_width="@dimen/dimen_20dp"
+                        android:layout_height="@dimen/dimen_20dp"
+                        android:layout_marginBottom="@dimen/dimen_5dp"
+                        android:src="@drawable/ic_check" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="2dp"
+                        android:text="  检查信息"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/dimen_16sp" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/ll_open_or_close_inspect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginBottom="@dimen/dp_2"
+                    android:gravity="end"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/tv_value3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/dimen_5dp"
+                        android:text="收起"
+                        android:textColor="#ffffff"
+                        android:textSize="@dimen/dimen_16sp" />
+
+                    <ImageView
+                        android:id="@+id/icon_value3"
+                        android:layout_width="@dimen/dimen_20dp"
+                        android:layout_height="@dimen/dimen_20dp"
+                        android:layout_marginRight="1dp"
+                        android:src="@drawable/ic_collapse" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TableLayout
+                android:id="@+id/tl_inspect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:corners_radius="6dp"
+                app:stroke_color="#96a0a0a0"
+                app:stroke_width="2dp">
+
+                <TableRow
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:text="检查时间："
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_check_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:textColor="@color/white" />
+
+                </TableRow>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#96a0a0a0" />
+
+                <TableRow
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_record_name"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="暂无录音"
+                        android:textColor="@color/white" />
+
+                    <com.yado.pryado.pryadonew.ui.widgit.PlayView
+                        android:id="@+id/tv_record_play"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginTop="2dp"
+                        android:visibility="gone" />
+                </TableRow>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#96a0a0a0" />
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_video_name"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="暂无视频"
+                        android:textColor="@color/white" />
+
+
+                    <ImageView
+                        android:id="@+id/tv_video_play"
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:layout_margin="1dp"
+                        android:gravity="center"
+                        android:src="@drawable/ic_video"
+                        android:visibility="gone" />
+                </TableRow>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/dp_2"
+                    android:background="#96a0a0a0" />
+
+
+                <TableRow
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="60dp"
+                        android:gravity="center"
+                        android:text="        照片："
+                        android:textColor="@color/white" />
+
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_photos"
+                        style="@style/text_white_bg_gray"
+                        android:layout_height="60dp" />
+                </TableRow>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#96a0a0a0" />
+
+                <TableRow
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="60dp"
+                        android:gravity="center"
+                        android:text="红外照片："
+                        android:textColor="@color/white" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_photos_infrared"
+                        style="@style/text_white_bg_gray"
+                        android:layout_height="60dp" />
+                </TableRow>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#96a0a0a0" />
+
+
+                <TableRow
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:text="处理措施："
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:textColor="@color/white" />
+
+                </TableRow>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#96a0a0a0" />
+
+                <TableRow
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:text="检查人员："
+                        android:textColor="@color/white" />
+
+
+                    <TextView
+                        android:id="@+id/tv_check_man"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:textColor="@color/white" />
+
+                </TableRow>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#96a0a0a0" />
+
+                <TableRow
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center"
+                        android:text="处理情况："
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_Treatment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:textColor="@color/white" />
+                </TableRow>
+
+            </TableLayout>
+
+            <Button
+                android:id="@+id/btn_back"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:text="@string/back"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dimen_18sp"
+                app:corners_radius="8dp"
+                app:pressed_color="@color/orange"
+                app:unpressed_color="@color/blue" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

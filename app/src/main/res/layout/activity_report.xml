@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    tools:context=".ui.report.ReportActivity">
+
+    <include layout="@layout/title_bar" />
+
+    <ScrollView
+        android:id="@+id/sv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/dimen_5dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ll_bg"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:text="选择配电房： "
+                    android:textSize="18sp" />
+
+                <org.angmarch.views.NiceSpinner
+                    android:id="@+id/rooms_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_50dp"
+                    android:layout_marginLeft="@dimen/dimen_10dp"
+                    android:layout_marginRight="@dimen/dimen_10dp"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:background="@drawable/selector_spiner"
+                    android:textAlignment="center"
+                    app:arrowTint="@color/white"
+                    app:backgroundSelector="@color/blue3"
+                    app:textTint="@color/white" />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_25dp"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:layout_marginRight="@dimen/dimen_5dp"
+                    android:layout_marginTop="@dimen/dimen_20dp"
+                    android:background="@drawable/text_bg"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="8dp"
+                    android:text="详细描述"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <com.yado.pryado.pryadonew.ui.widgit.MyClearEditText
+                    android:id="@+id/note"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:layout_marginRight="@dimen/dimen_5dp"
+                    android:background="@color/white"
+                    android:hint="请输入文字"
+                    android:padding="10dp"
+                    android:singleLine="false"
+                    android:textSize="10sp" />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_25dp"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:layout_marginRight="@dimen/dimen_5dp"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:background="@drawable/text_bg"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="8dp"
+                    android:text="缺陷部位"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+
+                <com.yado.pryado.pryadonew.ui.widgit.MyClearEditText
+                    android:id="@+id/bug_Location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:layout_marginRight="@dimen/dimen_5dp"
+                    android:background="@color/white"
+                    android:hint="请输入文字"
+                    android:padding="10dp"
+                    android:singleLine="false"
+                    android:textSize="10sp" />
+
+                <include layout="@layout/files" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_submit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/dimen_25dp"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:layout_marginRight="@dimen/dimen_10dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:text="提         交"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:corners_radius="8dp"
+                app:pressed_color="@color/orange"
+                app:stroke_width="2dp"
+                app:unpressed_color="@color/blue2"
+                tools:ignore="MissingPrefix" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</LinearLayout>

@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.yado.pryado.pryadonew.ui.widgit.EmptyLayout
+        android:id="@+id/emptyLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="visible" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/tv_PName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="配电房：一多配电房 "
+                android:textSize="@dimen/dimen_16sp" />
+
+            <TextView
+                android:id="@+id/tv_device_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="设备名称：D1进线柜"
+                android:textSize="@dimen/dimen_16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ll_bg"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_25dp"
+                        android:background="@drawable/text_bg"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="8dp"
+                        android:text="详细描述"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_with_border">
+
+
+                        <com.yado.pryado.pryadonew.ui.widgit.MyClearEditText
+                            android:id="@+id/note"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:background="@color/white"
+                            android:hint="请输入文字"
+                            android:padding="10dp"
+                            android:singleLine="false"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_25dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/text_bg"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="8dp"
+                        android:text="缺陷部位"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_with_border">
+
+                        <com.yado.pryado.pryadonew.ui.widgit.MyClearEditText
+                            android:id="@+id/bug_Location"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:background="@color/white"
+                            android:hint="请输入文字"
+                            android:padding="10dp"
+                            android:singleLine="false"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:clickable="true"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_25dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/text_bg"
+                        android:gravity="center"
+                        android:text="选择位置"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+
+                        <LinearLayout
+                            android:id="@+id/location_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@color/color_for_border"
+                            android:padding="@dimen/dimen_5dp">
+
+                            <TextView
+                                android:id="@+id/latitude"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:clickable="false"
+                                android:textSize="@dimen/dimen_18sp" />
+
+                            <TextView
+                                android:id="@+id/longitude"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/dimen_5dp"
+                                android:clickable="false"
+                                android:textSize="@dimen/dimen_18sp" />
+
+                        </LinearLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_25dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/text_bg"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="8dp"
+                    android:text="隐患状态"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/bg_with_border">
+
+                        <RadioGroup
+                            android:id="@+id/risk_State"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:layout_margin="1dp"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:layout_width="130dp"
+                                android:layout_height="wrap_content"
+                                android:text="非隐患" />
+
+                            <RadioButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="隐患" />
+
+                        </RadioGroup>
+
+                </LinearLayout>
+
+                <include layout="@layout/files" />
+
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/btn_submit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/dimen_25dp"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:layout_marginRight="@dimen/dimen_10dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:text="提         交"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:corners_radius="8dp"
+                app:pressed_color="@color/orange"
+                app:stroke_width="2dp"
+                app:unpressed_color="@color/blue2"
+                tools:ignore="MissingPrefix" />
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

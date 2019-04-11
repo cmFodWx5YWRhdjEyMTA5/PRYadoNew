@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.roomDetail.RoomDetailActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/title"
+            layout="@layout/title_bar" />
+
+        <com.yado.pryado.pryadonew.ui.widgit.EmptyLayout
+            android:id="@+id/emptyLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:gravity="center" />
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/dark_gray"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:id="@+id/ll_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp"
+                        android:text="配电房运行状态"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp"
+                        android:text="正常"
+                        android:textColor="#00ff00"
+                        android:textSize="22sp" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_rooms"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:background="@color/light_gray"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/dimen_10dp"
+                    android:text="配电房平面图(点我切换)"
+                    android:textColor="@color/xxblue" />
+
+                <!--<com.yado.pryado.pryadonew.ui.widgit.MyWebView-->
+                    <!--android:id="@+id/webview"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content" />-->
+
+                <!--<WebView-->
+                    <!--android:id="@+id/webview2"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_margin="@dimen/dimen_10dp"-->
+                    <!--android:layout_marginTop="@dimen/dimen_10dp"-->
+                    <!--android:visibility="gone" />-->
+
+                <RelativeLayout
+                    android:id="@+id/rl_max"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:layout_marginRight="@dimen/dimen_5dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/dp_10"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/tv_highest"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_30dp"
+                        android:background="@drawable/text_bg"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="@dimen/dimen_10dp"
+                        android:text="最高温度(℃)"
+                        android:textColor="@color/white" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_dec"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_highest"
+                        android:background="@color/white"
+                        android:gravity="end|center">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/textView_maxname"
+                            android:layout_toStartOf="@+id/textView_maxname"
+                            android:src="@drawable/aabb" />
+
+                        <TextView
+                            android:id="@+id/textView_maxname"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:paddingLeft="0dp"
+                            android:paddingRight="@dimen/dimen_10dp"
+                            android:text="P02A相"
+                            android:textSize="@dimen/sp_12" />
+                    </LinearLayout>
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/linechart"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_below="@+id/ll_dec"
+                        android:background="@color/white" />
+
+                    <ProgressBar
+                        android:id="@+id/pb_loading"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:visibility="visible" />
+
+                    <RadioGroup
+                        android:id="@+id/rg_max"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/linechart"
+                        android:background="@drawable/shape_white2"
+                        android:orientation="horizontal"
+                        android:paddingBottom="@dimen/dimen_10dp"
+                        android:paddingLeft="@dimen/dimen_10dp"
+                        android:paddingRight="@dimen/dimen_10dp"
+                        android:paddingTop="@dimen/dimen_10dp">
+
+                        <RadioButton
+                            android:id="@+id/rb_day"
+                            style="@style/tab_item_style"
+                            android:drawableLeft="@drawable/day_selector"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp"
+                            android:text="日" />
+
+                        <RadioButton
+                            android:id="@+id/rb_week"
+                            style="@style/tab_item_style"
+                            android:drawableLeft="@drawable/week_selector"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp"
+                            android:text="周" />
+
+                        <RadioButton
+                            android:id="@+id/rb_month"
+                            style="@style/tab_item_style"
+                            android:drawableLeft="@drawable/month_selector"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp"
+                            android:text="月" />
+
+                        <RadioButton
+                            android:id="@+id/rb_all"
+                            style="@style/tab_item_style"
+                            android:drawableLeft="@drawable/all_selector"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp"
+                            android:text="年" />
+                    </RadioGroup>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_load"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="10dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/wwww2"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_30dp"
+                        android:background="@drawable/text_bg"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="@dimen/dimen_10dp"
+                        android:text="配电房负荷（kWh）"
+                        android:textColor="@color/white" />
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/linechart2"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_below="@+id/wwww2"
+                        android:background="@color/white" />
+
+                    <RadioGroup
+                        android:id="@+id/rg_load"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/linechart2"
+                        android:background="@drawable/shape_white2"
+                        android:orientation="horizontal"
+                        android:paddingBottom="@dimen/dimen_10dp"
+                        android:paddingLeft="@dimen/dimen_10dp"
+                        android:paddingRight="@dimen/dimen_10dp"
+                        android:paddingTop="@dimen/dimen_10dp">
+
+                        <RadioButton
+                            android:id="@+id/rb_day1"
+                            style="@style/tab_item_style"
+                            android:drawableLeft="@drawable/day_selector"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp"
+                            android:text="日" />
+
+                        <RadioButton
+                            android:id="@+id/rb_week1"
+                            style="@style/tab_item_style"
+                            android:drawableLeft="@drawable/week_selector"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp"
+                            android:text="周" />
+
+                        <RadioButton
+                            android:id="@+id/rb_month1"
+                            style="@style/tab_item_style"
+                            android:drawableLeft="@drawable/month_selector"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp"
+                            android:text="月">
+
+                        </RadioButton>
+
+                        <RadioButton
+                            android:id="@+id/rb_all1"
+                            style="@style/tab_item_style"
+                            android:drawableLeft="@drawable/all_selector"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp"
+                            android:text="年" />
+                    </RadioGroup>
+                </RelativeLayout>
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -1,0 +1,126 @@
+<resources>
+    <string name="app_name">一多运维</string>
+    <string name="error_room">No power distribution room</string>
+    <string name="upload_file">Uploading attachment.</string>
+    <string name="submit_failure">Submission Failed!</string>
+    <string name="richangxunjian">Daily Inspection</string>
+    <string name="upcoming">My To-Do</string>
+    <string name="his_order">History Order</string>
+    <string name="urgent">Emergency Repair</string>
+    <string name="net_error">Network Error</string>
+    <string name="no_data"> no data...</string>
+    <string name="no_line_data">Curve data not obtained.</string>
+    <string name="no_recent_data"> No recent data！</string>
+
+    <string name="server_connect_error">Can not connect to the server!</string>
+    <string name="json_error">Server returned error!</string>
+    <string name="timeout_error">Connection server timeout!</string>
+    <string name="unknow_error">Unknown Mistake</string>
+    <string name="error404">404 Error(URL does not exist)!</string>
+    <string name="order_error">Unknown Order</string>
+    <string name="auth_error">Login expired</string>
+
+
+    <string name="unknow">Unknow</string>
+    <string name="normal">Normal</string>
+    <string name="high">High</string>
+    <string name="highest">Highest</string>
+
+
+    <string name="has_new_alert">Have new alarm information!</string>
+    <string name="has_new_task">Have new work orders!</string>
+    <string name="new_task">New Task</string>
+    <string name="voice_notice">Alarm Tone</string>
+    <string name="new_notice">New message tone</string>
+    <string name="reset">Restore Default Settings</string>
+    <string name="back">Back</string>
+
+    <string name="baojin">Alarm</string>
+    <string name="yinhuan">Hidden Danger</string>
+    <string name="cewen">Temperature Measurement</string>
+    <string name="danger_up">Hidden Trouble Report</string>
+    <string name="danger_assess">Hidden Risk Assessment</string>
+    <string name="jiance">Monitor</string>
+    <string name="catchstr">Catch</string>
+
+    <string name="order">Order</string>
+    <string name="handle_order">Handle Order</string>
+    <string name="scan">Scan Code</string>
+    <string name="notice">"Notice"</string>
+    <string name="alarm">"Alarm"</string>
+    <string name="new_order">"New Order"</string>
+
+
+    <string name="copyright">Copyright © 2016 一多监测，版权所有。</string>
+    <string name="tel">Technical support phone：0756-8580701</string>
+    <string name="onegraph">One Wiring Diagram</string>
+    <string name="planinfo">Power distribution room plan</string>
+    <string name="no_nfc_toast">Not support NFC</string>
+    <string name="open_nfc_toast">Open NFC</string>
+    <string name="switchuser">Switch User</string>
+
+    <!-- Error View -->
+    <string name="error_view_no_data">No content yet</string>
+    <string name="error_view_loading">Loading…</string>
+    <string name="error_view_load_error_click_to_refresh">Content loading failed\r\nClick to reload</string>
+    <string name="error_view_network_error_click_to_refresh">No network available!</string>
+    <string name="submit_success">Order submitted successfully!</string>
+    <string name="down">Press and hold to start recording</string>
+    <string name="cancel_record">Slip on your finger to cancel recording</string>
+    <string name="up">Release the end recording</string>
+    <string name="status_capturecancelled">Cancel recording!</string>
+    <string name="status_capturefailed">Recording failed!</string>
+    <string name="has_no_video">No video yet</string>
+
+    <string name="loading">Loading...</string>
+    <string name="no_location">Failed to get current location！</string>
+    <string name="all_rooms">All Sites</string>
+    <string name="confirm">Confirmed</string>
+    <string name="unconfirm">Unconfirmed</string>
+    <string name="huifu">Restore</string>
+    <string name="has_no_room">There is no such power distribution room or no viewing rights!</string>
+    <string name="jiancezouqi">Monitoring Cycle:</string>
+    <string name="generatetime">Report generation date:</string>
+    <string name="reportdetail">Report Details</string>
+    <string name="sddsd">Total electricity consumption:0kWh    \nPower loss:0kWh   \nMaximum load:11036 kW    \nTime of occurrence 2017-08-06 00:00   \nMinimum load:11036kW   \nTime of occurrence 2017-08-06 00:00   \nAverage load：11036 kW</string>
+    <string name="sddsd3">Maximum temperature:32°C\nTime of occurrence：2017-08-06 00:00</string>
+    <string name="dsfsd">Voltage pass rate:100%   \nThree-phase unbalance degree overrun time:0 hour   \nVoltage over time:1 hour</string>
+    <string name="dsfsd2">Average power factor:1   \nMaximum power factor:1 Time of occurrence 2017-08-06 00:00   \nMinimum power factor:1 Time of occurrence 2017-08-06 00:00   \n功Power factor overrun duration:1 hour</string>
+
+    <string name="other">Other</string>
+    <string name="system">System Settings</string>
+    <string name="receive_setting">Receive Message Settings</string>
+    <string name="net_setting">Network Setting</string>
+    <string name="feedBack">Feedback</string>
+    <string name="version_up">Version Update</string>
+    <string name="compatibility_mode">Compatibility Mmode</string>
+    <string name="recovery">Restore Default Settings</string>
+    <string name="pwd_setting">Password Setting</string>
+    <string name="about">About Us</string>
+    <string name="switch_user">Switch Users</string>
+    <string name="switch_user_confirm">Whether to switch users？</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="exit">Exit</string>
+    <string name="exit_app">Exit APP</string>
+    <string name="exit_confirm">Ok to exit?</string>
+    <string name="exit_all">All Exit</string>
+    <string name="background_process">Background process</string>
+    <string name="restoring">Restoring default data...</string>
+    <string name="restored">Successful recovery！</string>
+    <string name="remember_user">Remember Password</string>
+    <string name="risk_check">Risk Check</string>
+    <string name="report_monitor">Operational Report Monitoring</string>
+    <string name="follow_system">Follow System</string>
+    <string name="restoring_setting">Restoring default settings, please wait…</string>
+    <string name="alarm_time">Alarm Time:</string>
+    <string name="restore_time">Restore Time:</string>
+    <string name="change_ip">Click to change the IP address</string>
+    <string name="ip_error">The IP address you entered is incorrect. Please re-enter!</string>
+    <string name="login">Login</string>
+    <string name="update_time">Update Time:</string>
+    <string name="downloading">Downloading...</string>
+    <string name="cancel">Cancel</string>
+    <string name="update">Update</string>
+
+</resources>

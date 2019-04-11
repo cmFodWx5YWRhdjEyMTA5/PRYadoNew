@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?><!--<shape--><!--xmlns:android="http://schemas.android.com/apk/res/android"--><!--android:shape="oval"--><!--android:useLevel="false" >--><!--<solid android:color="@color/blue" />--><!--<padding--><!--android:left="2dp"--><!--android:top="1dp"--><!--android:right="2dp"--><!--android:bottom="1dp" />--><!--<solid--><!--android:color="@color/blue" />-->
+
+<!--&lt;!&ndash;这里宽高要一样 &ndash;&gt;--><!--<size android:width="20dp"--><!--android:height="20dp" />--><!--</shape>--><!--默认情况下是一个带圆角,蓝色背景,白色边框的矩形--><!--第二种方法-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--&lt;!&ndash;单击时是一个带圆角,绿色背景,白色边框的矩形&ndash;&gt;-->
+    <!--<item android:state_pressed="true">-->
+        <!--<shape android:shape="oval">-->
+            <!--&lt;!&ndash;填充颜色&ndash;&gt;-->
+            <!--<solid android:color="@color/yanzhong" />-->
+            <!--<size android:width="20dp" android:height="20dp" />-->
+            <!--<padding android:bottom="1dp" android:left="2dp" android:right="2dp" android:top="1dp" />-->
+        <!--</shape>-->
+    <!--</item>-->
+    <item >
+        <shape android:shape="oval">
+
+            <!--填充颜色-->
+            <solid android:color="@color/blue" />
+            <size android:width="20dp" android:height="20dp" />
+            <padding android:bottom="1dp" android:left="2dp" android:right="2dp" android:top="1dp" />
+        </shape>
+    </item>
+
+
+</selector>

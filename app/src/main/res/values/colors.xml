@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="white">#FFFFFF</color>
+    <color name="gray">#2D2F31</color>
+    <color name="black">#000000</color>
+    <color name="main">#CECFC3</color>
+    <color name="light_gray">#666666</color>
+    <color name="dark_gray">#393939</color>
+    <color name="blue_text">#2F338A</color>
+    <color name="table_black">#787878</color>
+    <color name="bg_for_setting_e5">#E5E5E5</color>
+    <color name="blue_title">#1F8BBC</color>
+    <color name="mygray">#424242</color>
+    <color name="transparent">#00ffffff</color>
+
+
+    <color name="yiban">#FFFF00</color>
+    <color name="yanzhong">#ED9700</color>
+    <color name="weiji">#B10000</color>
+    <color name="gray333">#c7c6c6</color>
+    <color name="tab">#f4ad56</color>
+    <color name="xxblue">#2C81FF</color>
+    <color name="blue">#39b6ff</color>
+    <color name="blue2">#499393</color>
+    <color name="blue3">#408080</color>
+    <color name="gray1">#865090ba</color>
+    <color name="gray2">#5cb2b4b5</color>
+    <color name="orange">#f5cb41</color>
+
+    <!-- QRCode scanner color begin -->
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="result_view">#B0000000</color>
+    <color name="viewfinder_frame">#90FFFFFF</color>
+    <color name="result_point_color">#C0FFFF00</color>
+    <color name="laser_color">#0F0</color>
+    <!-- QRCode scanner color end -->
+
+    <color name="color_for_a">#A1D3CA</color>
+    <color name="color_for_b">#A5D3D0</color>
+    <color name="color_for_c">#C3E0DC</color>
+    <color name="color_for_border">#B4B4B4</color>
+
+    <color name="brown">#7e3f19</color>
+    <color name="purple">#d51cf1</color>
+    <color name="mark_view">#9d201f1f</color>
+    <color name="spinner_default">#af495559</color>
+    <color name="spinner_selected">#af65767b</color>
+
+
+</resources>

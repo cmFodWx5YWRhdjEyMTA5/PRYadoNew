@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/white_balance_auto"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="自动">
+    </item>
+    <item
+        android:id="@+id/white_balance_cloudy_daylight"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="阴天">
+    </item>
+    <item
+        android:id="@+id/white_balance_daylight"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="日光">
+    </item>
+    <item
+        android:id="@+id/white_balance_fluorescent"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="荧光">
+    </item>
+    <item
+        android:id="@+id/white_balance_incandescent"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="白炽光">
+    </item>
+
+</menu>

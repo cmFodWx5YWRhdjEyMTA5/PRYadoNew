@@ -1,0 +1,707 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/nestedScrollView">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/dimen_10dp">
+
+        <com.yado.pryado.pryadonew.ui.widgit.EmptyLayout
+            android:id="@+id/emptyLayout"
+            android:layout_width="match_parent"
+            android:layout_height="550dp"
+            android:gravity="center"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:id="@+id/ll_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_station"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:padding="@dimen/dimen_5dp"
+                android:singleLine="true"
+                android:text="203柜体诊断信息"
+                android:textColor="@color/brown"
+                android:textSize="@dimen/dimen_20sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:text="非介入式状态诊断:"
+                android:textSize="@dimen/dimen_18sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_for_border"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_40"
+                    android:layout_marginEnd="@dimen/dp_2"
+                    android:layout_marginStart="2dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="1dp"
+                        android:layout_marginStart="1dp"
+                        android:layout_marginTop="1dp"
+                        android:layout_weight="1"
+                        android:background="@color/table_black"
+                        android:gravity="center"
+                        android:text="监测部位"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="5">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="1dp"
+                            android:layout_marginStart="1dp"
+                            android:layout_marginTop="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/table_black"
+                            android:gravity="center"
+                            android:text="环境温度(℃)"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_12"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="1dp"
+                            android:layout_marginStart="1dp"
+                            android:layout_marginTop="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/table_black"
+                            android:gravity="center"
+                            android:text="测点温度(℃)"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_12"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="1dp"
+                            android:layout_marginStart="1dp"
+                            android:layout_marginTop="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/table_black"
+                            android:gravity="center"
+                            android:text="测点温升速率(K/min)"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_12"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="1dp"
+                            android:layout_marginStart="1dp"
+                            android:layout_marginTop="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/table_black"
+                            android:gravity="center"
+                            android:text="推算柜内温度(℃)"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_12"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="1dp"
+                            android:layout_marginStart="1dp"
+                            android:layout_marginTop="1dp"
+                            android:layout_weight="0.6"
+                            android:background="@color/table_black"
+                            android:gravity="center"
+                            android:text="温升状态"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_12"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_temp_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="@dimen/dp_2"
+                    android:layout_marginStart="@dimen/dp_2" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:text="健康评估:"
+                android:textSize="@dimen/dimen_18sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_for_border"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_40"
+                    android:layout_marginEnd="@dimen/dp_2"
+                    android:layout_marginStart="2dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="1dp"
+                        android:layout_marginStart="1dp"
+                        android:layout_marginTop="1dp"
+                        android:layout_weight="1"
+                        android:background="@color/table_black"
+                        android:gravity="center"
+                        android:text="监测部位"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="5">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="1dp"
+                            android:layout_marginStart="1dp"
+                            android:layout_marginTop="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/table_black"
+                            android:gravity="center"
+                            android:text="测点温度(℃)"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_12"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="1dp"
+                            android:layout_marginStart="1dp"
+                            android:layout_marginTop="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/table_black"
+                            android:gravity="center"
+                            android:text="电流(A)"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_12"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="1dp"
+                            android:layout_marginStart="1dp"
+                            android:layout_marginTop="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/table_black"
+                            android:gravity="center"
+                            android:text="健康度"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_12"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="1dp"
+                            android:layout_marginStart="1dp"
+                            android:layout_marginTop="1dp"
+                            android:layout_weight="0.6"
+                            android:background="@color/table_black"
+                            android:gravity="center"
+                            android:text="健康评估"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_12"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_health"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="@dimen/dp_2"
+                    android:layout_marginStart="@dimen/dp_2" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:id="@+id/ll_head1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/text_bg"
+                    >
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="@dimen/dimen_30dp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="@dimen/dimen_10dp"
+                        android:text="柜体温度-负荷曲线"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_date1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dimen_30dp"
+                        android:visibility="gone"
+                        android:gravity="center_vertical"
+                        android:layout_marginEnd="@dimen/dimen_10dp"
+                        android:text="柜体温度-负荷曲线"
+                        android:textColor="@color/white" />
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:id="@+id/ll_dec"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ll_head1"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:gravity="center"-->
+                        <!--android:visibility="gone"-->
+                        <!--android:orientation="horizontal">-->
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/tv_line1_1"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:drawableLeft="@drawable/ic_line1"-->
+                            <!--android:gravity="center|start"-->
+                            <!--android:text="泄压窗"-->
+                            <!--android:textSize="10sp" />-->
+                    <!--</LinearLayout>-->
+
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:layout_marginLeft="@dimen/dp_2"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:visibility="gone"-->
+                        <!--android:gravity="center|start"-->
+                        <!--android:orientation="horizontal">-->
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/tv_line1_2"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:drawableLeft="@drawable/ic_line2"-->
+                            <!--android:text="203断路器泄压窗"-->
+                            <!--android:gravity="center|start"-->
+                            <!--android:textSize="10sp" />-->
+                    <!--</LinearLayout>-->
+
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:layout_marginLeft="@dimen/dp_2"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:gravity="center"-->
+                        <!--android:visibility="gone"-->
+                        <!--android:orientation="horizontal">-->
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/tv_line1_3"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:drawableLeft="@drawable/ic_line3"-->
+                            <!--android:text="203母排室泄压窗"-->
+                            <!--android:gravity="center|start"-->
+                            <!--android:textSize="10sp" />-->
+                    <!--</LinearLayout>-->
+
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:layout_marginLeft="@dimen/dp_2"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:gravity="center"-->
+                        <!--android:visibility="gone"-->
+                        <!--android:orientation="horizontal">-->
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/tv_line1_4"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:drawableLeft="@drawable/ic_line4"-->
+                            <!--android:text="203柜内环境"-->
+                            <!--android:gravity="center|start"-->
+                            <!--android:textSize="@dimen/dimen_10sp" />-->
+                    <!--</LinearLayout>-->
+
+
+                </LinearLayout>
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/linechart"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_below="@+id/ll_dec"
+                    android:background="@color/gray1"
+                    />
+
+                <ProgressBar
+                    android:id="@+id/pb_loading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone" />
+
+
+                <RadioGroup
+                    android:id="@+id/rg_max"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/linechart"
+                    android:background="@drawable/shape_white2"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/dimen_10dp"
+                    android:paddingLeft="@dimen/dimen_10dp"
+                    android:paddingRight="@dimen/dimen_10dp"
+                    android:paddingTop="@dimen/dimen_10dp">
+
+                    <RadioButton
+                        android:id="@+id/rb_day"
+                        style="@style/tab_item_style"
+                        android:drawableLeft="@drawable/day_selector"
+                        android:paddingRight="15dp"
+                        android:text="日" />
+
+                    <RadioButton
+                        android:id="@+id/rb_week"
+                        style="@style/tab_item_style"
+                        android:drawableLeft="@drawable/week_selector"
+                        android:paddingRight="15dp"
+                        android:text="周" />
+
+                    <RadioButton
+                        android:id="@+id/rb_month"
+                        style="@style/tab_item_style"
+                        android:drawableLeft="@drawable/month_selector"
+                        android:paddingRight="15dp"
+                        android:text="月" />
+
+                </RadioGroup>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_below="@+id/linechart"
+                    android:layout_toEndOf="@+id/rg_max"
+                    android:layout_marginRight="@dimen/dimen_5dp"
+                    android:layout_marginTop="@dimen/dp_2"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_pre1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="上一天"
+                        android:enabled="false"
+                        android:textSize="@dimen/sp_12"
+                        app:corners_radius="@dimen/dimen_5dp"
+                        app:pressed_color="@color/orange"
+                        app:unpressed_color="@color/gray333"
+                        tools:ignore="MissingPrefix" />
+
+                    <Button
+                        android:id="@+id/btn_next1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/dimen_5dp"
+                        android:layout_weight="1"
+                        android:text="下一天"
+                        android:enabled="false"
+                        android:textSize="@dimen/sp_12"
+                        app:corners_radius="@dimen/dimen_5dp"
+                        app:pressed_color="@color/orange"
+                        app:unpressed_color="@color/gray333"
+                        tools:ignore="MissingPrefix" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_load"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/ll_head2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/text_bg"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="@dimen/dimen_30dp"
+                        android:paddingLeft="@dimen/dimen_10dp"
+                        android:gravity="center_vertical"
+                        android:text="柜内温度-负荷曲线"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/tv_date2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dimen_30dp"
+                        android:visibility="gone"
+                        android:gravity="center_vertical"
+                        android:text="柜内温度-负荷曲线"
+                        android:layout_marginEnd="@dimen/dimen_10dp"
+                        android:textColor="@color/white" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/ll_dec1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ll_head2"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:gravity="center"-->
+                        <!--android:visibility="gone"-->
+                        <!--android:orientation="horizontal">-->
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/tv_line2_1"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:drawableLeft="@drawable/ic_line1"-->
+                            <!--android:text="203断路器泄压窗"-->
+                            <!--android:gravity="center|start"-->
+                            <!--android:textSize="10sp" />-->
+                    <!--</LinearLayout>-->
+
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:layout_marginLeft="@dimen/dp_2"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:gravity="center"-->
+                        <!--android:visibility="gone"-->
+                        <!--android:orientation="horizontal">-->
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/tv_line2_2"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:text="203断路器泄压窗"-->
+                            <!--android:drawableLeft="@drawable/ic_line2"-->
+                            <!--android:gravity="center|start"-->
+                            <!--android:textSize="10sp" />-->
+                    <!--</LinearLayout>-->
+
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:layout_marginLeft="@dimen/dp_2"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:gravity="center"-->
+                        <!--android:visibility="gone"-->
+                        <!--android:orientation="horizontal">-->
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/tv_line2_3"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:drawableLeft="@drawable/ic_line3"-->
+                            <!--android:gravity="center|start"-->
+                            <!--android:text="203母排室泄压窗"-->
+                            <!--android:textSize="10sp" />-->
+                    <!--</LinearLayout>-->
+
+                    <!--<LinearLayout-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:layout_marginLeft="@dimen/dp_2"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:gravity="center"-->
+                        <!--android:visibility="gone"-->
+                        <!--android:orientation="horizontal">-->
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/tv_line2_4"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:gravity="center|start"-->
+                            <!--android:drawableLeft="@drawable/ic_line4"-->
+                            <!--android:text="203柜内环境"-->
+                            <!--android:textSize="10sp" />-->
+                    <!--</LinearLayout>-->
+
+
+                </LinearLayout>
+
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/linechart2"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:padding="@dimen/dimen_5dp"
+                    android:layout_below="@+id/ll_dec1"
+                    android:background="@color/gray1" />
+
+                <ProgressBar
+                    android:id="@+id/pb_loading1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone" />
+
+                <RadioGroup
+                    android:id="@+id/rg_load"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/linechart2"
+                    android:background="@drawable/shape_white2"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/dimen_10dp"
+                    android:paddingLeft="@dimen/dimen_10dp"
+                    android:paddingRight="@dimen/dimen_10dp"
+                    android:paddingTop="@dimen/dimen_10dp">
+
+                    <RadioButton
+                        android:id="@+id/rb_day1"
+                        style="@style/tab_item_style"
+                        android:drawableLeft="@drawable/day_selector"
+                        android:paddingRight="15dp"
+                        android:text="日" />
+
+                    <RadioButton
+                        android:id="@+id/rb_week1"
+                        style="@style/tab_item_style"
+                        android:drawableLeft="@drawable/week_selector"
+                        android:paddingRight="15dp"
+                        android:text="周" />
+
+                    <RadioButton
+                        android:id="@+id/rb_month1"
+                        style="@style/tab_item_style"
+                        android:drawableLeft="@drawable/month_selector"
+                        android:paddingRight="15dp"
+                        android:text="月">
+
+                    </RadioButton>
+
+                </RadioGroup>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_below="@+id/linechart2"
+                    android:layout_toRightOf="@id/rg_load"
+                    android:layout_marginRight="@dimen/dimen_5dp"
+                    android:layout_marginTop="@dimen/dp_2"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_pre2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="上一天"
+                        android:enabled="false"
+                        android:textSize="@dimen/sp_12"
+                        app:corners_radius="@dimen/dimen_5dp"
+                        app:pressed_color="@color/orange"
+                        app:unpressed_color="@color/gray333"
+                        tools:ignore="MissingPrefix" />
+
+                    <Button
+                        android:id="@+id/btn_next2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/dimen_5dp"
+                        android:layout_weight="1"
+                        android:text="下一天"
+                        android:enabled="false"
+                        android:textSize="@dimen/sp_12"
+                        app:corners_radius="@dimen/dimen_5dp"
+                        app:pressed_color="@color/orange"
+                        app:unpressed_color="@color/gray333"
+                        tools:ignore="MissingPrefix" />
+
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

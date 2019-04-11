@@ -1,0 +1,63 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PlanInfo727</title>
+    <script src="~/Content/js/jquery-1.7.2.min.js" type="text/javascript"></script>
+    <script src="~/Content/js/jquery.cookie.js" type="text/javascript"></script>
+    <script src="~/Content/js/echarts.min3.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="~/Content/css/planpub.css" />
+    <link rel="stylesheet" type="text/css" href="~/Content/css/pingmiantu727.css" />
+    @*<script src="../../Content/js/cewen-plan.js" type="text/javascript"></script>*@
+    <script src="~/Content/js/cewen-plan.js"></script>
+    <script type="text/javascript">
+        function getDID(did) {
+            alert(did);
+            //window.client.getDID(did + "");// 调用java中的方法
+            window.client.getDID(did + '');
+        }
+    </script>
+</head>
+
+<body class="tabbg6">
+    <!--Tong Zhou Zhan  平面图-->
+    <div class="pmmain plancontent" id="p727">
+        <!--204-->
+        <div class="TZ204" id="d7563" onclick="deviceinfo(7563);getDID(7563)">
+        </div>
+        <!--柜体-->
+        <div class="tz_p1 defaultcursor">
+        </div>
+        <div class="tz_p2 defaultcursor">
+        </div>
+        <div class="tz_p3 defaultcursor">
+        </div>
+        <!--256-->
+        <div class="TZ256" id="d7564" onclick="deviceinfo(7564);getDID(7564)">
+        </div>
+        <!--柜体-->
+        <div class="tz_p4 defaultcursor">
+        </div>
+        <div class="tz_p5 defaultcursor">
+        </div>
+        <div class="tz_p6 defaultcursor">
+        </div>
+        <!--203-->
+        <div class="TZ203" id="d7562" onclick="deviceinfo(7562);getDID(7562)">
+        </div>        
+        <!--柜体-->
+        <div class="tz_p7 defaultcursor">
+        </div>
+        <div class="tz_p8 defaultcursor">
+        </div>
+        <div class="tz_p9 defaultcursor">
+        </div>
+    </div>
+    <div class="station_room_monitor2" id="contentmain111">
+      
+    </div>
+</body>
+</html>
