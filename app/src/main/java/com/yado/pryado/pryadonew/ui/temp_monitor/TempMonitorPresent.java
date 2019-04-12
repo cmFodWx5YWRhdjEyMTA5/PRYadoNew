@@ -17,6 +17,7 @@ import com.yado.pryado.pryadonew.MyApplication;
 import com.yado.pryado.pryadonew.R;
 import com.yado.pryado.pryadonew.base.BasePresenter;
 import com.yado.pryado.pryadonew.bean.DeviceDetailBean2;
+import com.yado.pryado.pryadonew.bean.DeviceInfoListBean;
 import com.yado.pryado.pryadonew.bean.RoomListBean;
 import com.yado.pryado.pryadonew.bean.TypeBean;
 import com.yado.pryado.pryadonew.bean.VagueHistoryGraphBean;
@@ -220,6 +221,28 @@ public class TempMonitorPresent extends BasePresenter<TempMonitorContract.View, 
     }
 
 
+    @Override
+    public void getDeviceInfoList(int pid, int pagesize, int pageindex) {
+        mModel.getDeviceInfoList(pid, pagesize, pageindex, new INetListener<Object, Throwable, Object>() {
+            @Override
+            public void success(Object o) {
+                DeviceInfoListBean listBean = (DeviceInfoListBean) o;
+                ((TempMonitorPlanFragment) mView).setDeviceInfoListBean(listBean);
+            }
+
+            @Override
+            public void failed(Throwable throwable) {
+
+            }
+
+            @Override
+            public void loading(Object o) {
+
+            }
+        });
+    }
+
+
     /**
      * 设置折线图样式
      *
@@ -273,7 +296,7 @@ public class TempMonitorPresent extends BasePresenter<TempMonitorContract.View, 
 //        ArrayList<Entry> yVals3 = new ArrayList<>();//第3条折线；
 //        ArrayList<Entry> yVals4 = new ArrayList<>();//第4条折线；
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-        int i , a = 0, s = 0, d = 0;
+        int i, a = 0, s = 0, d = 0;
 //        LineDataSet set1 = new LineDataSet(yVals, "");
 //        LineDataSet set2 = new LineDataSet(yVals2, "");
 //        LineDataSet set3 = new LineDataSet(yVals3, "");
@@ -287,6 +310,13 @@ public class TempMonitorPresent extends BasePresenter<TempMonitorContract.View, 
             if (hisData.get(j) != null) {
                 for (Map.Entry<String, String> entry : hisData.get(j).entrySet()) {
                     if (!TextUtils.isEmpty(entry.getValue())) {
+//                        if (!entry.getValue().equals("0")) {
+//                            y.add(new Entry(Float.valueOf(entry.getValue()), i++));
+//                            xVals.add(getXvalue(entry.getKey(), type));
+//                        } else {
+//                            i++;
+//                            xVals.add(getXvalue(entry.getKey(), type));
+//                        }
                         y.add(new Entry(Float.valueOf(entry.getValue()), i++));
                         xVals.add(getXvalue(entry.getKey(), type));
 //                        if (j == 0) {
@@ -356,7 +386,7 @@ public class TempMonitorPresent extends BasePresenter<TempMonitorContract.View, 
         int k = 0;
         int maxIndex = lists.get(0).size();//定义最大值为该数组的第一个数
         for (int i = 0; i < lists.size(); i++) {
-            if(maxIndex < lists.get(i).size()){
+            if (maxIndex < lists.get(i).size()) {
                 maxIndex = lists.get(i).size();
             }
         }
@@ -377,7 +407,7 @@ public class TempMonitorPresent extends BasePresenter<TempMonitorContract.View, 
             ((LineDataSet) dataSets.get(i)).setCircleSize(1f);
             ((LineDataSet) dataSets.get(i)).setDrawCircleHole(false);
             ((LineDataSet) dataSets.get(i)).setValueTextSize(9f);
-            ((LineDataSet) dataSets.get(i)).setDrawFilled(true);//设置是否填充
+            ((LineDataSet) dataSets.get(i)).setDrawFilled(false);//设置是否填充
             ((LineDataSet) dataSets.get(i)).setFillColor(colors[i]);//设置填充色
 //            ((LineDataSet) dataSets.get(i)).enableDashedLine(10f, 5f, 0f);//设置虚线；
             ((LineDataSet) dataSets.get(i)).setFillAlpha(65);

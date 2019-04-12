@@ -151,10 +151,7 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
     private boolean webView2Enable = true;
     private int times;
 
-    //    private WeakReference<RoomDetail> roomStatusBean;
     private RoomDetail roomStatusBean;
-
-    //    private WeakReference<RoomDetail.HiPointHisDataEntity> hiPointHisData;
     private RoomDetail.HiPointHisDataEntity hiPointHisData;
     private LinkedHashMap<String, String> dayEvPoint;
     private LinkedHashMap<String, String> dayHiPoint;
@@ -165,7 +162,6 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
     private LinkedHashMap<String, String> allEvPoint;
     private LinkedHashMap<String, String> allHiPoint;
     private int widthScreen;
-//    private TypeBean gragh;
 
     private float lastX;
     private float lastY;

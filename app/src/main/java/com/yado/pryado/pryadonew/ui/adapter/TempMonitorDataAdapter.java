@@ -2,6 +2,7 @@ package com.yado.pryado.pryadonew.ui.adapter;
 
 import android.support.annotation.Nullable;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -39,9 +40,14 @@ public class TempMonitorDataAdapter extends BaseQuickAdapter<TempMonitorBean, Ba
         }
         if (item.getDynamicTemo() == null || item.getDynamicTemo().equals("")) {
             helper.setText(R.id.tv_cal_temp, "==");
-
+//            ((TextView)helper.getView(R.id.tv_cal_temp)).setTextSize(14);
+            helper.setGone(R.id.tv_recTime, false);
         } else {
             helper.setText(R.id.tv_cal_temp, item.getDynamicTemo());
+//            ((TextView)helper.getView(R.id.tv_cal_temp)).setTextSize(12);
+            helper.setText(R.id.tv_recTime,  "(" + item.getRectime() + ")");
+            helper.setGone(R.id.tv_recTime, true);
+
         }
         if (item.getTempRiseAlarm() != null) {
             setImage(item.getTempRiseAlarm(), (ImageView) helper.getView(R.id.iv_state));
@@ -49,12 +55,14 @@ public class TempMonitorDataAdapter extends BaseQuickAdapter<TempMonitorBean, Ba
         if (item.getpName() != null && item.getpName().contains("柜内环境")) {
             helper.setText(R.id.tv_point_name, "环境温度(℃)");
             helper.setGone(R.id.tv_temp_rate, false);
-            helper.setGone(R.id.tv_cal_temp, false);
+//            helper.setGone(R.id.tv_cal_temp, false);
+            helper.setGone(R.id.ll_cal_temp, false);
             helper.setGone(R.id.ll_state, false);
         } else {
             helper.setText(R.id.tv_point_name, item.getpName());
             helper.setGone(R.id.tv_temp_rate, true);
-            helper.setGone(R.id.tv_cal_temp, true);
+//            helper.setGone(R.id.tv_cal_temp, true);
+            helper.setGone(R.id.ll_cal_temp, true);
             helper.setGone(R.id.ll_state, true);
         }
 

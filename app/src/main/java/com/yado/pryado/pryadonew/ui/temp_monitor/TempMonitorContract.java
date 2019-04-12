@@ -1,6 +1,7 @@
 package com.yado.pryado.pryadonew.ui.temp_monitor;
 
 import com.yado.pryado.pryadonew.base.BaseContract;
+import com.yado.pryado.pryadonew.bean.DeviceInfoListBean;
 import com.yado.pryado.pryadonew.net.INetListener;
 import com.yado.pryado.pryadonew.ui.widgit.EmptyLayout;
 
@@ -72,6 +73,14 @@ public interface TempMonitorContract {
          */
         void getGraphType(int pid);
 
+        /**
+         * 获取配电房所有的设备列表
+         * @param pid
+         * @param pagesize
+         * @param pageindex
+         */
+        void getDeviceInfoList(int pid, int pagesize, int pageindex);
+
 
     }
 
@@ -130,6 +139,14 @@ public interface TempMonitorContract {
          * @param pid
          */
         void getGraphType(int pid, INetListener<Object, Throwable, Object> listener);
+
+        /**
+         * 获取配电房所有的设备列表
+         * @param pid
+         * @param pagesize
+         * @param pageindex
+         */
+        void getDeviceInfoList(int pid, int pagesize, int pageindex, INetListener<Object, Throwable, Object> listener);
 
     }
 

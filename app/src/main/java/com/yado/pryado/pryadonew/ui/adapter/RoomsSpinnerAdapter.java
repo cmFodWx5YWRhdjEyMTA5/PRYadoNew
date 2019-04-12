@@ -25,5 +25,6 @@ public class RoomsSpinnerAdapter  extends BaseQuickAdapter<RoomListBean.RowsEnti
     @Override
     protected void convert(BaseViewHolder helper, RoomListBean.RowsEntity item) {
         helper.setText(R.id.device_name, item.getName());
+        helper.setBackgroundColor(R.id.ll_rooms, Color.parseColor("#c8262626"));
     }
 }

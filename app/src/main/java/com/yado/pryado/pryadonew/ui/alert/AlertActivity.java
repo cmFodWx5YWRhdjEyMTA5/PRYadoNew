@@ -2,6 +2,7 @@ package com.yado.pryado.pryadonew.ui.alert;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DividerItemDecoration;
@@ -389,6 +390,7 @@ public class AlertActivity extends BaseActivity<AlertPresent> implements AlertCo
         rv_rooms = popView.findViewById(R.id.rv_devices);
         room_name = popView.findViewById(R.id.room_name);
         room_name.setText("站室列表");
+        room_name.setBackgroundColor(Color.parseColor("#C8484848"));
         rv_rooms.setLayoutManager(new LinearLayoutManager(mContext));
         //添加Android自带的分割线
         rv_rooms.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));

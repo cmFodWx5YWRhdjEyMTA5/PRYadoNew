@@ -26,15 +26,6 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.LimitLine;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.listener.BarLineChartTouchListener;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.yado.pryado.pryadonew.R;
@@ -358,6 +349,7 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
             monitorBeanList.get(monitorBeanList.size() - currentIndex).setPosition(vagueRealTimeBean.getRows().get(0).getTagName());
             monitorBeanList.get(monitorBeanList.size() - currentIndex).setpName(vagueRealTimeBean.getRows().get(0).getPosition());
             monitorBeanList.get(monitorBeanList.size() - currentIndex).setTempValue(vagueRealTimeBean.getRows().get(0).getTemp());
+            monitorBeanList.get(monitorBeanList.size() - currentIndex).setRectime(vagueRealTimeBean.getRows().get(0).getRectime());
 
             if (currentIndex2 > 0) {
                 if (!vagueRealTimeBean.getRows().get(0).getPosition().contains("仪表室")) {
@@ -368,6 +360,7 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
                     monitorBeanList2.get(monitorBeanList2.size() - currentIndex2).setPosition(vagueRealTimeBean.getRows().get(0).getTagName());
                     monitorBeanList2.get(monitorBeanList2.size() - currentIndex2).setpName(vagueRealTimeBean.getRows().get(0).getPosition());
                     monitorBeanList2.get(monitorBeanList2.size() - currentIndex2).setTempValue(vagueRealTimeBean.getRows().get(0).getTemp());
+                    monitorBeanList2.get(monitorBeanList2.size() - currentIndex2).setRectime(vagueRealTimeBean.getRows().get(0).getRectime());
                     currentIndex2--;
                 }
             }

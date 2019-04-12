@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
+    android:layout_height="@dimen/dimen_50dp"
     android:orientation="vertical">
 
     <LinearLayout
@@ -54,17 +54,36 @@
                 android:text="温升速率"
                 android:textColor="@color/blue_text" />
 
-            <TextView
-                android:id="@+id/tv_cal_temp"
+            <LinearLayout
+                android:id="@+id/ll_cal_temp"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="1dp"
                 android:layout_marginTop="1dp"
                 android:layout_weight="1"
                 android:background="#FAFAFA"
-                android:gravity="center"
-                android:text="推算柜内温度"
-                android:textColor="@color/blue_text" />
+                android:orientation="vertical"
+                android:layout_marginLeft="1dp"
+               android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tv_cal_temp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="推算柜内温度"
+                    android:textColor="@color/blue_text" />
+
+                <TextView
+                    android:id="@+id/tv_recTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="10sp"
+                    android:text="2019/2/18"
+                    android:textColor="@color/light_gray" />
+
+            </LinearLayout>
+
+
 
             <LinearLayout
                 android:id="@+id/ll_state"

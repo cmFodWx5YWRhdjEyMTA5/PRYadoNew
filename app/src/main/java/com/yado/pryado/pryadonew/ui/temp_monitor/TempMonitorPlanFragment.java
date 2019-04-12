@@ -2,8 +2,12 @@ package com.yado.pryado.pryadonew.ui.temp_monitor;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,25 +22,36 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.blankj.utilcode.util.SizeUtils;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yado.pryado.pryadonew.MyApplication;
 import com.yado.pryado.pryadonew.MyConstants;
 import com.yado.pryado.pryadonew.R;
 import com.yado.pryado.pryadonew.base.BaseFragment;
+import com.yado.pryado.pryadonew.bean.DeviceInfoListBean;
 import com.yado.pryado.pryadonew.bean.NonIntrusiveEvent;
 import com.yado.pryado.pryadonew.net.EadoUrl;
+import com.yado.pryado.pryadonew.ui.adapter.DeviceInfoListAdapter;
 import com.yado.pryado.pryadonew.ui.widgit.EmptyLayout;
 import com.yado.pryado.pryadonew.ui.widgit.MyWebChromeClient;
 import com.yado.pryado.pryadonew.ui.widgit.PlanInfoClient;
+import com.yado.pryado.pryadonew.ui.widgit.PopupWindow.CommonPopupWindow;
+import com.yado.pryado.pryadonew.util.ScreenUtil;
 import com.yado.pryado.pryadonew.util.SharedPrefUtil;
+import com.yado.pryado.pryadonew.util.Util;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,6 +69,9 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
     ScrollView svContent;
     @BindView(R.id.ll_web)
     LinearLayout llWeb;
+    @BindView(R.id.tv_devices)
+    TextView tvDevices;
+
 //    @BindView(R.id.webview2)
 //    WebView webview2;
 
@@ -65,9 +83,13 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
     private List<String> mStations;
     private NonIntrusiveEvent event;
     private WebChromeClient webChromeClient;
-    private static final String APP_CACAHE_DIRNAME = "/webcache";
-    private String cacheDirPath;
-    private static final String TAG = TempMonitorPlanFragment.class.getSimpleName();
+
+    private CommonPopupWindow popupWindow;
+    private View popView;
+    private RecyclerView rv_devices;
+    private TextView room_name;
+    @Inject
+    DeviceInfoListAdapter adapter;
 
     @Override
     protected boolean isRegisterEventBus() {
@@ -116,15 +138,16 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
 
     @Override
     protected void loadData() {
-        cacheDirPath = context.getFilesDir().getAbsolutePath() + APP_CACAHE_DIRNAME;
         assert getArguments() != null;
         pid = getArguments().getInt("pid");
         emptyLayout.setErrorType(EmptyLayout.NETWORK_LOADING);
         initWebView();
+        initPopView();
         setView();
         assert mPresenter != null;
         mPresenter.getGraphType(pid);
         mPresenter.getStatusData(pid, 0, 0);
+        mPresenter.getDeviceInfoList(pid, 100, 1);
     }
 
     @SuppressLint({"WrongConstant", "SetJavaScriptEnabled", "AddJavascriptInterface"})
@@ -159,17 +182,7 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
         //设置WebView属性，能够执行Javascript脚本
         webview.getSettings().setJavaScriptEnabled(true);
         webview.addJavascriptInterface(new JavaScriptInterface(), "android");
-
         webview.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT | WebSettings.LOAD_CACHE_ELSE_NETWORK);
-        //设置数据库缓存路径
-//        webview.getSettings().setDatabasePath(cacheDirPath);
-        //设置  Application Caches 缓存目录
-        webview.getSettings().setAppCachePath(cacheDirPath);
-        //开启 Application Caches 功能
-        webview.getSettings().setAppCacheEnabled(true);
-        Log.e("databasepath",  webview.getSettings().getDatabasePath());
-
-
 
         // 设置可以支持缩放
         webview2.getSettings().setSupportZoom(false);
@@ -217,6 +230,7 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
         assert mPresenter != null;
         mPresenter.getGraphType(pid);
         mPresenter.getStatusData(pid, 0, 0);
+        mPresenter.getDeviceInfoList(pid, 100, 1);
     }
 
     public void setStatusData(String string) {
@@ -243,10 +257,81 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
         emptyLayout.setVisibility(b ? View.GONE : View.VISIBLE);
     }
 
-    @OnClick(R.id.tv_rooms)
-    public void onViewClicked() {
-        if (webview != null) {
-            webview.reload();
+    @OnClick({R.id.tv_rooms, R.id.tv_devices})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.tv_rooms:
+                if (webview != null) {
+                    webview.reload();
+                }
+                break;
+            case R.id.tv_devices:
+                if (popupWindow == null) {
+                    initPopWindow();
+                }
+                tvDevices.setText("收起");
+                popupWindow.showAsDropDown(view);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void initPopWindow() {
+        if (popupWindow == null) {
+            popupWindow = new CommonPopupWindow.Builder(context)
+                    .setView(popView)
+                    .setWidthAndHeight(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtil.getScreenHeight(context) * 2 / 5)
+                    .setAnimationStyle(R.style.AnimDown)
+                    .setOutsideTouchable(true)
+                    .create();
+            popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                @Override
+                public void onDismiss() {
+                    tvDevices.setText("设备列表");
+                }
+            });
+        }
+
+    }
+
+
+    private void initPopView() {
+        popView = LayoutInflater.from(context).inflate(R.layout.popup_item2, null);
+        rv_devices = popView.findViewById(R.id.rv_devices);
+        room_name = popView.findViewById(R.id.room_name);
+        room_name.setBackgroundColor(Color.parseColor("#C8484848"));
+        rv_devices.setLayoutManager(new GridLayoutManager(context, 2));
+        //添加Android自带的分割线
+        rv_devices.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
+        rv_devices.setAdapter(adapter);
+        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                DeviceInfoListBean.RowsBean rowsBean = (DeviceInfoListBean.RowsBean) adapter.getData().get(position);
+                if (event == null) {
+                    event = new NonIntrusiveEvent();
+                }
+                event.setDid(rowsBean.getDID());
+                event.setIsClick(1);
+                if (mDids != null && mDids.size() > 0) {
+                    int index = mDids.indexOf(rowsBean.getDID());
+                    if (index >= 0) {
+                        if (mStations != null && mStations.size() > 0) {
+                            event.setStation(mStations.get(index));//站室名
+                        }
+                    }
+
+                }
+                EventBus.getDefault().post(event);
+                popupWindow.dismiss();
+            }
+        });
+    }
+
+    public void setDeviceInfoListBean(DeviceInfoListBean listBean) {
+        if (listBean.getRows() != null && listBean.getRows().size() > 0) {
+            adapter.setNewData(listBean.getRows());
         }
     }
 
@@ -320,7 +405,6 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
             }
         }
     }
-
 
 
     @Override

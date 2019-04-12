@@ -4,6 +4,7 @@ import com.yado.pryado.pryadonew.MyApplication;
 import com.yado.pryado.pryadonew.base.BaseModel;
 import com.yado.pryado.pryadonew.bean.AlertBean;
 import com.yado.pryado.pryadonew.bean.DeviceDetailBean2;
+import com.yado.pryado.pryadonew.bean.DeviceInfoListBean;
 import com.yado.pryado.pryadonew.bean.HisData;
 import com.yado.pryado.pryadonew.bean.HisData2;
 import com.yado.pryado.pryadonew.bean.RoomListBean;
@@ -280,6 +281,36 @@ public class TempMonitorModel extends BaseModel implements TempMonitorContract.M
                     @Override
                     public void onNext(TypeBean typeBean) {
                         listener.success(typeBean);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+//                        clearPool();
+                        deleteDisposable(disposable);
+                    }
+
+                });
+    }
+
+    @Override
+    public void getDeviceInfoList(int pid, int pagesize, int pageindex, final INetListener<Object, Throwable, Object> listener) {
+        prApi.getDeviceInfoList(pid, pagesize, pageindex)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new PRSubscriber<DeviceInfoListBean>() {
+                    Disposable disposable;
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        addDisposable(d);
+                        disposable = d;
+                    }
+
+                    @Override
+                    public void onNext(DeviceInfoListBean listBean) {
+                        listener.success(listBean);
                     }
 
                     @Override

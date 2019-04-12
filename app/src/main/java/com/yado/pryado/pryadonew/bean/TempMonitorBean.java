@@ -8,6 +8,7 @@ public class TempMonitorBean {
     private String staticTemp;
     private String dynamicTemo;
     private String tempRiseAlarm;
+    private String Rectime;
 
     public String getpName() {
         return pName;
@@ -63,5 +64,13 @@ public class TempMonitorBean {
 
     public void setTempRiseAlarm(String tempRiseAlarm) {
         this.tempRiseAlarm = tempRiseAlarm;
+    }
+
+    public String getRectime() {
+        return Rectime;
+    }
+
+    public void setRectime(String rectime) {
+        Rectime = rectime;
     }
 }

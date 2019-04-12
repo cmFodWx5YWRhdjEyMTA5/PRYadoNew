@@ -3,6 +3,7 @@ package com.yado.pryado.pryadonew.ui.temp_monitor;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
@@ -320,6 +321,7 @@ public class TempMonitorActivity extends BaseActivity<TempMonitorPresent> implem
         rv_rooms = popView.findViewById(R.id.rv_devices);
         room_name = popView.findViewById(R.id.room_name);
         room_name.setText("站室列表");
+        room_name.setBackgroundColor(Color.parseColor("#C8484848"));
         rv_rooms.setLayoutManager(new LinearLayoutManager(mContext));
         //添加Android自带的分割线
         rv_rooms.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
