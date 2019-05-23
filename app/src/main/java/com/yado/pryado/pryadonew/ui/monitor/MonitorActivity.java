@@ -39,6 +39,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.yado.pryado.pryadonew.MyConstants;
 import com.yado.pryado.pryadonew.R;
 import com.yado.pryado.pryadonew.base.BaseActivity;
+import com.yado.pryado.pryadonew.bean.Entity;
 import com.yado.pryado.pryadonew.bean.RoomListBean;
 import com.yado.pryado.pryadonew.bean.StatusBean;
 import com.yado.pryado.pryadonew.bean.TypeBean;
@@ -180,7 +181,8 @@ public class MonitorActivity extends BaseActivity<MonitorPresent> implements Mon
     }
 
     private void initMap() {
-        handle();
+        assert mPresenter != null;
+        mPresenter.handle(rooms);
         addIcon(R.drawable.point_green, R.drawable.point_yellow_light, R.drawable.point_yellow, R.drawable.point_red);
         mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
             @Override
@@ -196,12 +198,14 @@ public class MonitorActivity extends BaseActivity<MonitorPresent> implements Mon
 //                InfoWindow mInfoWindow = new InfoWindow(textView, pt, -47);
 //显示InfoWindow
 //                mBaiduMap.showInfoWindow(mInfoWindow);
-                    ARouter.getInstance().build(MyConstants.ROOM_DETAIL)
-                            .withParcelable("room", room)
-                            .withParcelableArrayList("room_list", (ArrayList<? extends Parcelable>) rooms)
-                            .withInt("position", position)
-                            .withString("video_url", room.getLatitude())
-                            .navigation();
+                    assert mPresenter != null;
+                    mPresenter.getGraphType(room.getPID(), room, rooms, position);
+//                    ARouter.getInstance().build(MyConstants.ROOM_DETAIL)
+//                            .withParcelable("room", room)
+//                            .withParcelableArrayList("room_list", (ArrayList<? extends Parcelable>) rooms)
+//                            .withInt("position", position)
+//                            .withString("video_url", room.getLatitude())
+//                            .navigation();
                 }
                 return true;
             }
@@ -271,42 +275,6 @@ public class MonitorActivity extends BaseActivity<MonitorPresent> implements Mon
         }
     }
 
-    private void handle() {
-        int[] j = new int[]{-1, -1, -1, -1};
-        for (int i = 0; i < rooms.size(); i++) {
-            if (rooms.get(i).getName().contains("景湖尚城")) {
-                j[0] = i;
-            }
-            if (rooms.get(i).getName().contains("高家堰")) {
-                j[1] = i;
-            }
-            if (rooms.get(i).getName().contains("山脉会员店")) {
-                j[2] = i;
-            }
-            if (rooms.get(i).getName().contains("民大")) {
-                j[3] = i;
-            }
-        }
-        ArrayList<Integer> x = new ArrayList<Integer>();
-        for (int i = 0; i < 4; i++) {
-            if (j[i] != -1) {
-                x.add(j[i]);
-            }
-        }
-        for (int i = 0; i < x.size(); i++) {
-            indexExChange(rooms, i, x.get(i));
-        }
-    }
-
-    public static <T> List<T> indexExChange(List<T> list, int index1, int index2) {
-        if (index1 < 0 || index2 < 0) {
-            return list;
-        }
-        T t = list.get(index1);
-        list.set(index1, list.get(index2));
-        list.set(index2, t);
-        return list;
-    }
 
     public void zoomToSpan() {
         if (mBaiduMap == null) {

@@ -90,4 +90,42 @@ public class MonitorPresent extends BasePresenter<MonitorContract.View, MonitorM
             }
         });
     }
+
+
+    public void handle(List<RoomListBean.RowsEntity> rooms) {
+        int[] j = new int[]{-1, -1, -1, -1};
+        for (int i = 0; i < rooms.size(); i++) {
+            if (rooms.get(i).getName().contains("景湖尚城")) {
+                j[0] = i;
+            }
+            if (rooms.get(i).getName().contains("高家堰")) {
+                j[1] = i;
+            }
+            if (rooms.get(i).getName().contains("山脉会员店")) {
+                j[2] = i;
+            }
+            if (rooms.get(i).getName().contains("民大")) {
+                j[3] = i;
+            }
+        }
+        ArrayList<Integer> x = new ArrayList<Integer>();
+        for (int i = 0; i < 4; i++) {
+            if (j[i] != -1) {
+                x.add(j[i]);
+            }
+        }
+        for (int i = 0; i < x.size(); i++) {
+            indexExChange(rooms, i, x.get(i));
+        }
+    }
+
+    public static <T> List<T> indexExChange(List<T> list, int index1, int index2) {
+        if (index1 < 0 || index2 < 0) {
+            return list;
+        }
+        T t = list.get(index1);
+        list.set(index1, list.get(index2));
+        list.set(index2, t);
+        return list;
+    }
 }

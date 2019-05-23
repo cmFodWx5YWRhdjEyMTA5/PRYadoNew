@@ -263,6 +263,7 @@ public class TempMonitorActivity extends BaseActivity<TempMonitorPresent> implem
             if (fragmentPlan != null) {
                 fragmentPlan.isHide(true);
             }
+
         } else if (ori == Configuration.ORIENTATION_PORTRAIT) {
             //竖屏
             title.setVisibility(View.VISIBLE);
@@ -270,6 +271,9 @@ public class TempMonitorActivity extends BaseActivity<TempMonitorPresent> implem
             if (fragmentPlan != null) {
                 fragmentPlan.isHide(false);
             }
+        }
+        if(fragmentAssess != null) {
+            fragmentAssess.reFreshLine();
         }
         dragView.getRootLayout().removeView(dragView.getDragView());
         dragView.getmBuilder().setView(null);

@@ -9,6 +9,7 @@ public class TempMonitorBean {
     private String dynamicTemo;
     private String tempRiseAlarm;
     private String Rectime;
+    private String Tagid;
 
     public String getpName() {
         return pName;
@@ -72,5 +73,13 @@ public class TempMonitorBean {
 
     public void setRectime(String rectime) {
         Rectime = rectime;
+    }
+
+    public String getTagid() {
+        return Tagid;
+    }
+
+    public void setTagid(String tagid) {
+        Tagid = tagid;
     }
 }

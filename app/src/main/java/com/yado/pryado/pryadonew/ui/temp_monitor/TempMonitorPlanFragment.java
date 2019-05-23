@@ -35,6 +35,7 @@ import com.yado.pryado.pryadonew.R;
 import com.yado.pryado.pryadonew.base.BaseFragment;
 import com.yado.pryado.pryadonew.bean.DeviceInfoListBean;
 import com.yado.pryado.pryadonew.bean.NonIntrusiveEvent;
+import com.yado.pryado.pryadonew.bean.TypeBean;
 import com.yado.pryado.pryadonew.net.EadoUrl;
 import com.yado.pryado.pryadonew.ui.adapter.DeviceInfoListAdapter;
 import com.yado.pryado.pryadonew.ui.widgit.EmptyLayout;
@@ -90,6 +91,7 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
     private TextView room_name;
     @Inject
     DeviceInfoListAdapter adapter;
+    private TypeBean typeBean;
 
     @Override
     protected boolean isRegisterEventBus() {
@@ -252,6 +254,10 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
 
     }
 
+    public void setTypeBean(TypeBean typeBean) {
+        this.typeBean = typeBean;
+    }
+
     public void setShowOrHide(boolean b) {
         svContent.setVisibility(b ? View.VISIBLE : View.GONE);
         emptyLayout.setVisibility(b ? View.GONE : View.VISIBLE);
@@ -331,7 +337,34 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
 
     public void setDeviceInfoListBean(DeviceInfoListBean listBean) {
         if (listBean.getRows() != null && listBean.getRows().size() > 0) {
+            if (mStations == null) {
+                mStations = new ArrayList<>();
+                mDids = new ArrayList<>();
+            } else {
+                mStations.clear();
+                mDids.clear();
+            }
+            for (DeviceInfoListBean.RowsBean rowsBean : listBean.getRows()) {
+                mStations.add(rowsBean.getDeviceName());
+                mDids.add(rowsBean.getDID());
+            }
+            if (mStations.size() > 0) {
+                EventBus.getDefault().post(mStations.get(0));
+            }
             adapter.setNewData(listBean.getRows());
+            if (typeBean != null && Integer.parseInt(typeBean.getHymannew().get(0).getTotal2()) > 0) {
+                if (mDids != null && mDids.size() > 0) {
+                    if (event == null) {
+                        event = new NonIntrusiveEvent();
+                    }
+                    event.setDid(mDids.get(0)); //did
+                    event.setIsClick(0);
+//                if (mStations != null && mStations.size() > 0) {
+//                    event.setStation(mStations.get(0));//站室名
+//                }
+                    EventBus.getDefault().post(event);
+                }
+            }
         }
     }
 
@@ -359,51 +392,56 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
             EventBus.getDefault().post(event);
         }
 
-        /**
-         * 获取网页内容
-         *
-         * @param html
-         */
-        @JavascriptInterface
-        public void getSource(String html) {
-            Log.e("html=", html);
-            searchAllIndex(html);
-            if (mDids != null && mDids.size() > 0) {
-                if (event == null) {
-                    event = new NonIntrusiveEvent();
-                }
-                event.setDid(mDids.get(0)); //did
-                event.setIsClick(0);
-                if (mStations != null && mStations.size() > 0) {
-                    event.setStation(mStations.get(0));//站室名
-                }
-                EventBus.getDefault().post(event);
-            }
+//        /**
+//         * 获取网页内容
+//         *
+//         * @param html
+//         */
+//        @JavascriptInterface
+//        public void getSource(String html) {
+//            Log.e("html=", html);
+//            searchAllIndex(html);
+//            if (mDids != null && mDids.size() > 0) {
+//                if (event == null) {
+//                    event = new NonIntrusiveEvent();
+//                }
+//                event.setDid(mDids.get(0)); //did
+//                event.setIsClick(0);
+////                if (mStations != null && mStations.size() > 0) {
+////                    event.setStation(mStations.get(0));//站室名
+////                }
+//                EventBus.getDefault().post(event);
+//            }
+//
+//        }
 
-        }
-
-        private void searchAllIndex(String str) {
-            int a = str.indexOf("deviceinfo");//*第一个出现的索引位置
-            if (mDids != null) {
-                mDids.clear();
-            }
-            if (mStations != null) {
-                mStations.clear();
-            }
-            while (a != -1) {
-                if (mDids == null) {
-                    mDids = new ArrayList<>();
-                }
-                if (mStations == null) {
-                    mStations = new ArrayList<>();
-                }
-                mDids.add(str.substring(a + 11, a + 15));
-                mStations.add(str.substring(a - 25, a - 22));
-                Log.e("deviceinfo", str.substring(a + 11, a + 15) + "   " + a + "\t");
-
-                a = str.indexOf("deviceinfo", a + 1);//*从这个索引往后开始第一个出现的位置
-            }
-        }
+//        private void searchAllIndex(String str) {
+//            int a = str.indexOf("deviceinfo");//*第一个出现的索引位置
+//            if (mDids != null) {
+//                mDids.clear();
+//            }
+////            if (mStations != null) {
+////                mStations.clear();
+////            }
+//            while (a != -1) {
+//                if (mDids == null) {
+//                    mDids = new ArrayList<>();
+//                }
+////                if (mStations == null) {
+////                    mStations = new ArrayList<>();
+////                }
+//                mDids.add(str.substring(a + 11, a + 15));
+////                String position = str.substring(a - 32, a - 22);
+////                if (position.contains("\"")){
+////                    mStations.add(position.substring(position.indexOf("\"") + 1));
+////                } else {
+////                    mStations.add(position);
+////                }
+//                Log.e("deviceinfo", str.substring(a + 11, a + 15) + "   " + a + "\t");
+//
+//                a = str.indexOf("deviceinfo", a + 1);//*从这个索引往后开始第一个出现的位置
+//            }
+//        }
     }
 
 

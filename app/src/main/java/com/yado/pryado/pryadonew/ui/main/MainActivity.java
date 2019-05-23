@@ -20,7 +20,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.FileProvider;
+
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -176,7 +176,7 @@ public class MainActivity extends BaseActivity<MainPresent> implements MainContr
 //    }
 
     //    private MyHandler handler = new MyHandler(MainActivity.this);
-    private static final int REQUEST_CODE_UNKNOWN_APP = 100;
+    public static final int REQUEST_CODE_UNKNOWN_APP = 100;
 
 
     private NiftyDialogBuilder dialogBuilder;
@@ -277,7 +277,7 @@ public class MainActivity extends BaseActivity<MainPresent> implements MainContr
             public void finishDownload() {
 //                File downloadFile = DownloadUtils.getInstance().downloadFile;
 //                saveFileName = new WeakReference<>(downloadFile.getAbsolutePath());
-                installApk(DownloadUtils.getInstance().downloadFile);
+                mPresenter.installApk(DownloadUtils.getInstance().downloadFile, (BaseActivity) mContext);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -591,43 +591,11 @@ public class MainActivity extends BaseActivity<MainPresent> implements MainContr
         numberProgressBar.setMax(100);
     }
 
-    private void installApk(File apkfile) {
-        ToastUtils.showShort("存放apk路径==" + apkfile.getAbsolutePath());
-//        File apkfile = new File(saveFileName);
-        if (!apkfile.exists()) {
-            return;
-        }
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-//                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);//无Activity环境启动时添加；
-            Uri apkUri = FileProvider.getUriForFile(mContext, "com.yado.pryado.pryadonew.fileprovider", apkfile);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            boolean hasInstallPermission = getPackageManager().canRequestPackageInstalls();
-            if (hasInstallPermission) {
-                //安装应用
-                Uri apkUri = FileProvider.getUriForFile(mContext, "com.yado.pryado.pryadonew.fileprovider", apkfile);
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
-            } else {
-                //跳转至“安装未知应用”权限界面，引导用户开启权限
-                Uri selfPackageUri = Uri.parse("package:" + this.getPackageName());
-                Intent intent1 = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, selfPackageUri);
-                startActivityForResult(intent1, REQUEST_CODE_UNKNOWN_APP);
-            }
-        } else {
-            intent.setDataAndType(Uri.fromFile(apkfile), "application/vnd.android.package-archive");
-
-        }
-        startActivity(intent);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_UNKNOWN_APP) {
-            installApk(DownloadUtils.getInstance().downloadFile);
+            mPresenter.installApk(DownloadUtils.getInstance().downloadFile, (BaseActivity) mContext);
         }
     }
 

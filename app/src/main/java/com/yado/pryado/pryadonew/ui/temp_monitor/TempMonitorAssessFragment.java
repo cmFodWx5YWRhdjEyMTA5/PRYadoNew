@@ -15,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.webkit.WebSettings;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -25,24 +27,50 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.ToastUtils;
+import com.github.abel533.echarts.Legend;
+import com.github.abel533.echarts.Toolbox;
+import com.github.abel533.echarts.Tooltip;
+import com.github.abel533.echarts.axis.Axis;
+import com.github.abel533.echarts.axis.AxisLabel;
+import com.github.abel533.echarts.axis.CategoryAxis;
+import com.github.abel533.echarts.axis.ValueAxis;
+import com.github.abel533.echarts.code.Magic;
+import com.github.abel533.echarts.code.SeriesType;
+import com.github.abel533.echarts.code.Trigger;
+import com.github.abel533.echarts.feature.DataView;
+import com.github.abel533.echarts.feature.Feature;
+import com.github.abel533.echarts.feature.MagicType;
+import com.github.abel533.echarts.feature.Restore;
+import com.github.abel533.echarts.feature.SaveAsImage;
+import com.github.abel533.echarts.json.GsonOption;
+import com.github.abel533.echarts.series.Line;
+import com.github.abel533.echarts.series.Series;
+import com.github.abel533.echarts.style.AreaStyle;
+import com.github.abel533.echarts.style.TextStyle;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.yado.pryado.pryadonew.R;
 import com.yado.pryado.pryadonew.base.BaseFragment;
 import com.yado.pryado.pryadonew.bean.DeviceDetailBean2;
+import com.yado.pryado.pryadonew.bean.NonIntrusiveEvent;
 import com.yado.pryado.pryadonew.bean.TempMonitorBean;
 import com.yado.pryado.pryadonew.bean.VagueHistoryGraphBean;
 import com.yado.pryado.pryadonew.bean.VagueRealTimeBean;
 import com.yado.pryado.pryadonew.ui.adapter.TempMonitorDataAdapter;
 import com.yado.pryado.pryadonew.ui.adapter.TempMonitorDataAdapter2;
 import com.yado.pryado.pryadonew.ui.widgit.EmptyLayout;
+import com.yado.pryado.pryadonew.ui.widgit.TEChartWebView;
 import com.yado.pryado.pryadonew.ui.widgit.XYMarkerView;
 import com.yado.pryado.pryadonew.util.DateUtils;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,6 +134,9 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
     LinearLayout llDec;
     @BindView(R.id.ll_dec1)
     LinearLayout llDec1;
+    @BindView(R.id.ll_barChartWebView1)
+    LinearLayout ll_barChartWebView1;
+    private TEChartWebView barChartWebView1;
 
     @Inject
     TempMonitorDataAdapter adapter;
@@ -130,16 +161,21 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
     private List<LinkedHashMap<String, String>> dataSets2 = new ArrayList<>();
     private List<List<String>> xValues1 = new ArrayList<>();
     private List<List<String>> xValues2 = new ArrayList<>();
+
     private int type1, type2;
     private int[] colors;
     private XYMarkerView mv;
     private XYMarkerView mv1;
 
+    private List<List<String>> yValues1 = new ArrayList<>();
+    private List<List<String>> xValues11 = new ArrayList<>();
+    private List<String> noDataTagIds = new ArrayList<>();
+
     private boolean isFirst;
 
     @Override
     protected boolean isRegisterEventBus() {
-        return false;
+        return true;
     }
 
     @Override
@@ -183,10 +219,13 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
         initMarkerView();
         mPresenter.setLineType(linechart, 7);
         mPresenter.setLineType(linechart2, 7);
-//        setLineType(linechart, 7);
-//        setLineType(linechart2, 7);
         initListener();
         emptyLayout.setErrorType(EmptyLayout.NODATA);
+        barChartWebView1 = new TEChartWebView(context);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ll_barChartWebView1.getLayoutParams());
+        barChartWebView1.setLayoutParams(lp);
+        ll_barChartWebView1.addView(barChartWebView1);
+
     }
 
     private void initMarkerView() {
@@ -230,8 +269,10 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
 
     @SuppressLint("SetTextI18n")
     public void onRefresh(String did, String station) {
-        this.station = station;
-        tvStation.setText(station + "柜体诊断信息");
+        if (station != null) {
+            this.station = station;
+            tvStation.setText(station + "柜体诊断信息");
+        }
         emptyLayout.setErrorType(EmptyLayout.NETWORK_LOADING);
         llContent.setVisibility(View.GONE);
         this.did = did;
@@ -248,6 +289,9 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
         rgMax.clearCheck();
         dataSets1.clear();
         xValues1.clear();
+        xValues11.clear();
+        noDataTagIds.clear();
+        yValues1.clear();
         dataSets2.clear();
         xValues2.clear();
         startDate1 = DateUtils.getStringDateShort() + " 00:00:00";
@@ -291,7 +335,7 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
                     }
 
                 }
-                if (detailBean.getRealTimeParams().get(i).getDataTypeID().equals("120")){
+                if (detailBean.getRealTimeParams().get(i).getDataTypeID().equals("120")) {
                     if (detailBean.getRealTimeParams().get(i).getTagID() == null) {
                         if (detailBean.getRealTimeParams().get(i).getTagIDA() != null) {
                             tagIds.add(detailBean.getRealTimeParams().get(i).getTagIDA());
@@ -329,6 +373,7 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
             endDate1 = DateUtils.getStringDate();
             startDate2 = DateUtils.getStringDateShort() + " 00:00:00";
             endDate2 = DateUtils.getStringDate();
+            noDataTagIds.clear();
             assert mPresenter != null;
             mPresenter.loadMonitorHistoryGraph(pid, Integer.parseInt(tagIds2.get(0)), startDate1, endDate1);
             mPresenter.loadVagueHistoryGraph(Integer.parseInt(tagIds2.get(0)), startDate2, endDate2);
@@ -350,6 +395,7 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
             monitorBeanList.get(monitorBeanList.size() - currentIndex).setpName(vagueRealTimeBean.getRows().get(0).getPosition());
             monitorBeanList.get(monitorBeanList.size() - currentIndex).setTempValue(vagueRealTimeBean.getRows().get(0).getTemp());
             monitorBeanList.get(monitorBeanList.size() - currentIndex).setRectime(vagueRealTimeBean.getRows().get(0).getRectime());
+            monitorBeanList.get(monitorBeanList.size() - currentIndex).setTagid(vagueRealTimeBean.getRows().get(0).getTagid());
 
             if (currentIndex2 > 0) {
                 if (!vagueRealTimeBean.getRows().get(0).getPosition().contains("仪表室")) {
@@ -361,6 +407,7 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
                     monitorBeanList2.get(monitorBeanList2.size() - currentIndex2).setpName(vagueRealTimeBean.getRows().get(0).getPosition());
                     monitorBeanList2.get(monitorBeanList2.size() - currentIndex2).setTempValue(vagueRealTimeBean.getRows().get(0).getTemp());
                     monitorBeanList2.get(monitorBeanList2.size() - currentIndex2).setRectime(vagueRealTimeBean.getRows().get(0).getRectime());
+                    monitorBeanList2.get(monitorBeanList2.size() - currentIndex2).setTagid(vagueRealTimeBean.getRows().get(0).getTagid());
                     currentIndex2--;
                 }
             }
@@ -371,12 +418,23 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
                 mPresenter.loadVagueRealTime(Integer.parseInt(tagIds.get(tagIds.size() - currentIndex)), Integer.parseInt(did), pid);
             }
         }
-        addLegend(monitorBeanList2);
         if (currentIndex == 0) {
+//            if (noDataTagIds.size() > 0) {
+//                for (int i = 0; i < monitorBeanList2.size(); i++) {
+//                    for (String tagId : noDataTagIds) {
+//                        if (monitorBeanList2.get(i).getTagid().equals(tagId)) {
+//                            monitorBeanList2.remove(i);
+//                        }
+//                    }
+//                }
+//            }
+            addLegend(monitorBeanList2);
             adapter.setNewData(monitorBeanList);
             adapter2.setNewData(monitorBeanList);
             mv.setMonitorBeanList(monitorBeanList2);
             mv1.setMonitorBeanList(monitorBeanList2);
+            mv.setNoDataTagIds(noDataTagIds);
+            mv1.setNoDataTagIds(noDataTagIds);
             mv.setStation(station);
             mv1.setStation(station);
             emptyLayout.setErrorType(EmptyLayout.HIDE_LAYOUT);
@@ -384,41 +442,66 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
         }
     }
 
-    private void addLegend(List<TempMonitorBean>monitorBeanList2 ) {
+    private void addLegend(List<TempMonitorBean> monitorBeanList2) {
         if (monitorBeanList2.size() > 0) {
             llDec.removeAllViews();
             llDec1.removeAllViews();
             for (int i = 0; i < monitorBeanList2.size(); i++) {
-                Drawable drawableLeft = null;
-                int drawableId;
-                drawableId = getResources().getIdentifier("ic_line" + (i + 1), "drawable", context.getPackageName());
-                drawableLeft = getResources().getDrawable(drawableId);
-                TextView textView = new TextView(mFragmentComponent.getActivityContext());
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
-                textView.setGravity(Gravity.START);
-                textView.setTextSize(10);
-                textView.setLayoutParams(lp);
-                textView.setText(station + monitorBeanList2.get(i).getpName());
-                textView.setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
-                llDec.addView(textView);
-
-                TextView textView2 = new TextView(mFragmentComponent.getActivityContext());
-                textView2.setGravity(Gravity.START | Gravity.CENTER);
-                textView2.setTextSize(10);
-                textView2.setLayoutParams(lp);
-                textView2.setText(station + monitorBeanList2.get(i).getPosition());
-                textView2.setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
-                llDec1.addView(textView2);
-
+                addTextView(monitorBeanList2, i);
             }
-
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void addTextView(List<TempMonitorBean> monitorBeanList2, int i) {
+        Drawable drawableLeft = null;
+        int drawableId;
+        drawableId = getResources().getIdentifier("ic_line" + (i + 1), "drawable", context.getPackageName());
+        drawableLeft = getResources().getDrawable(drawableId);
+        TextView textView = new TextView(mFragmentComponent.getActivityContext());
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
+        textView.setGravity(Gravity.START);
+        textView.setTextSize(10);
+        textView.setLayoutParams(lp);
+        TextView textView2 = new TextView(mFragmentComponent.getActivityContext());
+        if (monitorBeanList2.size() <= 4) {
+            textView2.setGravity(Gravity.START | Gravity.CENTER);
+        } else {
+            textView2.setGravity(Gravity.START);
+        }
+        textView2.setTextSize(10);
+        textView2.setLayoutParams(lp);
+        textView.setText(station + monitorBeanList2.get(i).getpName());
+        textView2.setText(station + monitorBeanList2.get(i).getPosition());
+        textView.setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
+        llDec.addView(textView);
+        textView2.setCompoundDrawablesWithIntrinsicBounds(drawableLeft, null, null, null);
+        llDec1.addView(textView2);
     }
 
     public void setPid(int pid) {
         this.pid = pid;
         isFirst = true;
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getIsShow(Integer value) {
+        if (value == 0) {
+            emptyLayout.setErrorType(EmptyLayout.NODATA);
+            llContent.setVisibility(View.GONE);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getStation(String station) {
+        if (station != null && !station.equals("")) {
+            this.station = station;
+            mv.setStation(station);
+            mv1.setStation(station);
+            tvStation.setText(station + "柜体诊断信息");
+        }
+    }
+
 
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
@@ -429,6 +512,9 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
         switch (checkedId) {
             case R.id.rb_day:
                 xValues1.clear();
+                xValues11.clear();
+                noDataTagIds.clear();
+                yValues1.clear();
                 linechart.setVisibility(View.INVISIBLE);
                 pbLoading.setVisibility(View.VISIBLE);
                 endDate1 = DateUtils.getStringDate();
@@ -458,6 +544,9 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
                 break;
             case R.id.rb_week:
                 xValues1.clear();
+                xValues11.clear();
+                noDataTagIds.clear();
+                yValues1.clear();
                 linechart.setVisibility(View.INVISIBLE);
                 pbLoading.setVisibility(View.VISIBLE);
                 endDate1 = DateUtils.getStringDate();
@@ -488,6 +577,9 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
                 break;
             case R.id.rb_month:
                 xValues1.clear();
+                xValues11.clear();
+                noDataTagIds.clear();
+                yValues1.clear();
                 linechart.setVisibility(View.INVISIBLE);
                 pbLoading.setVisibility(View.VISIBLE);
                 endDate1 = DateUtils.getStringDateMiddle() + ":00:00";
@@ -612,6 +704,9 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
         switch (view.getId()) {
             case R.id.btn_pre1:
                 xValues1.clear();
+                xValues11.clear();
+                noDataTagIds.clear();
+                yValues1.clear();
                 linechart.setVisibility(View.INVISIBLE);
                 pbLoading.setVisibility(View.VISIBLE);
                 for (int i = 0; i < rgMax.getChildCount(); i++) {
@@ -652,6 +747,9 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
                     return;
                 }
                 xValues1.clear();
+                xValues11.clear();
+                noDataTagIds.clear();
+                yValues1.clear();
                 linechart.setVisibility(View.INVISIBLE);
                 pbLoading.setVisibility(View.VISIBLE);
                 for (int i = 0; i < rgMax.getChildCount(); i++) {
@@ -803,13 +901,20 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
                 xValues2.add(xValues);
                 for (int i = 0; i < keys.size(); i++) {
                     if (values.get(i).equals("-")) {
-                        datas.put(keys.get(i), "0");
+//                        datas.put(keys.get(i), "0");
+                        //采用新方式
+                        for (int j = i; j < values.size(); j++) {
+                            if (!values.get(j).equals("-")){
+                                datas.put(keys.get(i), values.get(j));
+                                break;
+                            }
+                        }
                     } else {
                         datas.put(keys.get(i), values.get(i));
                     }
                 }
+                dataSets2.add(datas);
             }
-            dataSets2.add(datas);
             vagueIndex--;
             if (vagueIndex > 0) {
                 assert mPresenter != null;
@@ -827,8 +932,6 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
                 }
                 mv1.setXValue(xValues2);
                 mv1.setDateType(type2);
-
-
             }
         } else {
             pbLoading1.setVisibility(View.GONE);
@@ -844,7 +947,7 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
     }
 
     public void setHisData(List<VagueHistoryGraphBean> hisData) {
-        if (hisData != null ) {
+        if (hisData != null) {
             LinkedHashMap<String, String> datas = new LinkedHashMap<>();
             if (hisData.size() > 0 && commenIndex > 0) {
                 String recTime = hisData.get(0).getRecTime();
@@ -854,20 +957,41 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
                 List<String> values = Arrays.asList(temp.split(","));
                 List<String> xValues = Arrays.asList(realRecTime.split(","));
                 xValues1.add(xValues);
+                xValues11.add(keys);
+                yValues1.add(values);
                 for (int i = 0; i < keys.size(); i++) {
                     if (values.get(i).equals("-")) {
-                        datas.put(keys.get(i), "0");
+//                        datas.put(keys.get(i), "0");
+                        //采用新方式
+                        for (int j = i; j < values.size(); j++) {
+                            if (!values.get(j).equals("-")){
+                                datas.put(keys.get(i), values.get(j));
+                                break;
+                            }
+                        }
                     } else {
                         datas.put(keys.get(i), values.get(i));
                     }
                 }
+                dataSets1.add(datas);
+
+            } else {
+                if (commenIndex > 0) {
+                    noDataTagIds.add(tagIds2.get(tagIds2.size() - commenIndex));
+                }
             }
-            dataSets1.add(datas);
             commenIndex--;
             if (commenIndex > 0) {
                 assert mPresenter != null;
                 mPresenter.loadMonitorHistoryGraph(pid, Integer.parseInt(tagIds2.get(tagIds2.size() - commenIndex)), startDate1, endDate1);
             } else {
+                //设置数据源
+                barChartWebView1.setDataSource(new TEChartWebView.DataSource() {
+                    @Override
+                    public GsonOption markChartOptions() {
+                        return getLineAndBarChartOption(monitorBeanList2, xValues11.get(mPresenter.compareList(xValues11)), yValues1);
+                    }
+                });
                 if (linechart.getData() != null) {
                     linechart.clearValues();
                 }
@@ -895,6 +1019,145 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
         btnNext1.setEnabled(true);
         btnPre1.setEnabled(true);
 
+    }
+
+    /**
+     * 根据https://mvnrepository.com/artifact/com.github.abel533/ECharts
+     * 结合http://echarts.baidu.com/examples.html官方实例
+     * 配置json数据
+     *
+     * @return
+     */
+    private GsonOption getLineAndBarChartOption(List<TempMonitorBean> monitorBeanList2, List xAxisValues, List<List<String>> yAxisValues) {
+        //http://echarts.baidu.com/echarts2/doc/example/mix1.html
+        GsonOption option = new GsonOption();
+        //title
+//        String text = "";
+//        String subText = "";
+//        option.title(text, subText);
+        //tooltip
+        Tooltip tooltip = new Tooltip();
+        tooltip.trigger(Trigger.axis);
+        option.tooltip(tooltip);
+        //toolbox
+        Toolbox toolbox = new Toolbox();
+        toolbox.show(false);
+        Map<String, Feature> feature = new HashMap<String, Feature>();
+        feature.put("mark", new Feature().show(true));
+        feature.put("dataView", new DataView().show(true).readOnly(false));
+        feature.put("magicType", new MagicType(Magic.line, Magic.bar).show(true));
+        feature.put("restore", new Restore().show(true));
+        feature.put("saveAsImage", new SaveAsImage().show(false));
+        toolbox.setFeature(feature);
+        option.toolbox(toolbox);
+        //calculable
+        option.setCalculable(true);
+        //legend
+        List<String> legends = new ArrayList<>();
+        for (int i = 0; i < monitorBeanList2.size(); i++) {
+            if (noDataTagIds.size() > 0) {
+                for (String tagId : noDataTagIds) {
+                    if (!monitorBeanList2.get(i).getTagid().equals(tagId)) {
+                        legends.add(monitorBeanList2.get(i).getpName());
+                    }
+                }
+            } else {
+                legends.add(monitorBeanList2.get(i).getpName());
+            }
+        }
+        String legend1 = "蒸发量";
+        String legend2 = "降水量";
+        String legend3 = "平均温度";
+        Legend legend = new Legend();
+//        legend.data(legend1, legend2, legend3);
+        TextStyle textStyle = new TextStyle();
+        textStyle.setColor("#008ACD");
+        textStyle.setFontSize(8);
+        legend.setTextStyle(textStyle);
+        legend.data(legends);
+        option.legend(legend);
+        //grid
+//            Grid grid = new Grid();
+//            grid.y2(80);
+//            option.grid(grid);
+        //xAxis
+        List<Axis> xAxis = new ArrayList<Axis>();
+        CategoryAxis categoryAxis = new CategoryAxis();
+        {
+            List xAxisValues1 = new ArrayList();
+            for (int i = 0; i < xAxisValues.size(); i++) {
+                if (type1 == 0) {
+                    xAxisValues1.add(((String) xAxisValues.get(i)).substring(((String) xAxisValues.get(i)).lastIndexOf("/") + 3));
+                } else {
+                    xAxisValues1.add(((String) xAxisValues.get(i)).substring(((String) xAxisValues.get(i)).indexOf("/") + 1));
+                }
+            }
+            categoryAxis.setData(xAxisValues1);
+        }
+        xAxis.add(categoryAxis);
+        option.xAxis(xAxis);
+        //yAxis
+        List<Axis> yAxis = new ArrayList<Axis>();
+//        {
+//            ValueAxis valueAxis = new ValueAxis();
+//            valueAxis.name("水量");
+//            valueAxis.axisLabel(new AxisLabel().formatter("{value} ml"));
+//            yAxis.add(valueAxis);
+//        }
+        {
+            ValueAxis valueAxis = new ValueAxis();
+//            valueAxis.name("温度°C");
+            valueAxis.axisLabel(new AxisLabel().formatter("{value}"));
+            yAxis.add(valueAxis);
+        }
+        option.yAxis(yAxis);
+        //series
+        List<Series> series = new ArrayList<Series>();
+        for (int i = 0; i < yAxisValues.size(); i++) {
+            Line bar = new Line();
+            bar.name(legends.get(i)).type(SeriesType.line).yAxisIndex(0).itemStyle().normal().lineStyle().setWidth(1);
+            List data = new ArrayList();
+            data.addAll(yAxisValues.get(i));
+            bar.setData(data);
+            series.add(bar);
+        }
+
+//        {
+//            Line bar = new Line();
+//            bar.name(legend1).type(SeriesType.line).yAxisIndex(0);
+//            List data = new ArrayList();
+//            double arrays[] = {2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3};
+//            for (double value : arrays){
+//                data.add(value);
+//            }
+//            bar.setData(data);
+//            series.add(bar);
+//        }
+//        {
+//            Line bar = new Line();
+//            bar.name(legend2).type(SeriesType.line).yAxisIndex(0);
+//            List data = new ArrayList();
+//            double arrays[] = {2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3};
+//            for (double value : arrays){
+//                data.add(value);
+//            }
+//            bar.setData(data);
+//            series.add(bar);
+//        }
+//        {
+//            Line line = new Line();
+//            line.name(legend3).type(SeriesType.line).yAxisIndex(0);
+//            List data = new ArrayList();
+//            double arrays[] = {2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2};
+//            for (double value : arrays){
+//                data.add(value);
+//            }
+//            line.setData(data);
+//            series.add(line);
+//        }
+        option.series(series);
+        //
+        return option;
     }
 
     @Override
@@ -949,6 +1212,31 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
         }
         if (mv1 != null) {
             mv1.reset();
+        }
+        if (barChartWebView1 != null) {
+            // 如果先调用destroy()方法，则会命中if (isDestroyed()) return;这一行代码，需要先onDetachedFromWindow()，再
+            // destory()
+            barChartWebView1.clearCache(true);
+            barChartWebView1.setWebChromeClient(null);
+            barChartWebView1.setWebViewClient(null);
+            ViewParent parent = barChartWebView1.getParent();
+            if (parent != null) {
+                ((ViewGroup) parent).removeView(barChartWebView1);
+            }
+
+            barChartWebView1.stopLoading();
+            // 退出时调用此方法，移除绑定的服务，否则某些特定系统会报错
+            barChartWebView1.getSettings().setJavaScriptEnabled(false);
+            barChartWebView1.clearHistory();
+            barChartWebView1.clearView();
+            barChartWebView1.removeAllViews();
+
+
+            try {
+                barChartWebView1.destroy();
+            } catch (Throwable ex) {
+
+            }
         }
     }
 
@@ -1013,5 +1301,25 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
             emptyLayout.setErrorType(EmptyLayout.NODATA);
         }
 
+    }
+
+    public void reFreshLine() {
+        ViewParent parent = barChartWebView1.getParent();
+        if (parent != null) {
+            ((ViewGroup) parent).removeView(barChartWebView1);
+        }
+
+        barChartWebView1.stopLoading();
+        barChartWebView1 = null;
+        barChartWebView1 = new TEChartWebView(context);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ll_barChartWebView1.getLayoutParams());
+        barChartWebView1.setLayoutParams(lp);
+        ll_barChartWebView1.addView(barChartWebView1);
+        barChartWebView1.setDataSource(new TEChartWebView.DataSource() {
+            @Override
+            public GsonOption markChartOptions() {
+                return getLineAndBarChartOption(monitorBeanList2, xValues11.get(mPresenter.compareList(xValues11)), yValues1);
+            }
+        });
     }
 }

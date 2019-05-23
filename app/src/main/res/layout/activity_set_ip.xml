@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_gravity="center"
     android:background="@drawable/bg_rounded_container2"
     android:orientation="vertical"
@@ -18,23 +18,37 @@
             android:id="@+id/tv_change"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="去设置域名"
+            android:text="域名/IP切换"
             android:textColor="@color/white"
-            android:textSize="@dimen/dimen_18sp" />
+            android:textSize="@dimen/sp_14" />
 
         <org.angmarch.views.NiceSpinner
             android:id="@+id/ip_spinner"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="@dimen/dimen_20dp"
             android:layout_gravity="end"
-            app:arrowTint="@color/black"
+            android:layout_weight="1"
             android:textSize="@dimen/sp_12"
+            app:arrowTint="@color/black"
             app:backgroundSelector="@drawable/spinner_selector"
-            app:textTint="@color/black"/>
+            app:textTint="@color/black" />
     </LinearLayout>
 
+    <EditText
+        android:id="@+id/et_domain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:inputType="textVisiblePassword"
+        android:hint="m2.eado.com.cn:8081"
+        android:imeOptions="actionDone"
+        android:visibility="gone"
+        android:singleLine="true"
+        android:textColor="@color/white" />
+
+
     <LinearLayout
+        android:id="@+id/ll_ip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -44,12 +58,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
             android:gravity="center"
+            android:hint="121"
+            android:inputType="number"
             android:imeOptions="actionNext"
             android:nextFocusForward="@+id/ip_edit_text2"
             android:singleLine="true"
-            android:hint="121"
             android:textColor="@color/white" />
 
         <TextView
@@ -65,12 +79,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
             android:gravity="center"
+            android:hint="201"
+            android:inputType="number"
             android:imeOptions="actionNext"
             android:nextFocusForward="@+id/ip_edit_text3"
             android:singleLine="true"
-            android:hint="201"
             android:textColor="@color/white" />
 
         <TextView
@@ -86,12 +100,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
             android:gravity="center"
+            android:hint="108"
+            android:inputType="number"
             android:imeOptions="actionNext"
             android:nextFocusForward="@+id/ip_edit_text4"
             android:singleLine="true"
-            android:hint="108"
             android:textColor="@color/white" />
 
         <TextView
@@ -107,12 +121,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
             android:gravity="center"
+            android:hint="27"
+            android:inputType="number"
             android:imeOptions="actionNext"
             android:nextFocusForward="@+id/ip_edit_text5"
             android:singleLine="true"
-            android:hint="27"
             android:textColor="@color/white" />
 
         <TextView
@@ -128,11 +142,11 @@
             android:layout_width="@dimen/dimen_50dp"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:hint="8008"
             android:imeActionLabel="完成"
             android:imeOptions="actionDone"
             android:inputType="number"
             android:singleLine="true"
-            android:hint="8008"
             android:textColor="@color/white" />
 
     </LinearLayout>

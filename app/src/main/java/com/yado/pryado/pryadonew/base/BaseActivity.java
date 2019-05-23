@@ -96,24 +96,6 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter>  extend
     public Context getContext() {
         return this;
     }
-//
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent ev) {
-//        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-//            if (isFastDoubleClick()) {
-//                return true;
-//            }
-//        }
-//        return super.dispatchTouchEvent(ev);
-//    }
-//
-//    private long lastClickTime;
-//    public boolean isFastDoubleClick() {
-//        long time = System.currentTimeMillis();
-//        long timeD = time - lastClickTime;
-//        lastClickTime = time;
-//        return timeD <= 1000;
-//    }
 
     @Override
     public void startActivityForResult(Intent intent, int requestCode, @Nullable Bundle options) {

@@ -343,7 +343,7 @@ public class AssessActivity extends BaseActivity<AssessPresent> implements Asses
 
         @Override
         public void run() {
-            while (!stop && danger_list != null) {
+            while (!stop && danger_list != null && danger_list.size() > 0) {
                 for (int i = 0; i < danger_list.size(); i++) {
                     if (stop) {
                         break;
@@ -351,7 +351,7 @@ public class AssessActivity extends BaseActivity<AssessPresent> implements Asses
                     SystemClock.sleep(50);
                     if (handler != null) {
                         Message message = Message.obtain();
-                        message.what = (int) ((float)i / (float) danger_list.size() * 100f);
+                        message.what = (int) ((float) i / (float) danger_list.size() * 100f);
                         message.arg1 = i;
 //                        handler.sendEmptyMessage((int) ((float)i / (float) danger_list.size() * 100f));
                         handler.sendMessage(message);

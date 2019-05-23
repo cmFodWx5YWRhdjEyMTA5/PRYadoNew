@@ -25,6 +25,7 @@ public class XYMarkerView extends MarkerView {
     private TextView tvContent1;
     private List<List<String>> xVals;
     private List<TempMonitorBean> monitorBeanList;
+    private List<String> noDataTagIds;
     private String station;
     private int type;
     private int dateType;
@@ -55,24 +56,25 @@ public class XYMarkerView extends MarkerView {
 //                isNodata = true;
 //            }
 //        }
-        for (int i = 0; i < xVals.size(); i++) {
-            if (e.getXIndex() < xVals.get(i).size()) {
-                if (!xVals.get(i).get(e.getXIndex()).equals("-")) {
-                    isNodata = false;
-                    break;
-                } else {
-                    isNodata = true;
-                }
-            }
-        }
-        if (isNodata) {
-            text = "此点没有数据！";
-            builder.append(text);
-        } else {
+//        for (int i = 0; i < xVals.size(); i++) {
+//            if (e.getXIndex() < xVals.get(i).size()) {
+//                if (!xVals.get(i).get(e.getXIndex()).equals("-")) {
+//                    isNodata = false;
+//                    break;
+//                } else {
+//                    isNodata = true;
+//                }
+//            }
+//        }
+//        if (isNodata) {
+//            text = "此点没有数据！";
+//            builder.append(text);
+//        } else {
             for (int i = 0; i < xVals.size(); i++) {
                 if (xVals.get(i).get(e.getXIndex()).length() > 1) {
                     if (dateType == 0) {
-                        text = xVals.get(i).get(e.getXIndex()).split(" ")[1];
+                        text = ((LineChart) chart).getXAxis().getValues().get(e.getXIndex());
+//                        text = xVals.get(i).get(e.getXIndex()).split(" ")[1];
                     } else {
                         text = xVals.get(i).get(e.getXIndex()).split(" ")[0];
                     }
@@ -175,21 +177,27 @@ public class XYMarkerView extends MarkerView {
                 for (int i = 0; i < dataSetList.size(); i++) {
                     String date = "";
                     LineDataSet dataSet = (LineDataSet) dataSetList.get(i);
-                    switch (dateType) {
-                        case 0:
-                            break;
-                        case 1:
-                        case 2:
-                            if (xVals.get(i).get(e.getXIndex()).length() > 1) {
-                                date = xVals.get(i).get(e.getXIndex()).split(" ")[1];
-                            } else {
-                                date = "-";
-                            }
-                            break;
-                        default:
-                            break;
-
+//                    switch (dateType) {
+//                        case 0:
+//                            break;
+//                        case 1:
+//                        case 2:
+//                            if (xVals.get(i).get(e.getXIndex()).length() > 1) {
+//                                date = xVals.get(i).get(e.getXIndex()).split(" ")[1];
+//                            } else {
+//                                date = "-";
+//                            }
+//                            break;
+//                        default:
+//                            break;
+//
+//                    }
+                    if (xVals.get(i).get(e.getXIndex()).length() > 1) {
+                        date = xVals.get(i).get(e.getXIndex()).split(" ")[1];
+                    } else {
+                        date = "-";
                     }
+
                     if (date.length() <= 8) {
                         if (date.contains(":")) {
                             String[] split = date.split(":");
@@ -202,14 +210,20 @@ public class XYMarkerView extends MarkerView {
                             date = date + "\n";
                         }
                     }
-                    float yValForXIndex = dataSet.getYValForXIndex(e.getXIndex());
-                    if (Float.isNaN(yValForXIndex) || yValForXIndex == 0) {
-                        if (Float.isNaN(yValForXIndex)) {
-                            temp = "此点无数据";
-                        } else if ( yValForXIndex == 0) {
-                            temp = "-";
-                        }
-                        date = "\n";
+                    if (i == dataSetList.size() - 1) {
+                        date = date.substring(0,date.length() - 1);
+                    }
+//                    float yValForXIndex = dataSet.getYValForXIndex(e.getXIndex());
+//                    if (Float.isNaN(yValForXIndex) || yValForXIndex == 0) {
+//                        if (Float.isNaN(yValForXIndex)) {
+//                            temp = "此点无数据";
+//                        } else if ( yValForXIndex == 0) {
+//                            temp = "-";
+//                        }
+//                        date = "\n";
+//                    }
+                    if (xVals.get(i).get(e.getXIndex()).equals("-")) {
+                        temp = "-";
                     } else {
                         temp = dataSet.getYValForXIndex(e.getXIndex()) + "";
                     }
@@ -226,26 +240,36 @@ public class XYMarkerView extends MarkerView {
                             }
                             interval = "      ";
                         }
-                        if (dateType > 0) {
-                            builder.append(station + pName + temp + interval + date);
+//                        if (dateType > 0) {
+//                            builder.append(station + pName + temp + interval + date);
+//
+//                        } else {
+//                            builder.append(station + pName + temp + "");
+//                        }
+                        builder.append(station + pName + temp + interval + date);
 
-                        } else {
-                            builder.append(station + pName + temp + "");
-                        }
                     } else {
                         if (type == 1) {
-                            pName = monitorBeanList.get(i).getpName() + ":";
+                            if (i < monitorBeanList.size()) {
+                                pName = monitorBeanList.get(i).getpName() + ":";
+                            }
+//                            pName = monitorBeanList.get(i).getpName() + ":";
                         } else {
-                            pName = monitorBeanList.get(i).getPosition() + ":";
+                            if (i < monitorBeanList.size()) {
+                                pName = monitorBeanList.get(i).getPosition() + ":";
+                            }
+//                            pName = monitorBeanList.get(i).getPosition() + ":";
                         }
 
-                        if (dateType > 0) {
-                            builder.append(station + pName + temp + "  " + date);
+//                        if (dateType > 0) {
+//                            builder.append(station + pName + temp + "  " + date);
+//
+//                        } else {
+//                            builder.append(station + pName + temp + "" + "\n");
+//
+//                        }
+                        builder.append(station + pName + temp + "  " + date);
 
-                        } else {
-                            builder.append(station + pName + temp + "" + "\n");
-
-                        }
                     }
 //                    switch (i) {
 //                        case 0:
@@ -309,7 +333,7 @@ public class XYMarkerView extends MarkerView {
 
                 }
             }
-        }
+//        }
 
         tvContent1.setText(builder.toString()); // set the entry-value as the display text
     }
@@ -332,6 +356,10 @@ public class XYMarkerView extends MarkerView {
 
     public void setMonitorBeanList(List<TempMonitorBean> monitorBeanList) {
         this.monitorBeanList = monitorBeanList;
+    }
+
+    public void setNoDataTagIds(List<String> noDataTagIds) {
+        this.noDataTagIds = noDataTagIds;
     }
 
     public void setStation(String station) {

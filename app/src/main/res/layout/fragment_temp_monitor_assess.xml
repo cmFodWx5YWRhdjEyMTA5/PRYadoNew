@@ -399,7 +399,25 @@
                     android:layout_height="200dp"
                     android:layout_below="@+id/ll_dec"
                     android:background="@color/gray1"
+                    android:visibility="visible"
                     />
+
+                <LinearLayout
+                    android:id="@+id/ll_barChartWebView1"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:layout_below="@+id/ll_dec">
+
+                </LinearLayout>
+
+                <!--<com.yado.pryado.pryadonew.ui.widgit.TEChartWebView-->
+                    <!--android:id="@+id/barChartWebView1"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="250dp"-->
+                    <!--android:layout_below="@+id/ll_dec">-->
+                <!--</com.yado.pryado.pryadonew.ui.widgit.TEChartWebView>-->
 
                 <ProgressBar
                     android:id="@+id/pb_loading"
@@ -617,7 +635,16 @@
                     android:layout_height="200dp"
                     android:padding="@dimen/dimen_5dp"
                     android:layout_below="@+id/ll_dec1"
-                    android:background="@color/gray1" />
+                    android:background="@color/gray1"
+                    android:visibility="visible"/>
+
+                <!--<com.yado.pryado.pryadonew.ui.widgit.TEChartWebView-->
+                    <!--android:id="@+id/barChartWebView2"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="200dp"-->
+                    <!--android:padding="@dimen/dimen_5dp"-->
+                    <!--android:layout_below="@+id/ll_dec1">-->
+                <!--</com.yado.pryado.pryadonew.ui.widgit.TEChartWebView>-->
 
                 <ProgressBar
                     android:id="@+id/pb_loading1"

@@ -164,7 +164,7 @@ public class AlertActivity extends BaseActivity<AlertPresent> implements AlertCo
         public void onClick(View v) {
 
             int position = (int) v.getTag();
-            if (position == 3 && tabLayout.getTabAt(position).isSelected() == true) {
+            if (position == 3 && tabLayout.getTabAt(position).isSelected()) {
                 isSure = false;
                 //时间选择器
                 if (pvTime == null) {

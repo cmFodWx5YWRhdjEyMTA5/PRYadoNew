@@ -23,6 +23,7 @@ public class Util {
             return null;
         }
     }
+
     public static String getVersionName(Context context){
         try {
             return GetVersion(context).versionName;

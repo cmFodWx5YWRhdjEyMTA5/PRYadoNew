@@ -71,7 +71,7 @@ public class MyApplication extends Application {
             @Override
             public void run() {
                 SDKInitializer.initialize(mInstance);
-//                initTinker();
+                initTinker();
             }
         }, 3000);
         initOnWorkThread();

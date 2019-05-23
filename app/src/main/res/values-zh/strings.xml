@@ -117,7 +117,7 @@
     <string name="restoring_setting">正在恢复默认设置，请稍后…</string>
     <string name="alarm_time">报警时间:</string>
     <string name="restore_time">恢复时间:</string>
-    <string name="change_ip">点击更改IP地址</string>
+    <string name="change_ip">服务器设置</string>
     <string name="ip_error">您输入的IP地址有误， 请重新输入！</string>
     <string name="login">登&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;录</string>
     <string name="update_time">更新时间：</string>

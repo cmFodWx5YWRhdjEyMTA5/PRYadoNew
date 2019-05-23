@@ -102,26 +102,30 @@ public class AccountInfoFragment extends BaseFragment<DeviceDetailPresent> imple
         scrollView.setCurrentScrollableContainer(this);
         mBean = new WeakReference<>((DeviceDetailBean2)getArguments().getParcelable("DeviceDetailBean"));
         emptyLayout.setErrorType(EmptyLayout.NETWORK_LOADING);
+        setView();
+        initRecyclerView();
+        assert mPresenter != null;
+        mPresenter.getBugList(mBean.get().getDID() + "");
+
+    }
+
+    private void setView() {
         if (mBean != null) {
             tvDeviceCode.setText("设备编码  :  " + mBean.get().getDeviceCode());
             tvDeviceModel.setText("设备型号  :  " + mBean.get().getDeviceModel());
-            tvDateOfProduction.setText("生产日期  :  " + handle(mBean.get().getBuyTime()));
+            tvDateOfProduction.setText("生产日期  :  " + mPresenter.handle(mBean.get().getBuyTime()));
             tvDeviceName.setText("设备名称  :  " + mBean.get().getDeviceName());
             tvDeviceProducer.setText("设备厂家  :  " + mBean.get().getMFactory());
-            tvDateOfOperation.setText("投运日期  :  " + handle(mBean.get().getUseDate()));
+            tvDateOfOperation.setText("投运日期  :  " + mPresenter.handle(mBean.get().getUseDate()));
             tvInstalledPlace.setText("安装地点:  " + mBean.get().getInstallAddr());
             tvOrganization.setText("所属单位  :  " + mBean.get().getCompany());
 
-            tvLastDateOfMaintenance.setText("最后维护日期  :  " + handle(mBean.get().getLastMtcDate()));
+            tvLastDateOfMaintenance.setText("最后维护日期  :  " + mPresenter.handle(mBean.get().getLastMtcDate()));
             tvMaintainer.setText("维护人  :  " + mBean.get().getLastMtcPerson());
             emptyLayout.setErrorType(EmptyLayout.HIDE_LAYOUT);
             emptyLayout.setVisibility(View.GONE);
             ll_content.setVisibility(View.VISIBLE);
         }
-        initRecyclerView();
-        assert mPresenter != null;
-        mPresenter.getBugList(mBean.get().getDID() + "");
-
     }
 
     private void initRecyclerView() {
@@ -144,17 +148,7 @@ public class AccountInfoFragment extends BaseFragment<DeviceDetailPresent> imple
         });
     }
 
-    private String handle(String useDate) {
-        String result = "";
-        try {
-            result = useDate.substring(0, 10);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
 
-        }
-        return result;
-    }
 
     public void setBuglist(BugList bugList) {
         List<BugList.ListmapBean> danger_list = bugList.getListmap();

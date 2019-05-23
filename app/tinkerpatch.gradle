@@ -4,9 +4,9 @@ apply plugin: 'tinkerpatch-support'
  * TODO: 请按自己的需求修改为适应自己工程的参数
  */
 def bakPath = file("${buildDir}/bakApk/")
-def baseInfo = "app-1.0.0-0313-21-31-50"// 注意！！！  改成对应的路径
+def baseInfo = "app-1.0.18-0513-10-47-38"// 注意！！！  改成对应的路径
 def variantName = "release"
-def versionName = "1.0.18_20190313"
+def versionName = "1.0.18-20190513"
 
 static def releaseTime() {
     return new Date().format("yyyyMMdd", TimeZone.getTimeZone(/*"UTC"*/"Asia/Shanghai"))
@@ -28,10 +28,10 @@ tinkerpatchSupport {
     appKey = "cf248ce2c61968c0"// 注意！！！  需要修改成你的appkey
 
     /** 注意: 若发布新的全量包, appVersion一定要更新 **/
-    appVersion = "1.0.0"
+    appVersion = "1.0.18"
 
     def pathPrefix = "${bakPath}/${baseInfo}/${variantName}/"
-    def name = "综合运维巡检APP-V${versionName}_${variantName}"
+    def name = "综合运维巡检APP-V${versionName}-${variantName}"
     def name1 = "${project.name}-${variantName}"
 
     baseApkFile = "${pathPrefix}/综合运维巡检APP-V${versionName}_${variantName}.apk"

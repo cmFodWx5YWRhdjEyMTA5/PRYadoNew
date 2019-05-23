@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -40,11 +42,14 @@ import com.yado.pryado.pryadonew.util.SharedPrefUtil;
 
 import org.angmarch.views.NiceSpinner;
 
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import io.reactivex.functions.Consumer;
@@ -83,16 +88,18 @@ public class LoginActivity extends BaseActivity<LoginPresent> implements LoginCo
     private WeakReference<String[]> mItems;
     private List<String> mIps;
     private View dialogView;
-    private TextView tv_point1;
-    private TextView tv_point2;
-    private TextView tv_point3;
-    private TextView tv_point4;
+//    private TextView tv_point1;
+//    private TextView tv_point2;
+//    private TextView tv_point3;
+//    private TextView tv_point4;
     private TextView tv_change;
     private EditText et_ip1;
     private EditText et_ip2;
     private EditText et_ip3;
     private EditText et_ip4;
     private EditText et_ip5;
+    private EditText et_domain;
+    private LinearLayout ll_ip;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -220,7 +227,6 @@ public class LoginActivity extends BaseActivity<LoginPresent> implements LoginCo
                     @Override
                     public void onClick(View v) {
 
-
                         String ip;
                         if (isIP) {
                             if (TextUtils.isEmpty(et_ip1.getText().toString().trim()) || TextUtils.isEmpty(et_ip2.getText().toString().trim()) || TextUtils.isEmpty(et_ip3.getText().toString().trim())
@@ -231,11 +237,17 @@ public class LoginActivity extends BaseActivity<LoginPresent> implements LoginCo
                             ip = "http://" + et_ip1.getText().toString().trim() + "." + et_ip2.getText().toString().trim() + "." + et_ip3.getText().toString().trim()
                                     + "." + et_ip4.getText().toString().trim() + ":" + et_ip5.getText().toString().trim();
                         } else {
-                            if (TextUtils.isEmpty(et_ip1.getText().toString().trim())) {
+                            if (TextUtils.isEmpty(et_domain.getText().toString().trim())) {
                                 ToastUtils.showShort(R.string.ip_error);
                                 return;
                             }
-                            ip = "http://" + et_ip1.getText().toString().trim();
+
+                            ip = "http://" + et_domain.getText().toString().trim();
+                            if (!Patterns.WEB_URL.matcher(ip).matches()) {
+                                ToastUtils.showShort(R.string.ip_error);
+                                return;
+                            }
+
                         }
 
                         SharedPrefUtil.getInstance(MyApplication.getInstance()).saveObject(MyConstants.BASE_URL, ip);
@@ -261,46 +273,50 @@ public class LoginActivity extends BaseActivity<LoginPresent> implements LoginCo
                         title = new WeakReference<>("设置域名");
                         dialogBuilder.withTitle(title.get());
                     }
-                    et_ip1.setHint("yw.eado.com.cn");
-                    et_ip2.setVisibility(View.GONE);
-                    et_ip3.setVisibility(View.GONE);
-                    et_ip4.setVisibility(View.GONE);
-                    et_ip5.setVisibility(View.GONE);
-                    tv_point1.setVisibility(View.GONE);
-                    tv_point2.setVisibility(View.GONE);
-                    tv_point3.setVisibility(View.GONE);
-                    tv_point4.setVisibility(View.GONE);
-                    et_ip1.setNextFocusForwardId(et_ip5.getId());
-                    et_ip1.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                    et_ip2.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                    et_ip3.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                    et_ip4.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                    tv_change.setText("去设置IP");
+                    et_domain.setVisibility(View.VISIBLE);
+                    ll_ip.setVisibility(View.GONE);
+                    et_domain.setHint("yw.eado.com.cn");
+//                    et_ip2.setVisibility(View.GONE);
+//                    et_ip3.setVisibility(View.GONE);
+//                    et_ip4.setVisibility(View.GONE);
+//                    et_ip5.setVisibility(View.GONE);
+//                    tv_point1.setVisibility(View.GONE);
+//                    tv_point2.setVisibility(View.GONE);
+//                    tv_point3.setVisibility(View.GONE);
+//                    tv_point4.setVisibility(View.GONE);
+//                    et_ip1.setNextFocusForwardId(et_ip5.getId());
+//                    et_ip1.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+//                    et_ip2.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+//                    et_ip3.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+//                    et_ip4.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+//                    tv_change.setText("去设置IP");
 
                 } else {
                     if (dialogBuilder != null) {
                         title = new WeakReference<>("设置端口IP");
                         dialogBuilder.withTitle(title.get());
                     }
-                    tv_change.setText("去设置域名");
+//                    tv_change.setText("去设置域名");
+                    ll_ip.setVisibility(View.VISIBLE);
+                    et_domain.setVisibility(View.GONE);
                     et_ip1.setHint("121");
                     et_ip2.setHint("201");
                     et_ip3.setHint("108");
                     et_ip4.setHint("27");
                     et_ip5.setHint("8008");
-                    et_ip2.setVisibility(View.VISIBLE);
-                    et_ip3.setVisibility(View.VISIBLE);
-                    et_ip4.setVisibility(View.VISIBLE);
-                    et_ip5.setVisibility(View.VISIBLE);
-                    tv_point1.setVisibility(View.VISIBLE);
-                    tv_point2.setVisibility(View.VISIBLE);
-                    tv_point3.setVisibility(View.VISIBLE);
-                    tv_point4.setVisibility(View.VISIBLE);
-                    et_ip1.setNextFocusForwardId(et_ip2.getId());
-                    et_ip1.setInputType(InputType.TYPE_CLASS_NUMBER);
-                    et_ip2.setInputType(InputType.TYPE_CLASS_NUMBER);
-                    et_ip3.setInputType(InputType.TYPE_CLASS_NUMBER);
-                    et_ip4.setInputType(InputType.TYPE_CLASS_NUMBER);
+//                    et_ip2.setVisibility(View.VISIBLE);
+//                    et_ip3.setVisibility(View.VISIBLE);
+//                    et_ip4.setVisibility(View.VISIBLE);
+//                    et_ip5.setVisibility(View.VISIBLE);
+//                    tv_point1.setVisibility(View.VISIBLE);
+//                    tv_point2.setVisibility(View.VISIBLE);
+//                    tv_point3.setVisibility(View.VISIBLE);
+//                    tv_point4.setVisibility(View.VISIBLE);
+//                    et_ip1.setNextFocusForwardId(et_ip2.getId());
+//                    et_ip1.setInputType(InputType.TYPE_CLASS_NUMBER);
+//                    et_ip2.setInputType(InputType.TYPE_CLASS_NUMBER);
+//                    et_ip3.setInputType(InputType.TYPE_CLASS_NUMBER);
+//                    et_ip4.setInputType(InputType.TYPE_CLASS_NUMBER);
                 }
                 isIP = !isIP;
             }
@@ -321,7 +337,7 @@ public class LoginActivity extends BaseActivity<LoginPresent> implements LoginCo
                             et_ip5.setText(split[3].split(":")[1]);
                         }
                     } else {
-                        et_ip1.setText(ip);
+                        et_domain.setText(ip);
 
                     }
                 }
@@ -336,19 +352,22 @@ public class LoginActivity extends BaseActivity<LoginPresent> implements LoginCo
     private void initDialogView() {
         if (dialogView == null) {
             dialogView = LayoutInflater.from(this).inflate(R.layout.activity_set_ip, null);
-            tv_point1 = dialogView.findViewById(R.id.tv_point1);
-            tv_point2 = dialogView.findViewById(R.id.tv_point2);
-            tv_point3 = dialogView.findViewById(R.id.tv_point3);
-            tv_point4 = dialogView.findViewById(R.id.tv_point4);
+//            tv_point1 = dialogView.findViewById(R.id.tv_point1);
+//            tv_point2 = dialogView.findViewById(R.id.tv_point2);
+//            tv_point3 = dialogView.findViewById(R.id.tv_point3);
+//            tv_point4 = dialogView.findViewById(R.id.tv_point4);
             tv_change = dialogView.findViewById(R.id.tv_change);
             et_ip1 = dialogView.findViewById(R.id.ip_edit_text1);
             et_ip2 = dialogView.findViewById(R.id.ip_edit_text2);
             et_ip3 = dialogView.findViewById(R.id.ip_edit_text3);
             et_ip4 = dialogView.findViewById(R.id.ip_edit_text4);
             et_ip5 = dialogView.findViewById(R.id.ip_edit_text5);
+            et_domain = dialogView.findViewById(R.id.et_domain);
+            ll_ip = dialogView.findViewById(R.id.ll_ip);
             ip_spinner = dialogView.findViewById(R.id.ip_spinner);
             String ip = SharedPrefUtil.getInstance(MyApplication.getInstance()).getT(MyConstants.BASE_URL, "");
             if (ip.length() > 0) {
+                et_domain.setText(ip.substring(7));
                 String[] split =ip.substring(7).split("\\.");
                 if (split.length >= 4) {
                     et_ip1.setText(split[0]);
@@ -360,19 +379,19 @@ public class LoginActivity extends BaseActivity<LoginPresent> implements LoginCo
             }
 
         }
-        if (isIP) {
-            tv_change.setText("设置域名");
-            et_ip1.setInputType(InputType.TYPE_CLASS_NUMBER);
-            et_ip2.setInputType(InputType.TYPE_CLASS_NUMBER);
-            et_ip3.setInputType(InputType.TYPE_CLASS_NUMBER);
-            et_ip4.setInputType(InputType.TYPE_CLASS_NUMBER);
-        } else {
-            tv_change.setText("设置IP");
-            et_ip1.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-            et_ip2.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-            et_ip3.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-            et_ip4.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-        }
+//        if (isIP) {
+//            tv_change.setText("设置域名");
+//            et_ip1.setInputType(InputType.TYPE_CLASS_NUMBER);
+//            et_ip2.setInputType(InputType.TYPE_CLASS_NUMBER);
+//            et_ip3.setInputType(InputType.TYPE_CLASS_NUMBER);
+//            et_ip4.setInputType(InputType.TYPE_CLASS_NUMBER);
+//        } else {
+//            tv_change.setText("设置IP");
+//            et_ip1.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+//            et_ip2.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+//            et_ip3.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+//            et_ip4.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+//        }
         ViewGroup.MarginLayoutParams layoutParams = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(SizeUtils.dp2px(15), SizeUtils.dp2px(10), SizeUtils.dp2px(15), 0);
         dialogView.setLayoutParams(layoutParams);

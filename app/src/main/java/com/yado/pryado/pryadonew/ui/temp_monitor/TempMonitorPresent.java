@@ -4,6 +4,25 @@ import android.graphics.Matrix;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.github.abel533.echarts.Event;
+import com.github.abel533.echarts.Legend;
+import com.github.abel533.echarts.Toolbox;
+import com.github.abel533.echarts.Tooltip;
+import com.github.abel533.echarts.axis.Axis;
+import com.github.abel533.echarts.axis.AxisLabel;
+import com.github.abel533.echarts.axis.CategoryAxis;
+import com.github.abel533.echarts.axis.ValueAxis;
+import com.github.abel533.echarts.code.Magic;
+import com.github.abel533.echarts.code.SeriesType;
+import com.github.abel533.echarts.code.Trigger;
+import com.github.abel533.echarts.feature.DataView;
+import com.github.abel533.echarts.feature.Feature;
+import com.github.abel533.echarts.feature.MagicType;
+import com.github.abel533.echarts.feature.Restore;
+import com.github.abel533.echarts.feature.SaveAsImage;
+import com.github.abel533.echarts.json.GsonOption;
+import com.github.abel533.echarts.series.Line;
+import com.github.abel533.echarts.series.Series;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
@@ -25,8 +44,11 @@ import com.yado.pryado.pryadonew.bean.VagueRealTimeBean;
 import com.yado.pryado.pryadonew.net.INetListener;
 import com.yado.pryado.pryadonew.ui.widgit.EmptyLayout;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,6 +115,7 @@ public class TempMonitorPresent extends BasePresenter<TempMonitorContract.View, 
             public void success(Object o) {
                 List<VagueHistoryGraphBean> vagueHistoryGraphBean = (List<VagueHistoryGraphBean>) o;
                 ((TempMonitorAssessFragment) mView).setHisData(vagueHistoryGraphBean);
+
             }
 
             @Override
@@ -204,6 +227,7 @@ public class TempMonitorPresent extends BasePresenter<TempMonitorContract.View, 
             public void success(Object o) {
                 TypeBean typeBean = (TypeBean) o;
                 if (typeBean.getHymannew() != null && typeBean.getHymannew().size() > 0) {
+                    ((TempMonitorPlanFragment) mView).setTypeBean(typeBean);
                     ((TempMonitorPlanFragment) mView).setShowOrHide(Integer.parseInt(typeBean.getHymannew().get(0).getTotal2()) > 0);
                 }
             }
@@ -289,7 +313,7 @@ public class TempMonitorPresent extends BasePresenter<TempMonitorContract.View, 
     public LineData transform_data(List<LinkedHashMap<String, String>> hisData, int type, int[] colors) {
 
 //        ArrayList<String> xVals = new ArrayList<>();
-        ArrayList<ArrayList<String>> xVal = new ArrayList<>();
+        List<List<String>> xVal = new ArrayList<>();
 
 //        ArrayList<Entry> yVals = new ArrayList<>();//第一条折线；
 //        ArrayList<Entry> yVals2 = new ArrayList<>();//第2条折线；
@@ -376,13 +400,15 @@ public class TempMonitorPresent extends BasePresenter<TempMonitorContract.View, 
 //        }
         setParm(dataSets, colors);
         if (xVal.size() > 0) {
-            return new LineData(xVal.get(compareList(xVal)), dataSets);
+            List<String> xvals = xVal.get(compareList(xVal));
+            return new LineData(xvals, dataSets);
         } else {
             return null;
         }
     }
 
-    private int compareList(ArrayList<ArrayList<String>> lists) {
+
+    public int compareList(List<List<String>> lists) {
         int k = 0;
         int maxIndex = lists.get(0).size();//定义最大值为该数组的第一个数
         for (int i = 0; i < lists.size(); i++) {

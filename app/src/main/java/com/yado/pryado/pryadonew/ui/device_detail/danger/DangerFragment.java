@@ -528,8 +528,10 @@ public class DangerFragment extends BaseFragment<DeviceDetailPresent> implements
     }
 
     private void setText(LatLng latLng) {
-        latitude.setText(String.format("纬度：%.4f", latLng.latitude));
-        longitude.setText(String.format("经度：%.4f", latLng.longitude));
+        if (latLng != null) {
+            latitude.setText(String.format("纬度：%.4f", latLng.latitude));
+            longitude.setText(String.format("经度：%.4f", latLng.longitude));
+        }
     }
 
     public void setPostBugResult(PostBugResult postBugResult) {
