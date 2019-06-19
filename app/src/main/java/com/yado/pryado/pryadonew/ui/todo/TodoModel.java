@@ -38,6 +38,9 @@ public class TodoModel extends BaseModel implements TodoContract.Model {
         prApi = PRRetrofit.getInstance(MyApplication.getInstance()).getApi();
     }
 
+    /**
+     * 获取代办
+     */
     @Override
     public void getAwaitOrder(String orderType, EmptyLayout emptyLayout, final INetListener<Object, Throwable, Object> listener) {
         Observable

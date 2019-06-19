@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -24,6 +25,7 @@ import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
@@ -35,43 +37,28 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.alibaba.android.arouter.launcher.ARouter;
-import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.yado.pryado.pryadonew.ChangeOrientationHandler;
-import com.yado.pryado.pryadonew.MyConstants;
-import com.yado.pryado.pryadonew.OrientationSensorListener;
 import com.yado.pryado.pryadonew.R;
 import com.yado.pryado.pryadonew.base.BaseActivity;
 import com.yado.pryado.pryadonew.base.BaseFragment;
-import com.yado.pryado.pryadonew.bean.DeviceInfoListBean;
 import com.yado.pryado.pryadonew.bean.NonIntrusiveEvent;
 import com.yado.pryado.pryadonew.bean.RoomListBean;
-import com.yado.pryado.pryadonew.ui.adapter.DeviceInfoListAdapter;
 import com.yado.pryado.pryadonew.ui.adapter.MyPagerAdapter;
 import com.yado.pryado.pryadonew.ui.adapter.RoomsSpinnerAdapter;
-import com.yado.pryado.pryadonew.ui.widgit.DragFloatActionButton;
 import com.yado.pryado.pryadonew.ui.widgit.DragView;
 import com.yado.pryado.pryadonew.ui.widgit.PopupWindow.CommonPopupWindow;
 import com.yado.pryado.pryadonew.ui.widgit.ZoomOutPageTransformer;
 import com.yado.pryado.pryadonew.util.ScreenUtil;
-import com.yado.pryado.pryadonew.util.Util;
 
-import org.angmarch.views.NiceSpinner;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.lang.ref.WeakReference;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 @Route(path = "/ui/temp_monitor/TempMonitorActivity")
@@ -79,8 +66,6 @@ public class TempMonitorActivity extends BaseActivity<TempMonitorPresent> implem
 
     @BindView(R.id.name)
     TextView name;
-//    @BindView(R.id.pd_name_spinner)
-//    NiceSpinner pdNameSpinner;
     @BindView(R.id.tabLayout)
     TabLayout tabLayout;
     @BindView(R.id.viewPager)
@@ -89,7 +74,6 @@ public class TempMonitorActivity extends BaseActivity<TempMonitorPresent> implem
     ViewGroup title;
     @BindView(R.id.vs_spinner)
     ViewStub vsSpinner;
-
 
 
     private List<RoomListBean.RowsEntity> rooms;
@@ -117,11 +101,19 @@ public class TempMonitorActivity extends BaseActivity<TempMonitorPresent> implem
     @Inject
     RoomsSpinnerAdapter adapter;
 
+    /**
+     * 加载布局
+     *
+     * @return
+     */
     @Override
     public int inflateContentView() {
         return R.layout.activity_temp_monitor;
     }
 
+    /**
+     * 初始化数据
+     */
     @Override
     protected void initData() {
         llRooms = vsSpinner.inflate().findViewById(R.id.ll_rooms);
@@ -135,6 +127,9 @@ public class TempMonitorActivity extends BaseActivity<TempMonitorPresent> implem
         initListener();
     }
 
+    /**
+     * 初始化可拖拽View
+     */
     private void initDragView() {
         circleImageView = new ImageView(mContext);
         circleImageView.setScaleType(ImageView.ScaleType.CENTER);
@@ -171,6 +166,9 @@ public class TempMonitorActivity extends BaseActivity<TempMonitorPresent> implem
         });
     }
 
+    /**
+     * 初始化监听事件
+     */
     private void initListener() {
         llRooms.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,11 +188,22 @@ public class TempMonitorActivity extends BaseActivity<TempMonitorPresent> implem
 
     }
 
+    /**
+     * 获取数据
+     *
+     * @param pid
+     */
     private void getByPid(int pid) {
         reGet(fragmentPlan, pid);
         reGet(fragmentAssess, pid);
     }
 
+    /**
+     * 重新获取
+     *
+     * @param fragment
+     * @param pid
+     */
     private void reGet(BaseFragment fragment, int pid) {
         if (fragment != null && fragment instanceof TempMonitorPlanFragment) {
             ((TempMonitorPlanFragment) fragment).refreshWebView(pid);
@@ -203,6 +212,9 @@ public class TempMonitorActivity extends BaseActivity<TempMonitorPresent> implem
         }
     }
 
+    /**
+     * 初始化Fragment
+     */
     private void initFragments() {
         fragments = new ArrayList<>();
         fragmentPlan = TempMonitorPlanFragment.newInstance(rooms.get(0).getPID());
@@ -220,6 +232,11 @@ public class TempMonitorActivity extends BaseActivity<TempMonitorPresent> implem
         tabLayout.setupWithViewPager(viewPager);
     }
 
+    /**
+     * 设置站室列表
+     *
+     * @param rooms
+     */
     public void setRooms(List<RoomListBean.RowsEntity> rooms) {
         if (rooms.size() > 0) {
             this.rooms = rooms;
@@ -238,7 +255,7 @@ public class TempMonitorActivity extends BaseActivity<TempMonitorPresent> implem
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getMessage(NonIntrusiveEvent event) {
-        String did =  event.getDid();
+        String did = event.getDid();
         int isClick = event.getIsClick();//是否点击
         String station = event.getStation();//站室名
         if (isClick == 1) {
@@ -263,6 +280,7 @@ public class TempMonitorActivity extends BaseActivity<TempMonitorPresent> implem
             if (fragmentPlan != null) {
                 fragmentPlan.isHide(true);
             }
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏
 
         } else if (ori == Configuration.ORIENTATION_PORTRAIT) {
             //竖屏
@@ -271,8 +289,9 @@ public class TempMonitorActivity extends BaseActivity<TempMonitorPresent> implem
             if (fragmentPlan != null) {
                 fragmentPlan.isHide(false);
             }
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); //显示状态栏
         }
-        if(fragmentAssess != null) {
+        if (fragmentAssess != null) {
             fragmentAssess.reFreshLine();
         }
         dragView.getRootLayout().removeView(dragView.getDragView());
@@ -297,6 +316,9 @@ public class TempMonitorActivity extends BaseActivity<TempMonitorPresent> implem
         });
     }
 
+    /**
+     * 初始化设备列表弹窗
+     */
     private void initPopWindow() {
         if (popupWindow == null) {
             popupWindow = new CommonPopupWindow.Builder(this)
@@ -320,6 +342,9 @@ public class TempMonitorActivity extends BaseActivity<TempMonitorPresent> implem
 
     }
 
+    /**
+     * 初始化弹窗View
+     */
     private void initPopView() {
         popView = LayoutInflater.from(mContext).inflate(R.layout.popup_item2, null);
         rv_rooms = popView.findViewById(R.id.rv_devices);
@@ -345,16 +370,29 @@ public class TempMonitorActivity extends BaseActivity<TempMonitorPresent> implem
         });
     }
 
+    /**
+     * 注入View
+     */
     @Override
     protected void initInjector() {
         mActivityComponent.inject(this);
     }
 
+    /**
+     * 是否需要注册EventBus
+     *
+     * @return
+     */
     @Override
     protected boolean isRegisterEventBus() {
         return true;
     }
 
+    /**
+     * 是否需要注入Arouter
+     *
+     * @return
+     */
     @Override
     protected boolean isNeedInject() {
         return false;

@@ -1,5 +1,6 @@
 package com.yado.pryado.pryadonew;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -22,15 +23,29 @@ import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.tinker.entry.ApplicationLike;
 import com.tinkerpatch.sdk.TinkerPatch;
 import com.tinkerpatch.sdk.loader.TinkerPatchApplicationLike;
+import com.yado.pryado.pryadonew.bean.RoomListBean;
 import com.yado.pryado.pryadonew.di.component.ApplicationComponent;
 import com.yado.pryado.pryadonew.di.component.DaggerApplicationComponent;
 import com.yado.pryado.pryadonew.di.module.ApplicationModule;
 import com.yado.pryado.pryadonew.greendao.DaoMaster;
 import com.yado.pryado.pryadonew.greendao.DaoSession;
+import com.yado.pryado.pryadonew.net.PRRetrofit;
+import com.yado.pryado.pryadonew.subscriber.PRSubscriber;
+import com.yado.pryado.pryadonew.util.SharedPrefUtil;
+import com.yado.pryado.pryadonew.util.UserLogoutUtil;
 
 
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class MyApplication extends Application {
     private static Context context;
@@ -48,6 +63,7 @@ public class MyApplication extends Application {
     private boolean isBackground;
     private ApplicationLike tinkerApplicationLike;
 
+    private List<Activity> activityList = new LinkedList<Activity>();
 
     @Override
     public void onCreate() {
@@ -57,10 +73,7 @@ public class MyApplication extends Application {
         initApplicationComponent();
         mInstance = this;
         initArouter();
-        if (LeakCanary.isInAnalyzerProcess(getInstance())) {
-            return;
-        }
-        refWatcher = LeakCanary.install(getInstance());
+        CrashHandler.getInstance().init(this);
         activityManager = ActivityManager.getInstance();
         Utils.init(mInstance);
         //配置ToastUtils的相关的属性
@@ -76,6 +89,11 @@ public class MyApplication extends Application {
         }, 3000);
         initOnWorkThread();
         registerActivityLifecycleCallbacks();
+        if (LeakCanary.isInAnalyzerProcess(getInstance())) {
+            return;
+        }
+        refWatcher = LeakCanary.install(getInstance());
+
 
     }
 
@@ -98,7 +116,7 @@ public class MyApplication extends Application {
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle bundle) {
-
+                addActivity(activity);
             }
 
             @Override
@@ -127,11 +145,33 @@ public class MyApplication extends Application {
 
             }
 
+            @SuppressLint("CheckResult")
             @Override
             public void onActivityDestroyed(Activity activity) {
-
+//                if(refCount == 0) {
+//                    UserLogoutUtil.logout(true);
+//                }
+                deleteActivity(activity);
+                Log.e("onActivityDestroyed", refCount + "");
             }
         });
+    }
+
+    public void deleteActivity(Activity activity) {
+        activityList.remove(activity);
+    }
+
+    //添加Activity到容器中
+    public void addActivity(Activity activity)  {
+        activityList.add(activity);
+    }
+
+    //遍历所有Activity并finish
+    public void exit() {
+        for(Activity activity:activityList) {
+            activity.finish();
+        }
+        activityList.clear();
     }
 
     public static RefWatcher getRefWatcher() {

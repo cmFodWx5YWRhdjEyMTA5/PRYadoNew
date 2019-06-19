@@ -187,10 +187,14 @@ public class MainActivity extends BaseActivity<MainPresent> implements MainContr
         super.onCreate(savedInstanceState);
         requestPermissions();
         startService(new Intent(mContext, PollingService.class));
+        //实例化角标
         badgeView1 = new QBadgeView(mActivityComponent.getActivityContext());
         badgeView2 = new QBadgeView(mActivityComponent.getActivityContext());
     }
 
+    /**
+     * 检查权限
+     */
     @SuppressLint("CheckResult")
     private void requestPermissions() {
         RxPermissions rxPermission = new RxPermissions((Activity) mContext);
@@ -216,6 +220,10 @@ public class MainActivity extends BaseActivity<MainPresent> implements MainContr
                 });
     }
 
+    /**
+     * 加载布局
+     * @return
+     */
     @Override
     public int inflateContentView() {
         return R.layout.activity_main;
@@ -242,6 +250,9 @@ public class MainActivity extends BaseActivity<MainPresent> implements MainContr
 
     }
 
+    /**
+     * 初始化数据
+     */
     @Override
     protected void initData() {
         //得到头布局
@@ -261,6 +272,9 @@ public class MainActivity extends BaseActivity<MainPresent> implements MainContr
         initDownload();
     }
 
+    /**
+     * 初始化 文件下载工具类
+     */
     private void initDownload() {
         DownloadUtils.getInstance().initDownload(EadoUrl.DEFAULT_SAVE_FILE_PATH);
         DownloadUtils.getInstance().setListener(new DownloadListener() {
@@ -275,8 +289,6 @@ public class MainActivity extends BaseActivity<MainPresent> implements MainContr
 
             @Override
             public void finishDownload() {
-//                File downloadFile = DownloadUtils.getInstance().downloadFile;
-//                saveFileName = new WeakReference<>(downloadFile.getAbsolutePath());
                 mPresenter.installApk(DownloadUtils.getInstance().downloadFile, (BaseActivity) mContext);
                 runOnUiThread(new Runnable() {
                     @Override
@@ -305,6 +317,9 @@ public class MainActivity extends BaseActivity<MainPresent> implements MainContr
         });
     }
 
+    /**
+     * 初始化监听事件
+     */
     private void initListener() {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -312,15 +327,12 @@ public class MainActivity extends BaseActivity<MainPresent> implements MainContr
                 if (!Util.isDoubleClick()) {
                     switch (menuItem.getItemId()) {
                         case R.id.receive_setting:  //接收消息设定
-//                        startActivity(new Intent(mContext, ReceiveSettingActivity.class));
                             ARouter.getInstance().build(MyConstants.RECEIVE_SETTING).navigation();
                             break;
                         case R.id.net_setting:  //网络设定
-//                        startActivity(new Intent(mContext, NetworkSettingActivity.class));
                             ARouter.getInstance().build(MyConstants.NETWORK_SETTING1).navigation();
                             break;
                         case R.id.feedBack: //意见反馈
-//                        startActivity(new Intent(mContext, FeedbackActivity.class));
                             ARouter.getInstance().build(MyConstants.FEEDBACK).navigation();
                             break;
                         case R.id.version_up:   //检查更新
@@ -329,71 +341,11 @@ public class MainActivity extends BaseActivity<MainPresent> implements MainContr
                             mPresenter.CheckUpdate(versionCode);
                             break;
                         case R.id.compatibility_mode:   //兼容模式
-                            if (dialogBuilder1 == null) {
-                                dialogBuilder1 = NiftyDialogBuilder.getInstance(mActivityComponent.getActivityContext());
-                            }
-                            if (rb_Compatible != null) {
-                                if (SharedPrefUtil.getInstance(MyApplication.getInstance()).getT("Compatibility", false)) {
-                                    rb_Compatible.setChecked(true);
-                                    rb_Incompatible.setChecked(false);
-                                } else {
-                                    rb_Incompatible.setChecked(true);
-                                    rb_Compatible.setChecked(false);
-                                }
-                            }
-                            dialogBuilder1
-                                    .withTitle("兼容模式")
-                                    .withTitleColor("#FFFFFF")
-                                    .withDividerColor("#11000000")
-                                    .withMessage(null)
-                                    .withMessageColor("#FFCFCFCF")
-                                    .withDialogColor("#AF444D50")
-                                    .withIcon(mContext.getResources().getDrawable(R.drawable.ic_logo2))
-                                    .withDuration(700)
-                                    .withEffect(Effectstype.SlideBottom)
-                                    .withButton1Text("取消")
-                                    .withButton2Text("确定")
-                                    .isCancelableOnTouchOutside(false)
-                                    .setCustomView(compatibleView, mActivityComponent.getActivityContext())
-                                    .setButton1Click(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            dialogBuilder1.dismiss();
-                                        }
-                                    })
-                                    .setButton2Click(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            boolean isCompatible;
-                                            isCompatible = rg_Compatible.getCheckedRadioButtonId() == rb_Compatible.getId();
-                                            SharedPrefUtil.getInstance(MyApplication.getInstance()).saveObject("Compatibility", isCompatible);
-                                            dialogBuilder1.dismiss();
-                                        }
-                                    })
-                                    .show();    //展示
-
+                            showCompatibleDialog();
                             break;
                         case R.id.recovery: //恢复默认数据
                             ToastUtils.showShort(getResources().getString(R.string.restoring));
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    String name = SharedPrefUtil.getInstance(MyApplication.getInstance()).getT(MyConstants.USERNAME, "");
-                                    String pwd = SharedPrefUtil.getInstance(MyApplication.getInstance()).getT(MyConstants.PWD, "");
-                                    String last_time = SharedPrefUtil.getInstance(MyApplication.getInstance()).getT("LastAlarmTime", "2016/01/05 04:26:32.959");
-                                    String last_time2 = SharedPrefUtil.getInstance(MyApplication.getInstance()).getT("LastAlarmTime2", "2016/01/05 04:26:32.959");
-
-                                    SharedPrefUtil.getInstance(MyApplication.getInstance()).removeAll();
-
-                                    SharedPrefUtil.getInstance(MyApplication.getInstance()).saveObject(MyConstants.USERNAME, name);
-                                    SharedPrefUtil.getInstance(MyApplication.getInstance()).saveObject(MyConstants.PWD, pwd);
-                                    SharedPrefUtil.getInstance(MyApplication.getInstance()).saveObject("LastAlarmTime", last_time);
-                                    SharedPrefUtil.getInstance(MyApplication.getInstance()).saveObject("LastAlarmTime2", last_time2);
-                                    SharedPrefUtil.getInstance(MyApplication.getInstance()).remove("ip");
-                                    ToastUtils.showShort(getResources().getString(R.string.restored));
-                                }
-                            }, 2000);
-
+                            restoreData();
                             break;
                         case R.id.pwd_setting:  //密码设定
                             ARouter.getInstance().build(MyConstants.PASSWORD_SETTING).navigation();
@@ -403,7 +355,6 @@ public class MainActivity extends BaseActivity<MainPresent> implements MainContr
                                     getResources().getString(R.string.no), getResources().getString(R.string.yes), Effectstype.SlideBottom);
                             break;
                         case R.id.about:
-//                        startActivity(new Intent(mContext, AboutActivity.class));
                             ARouter.getInstance().build(MyConstants.ABOUT).navigation();
                             break;
                         case R.id.exit: //退出
@@ -420,26 +371,113 @@ public class MainActivity extends BaseActivity<MainPresent> implements MainContr
         });
     }
 
+    /**
+     * 恢复默认数据
+     */
+    private void restoreData() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                String name = SharedPrefUtil.getInstance(MyApplication.getInstance()).getT(MyConstants.USERNAME, "");
+                String pwd = SharedPrefUtil.getInstance(MyApplication.getInstance()).getT(MyConstants.PWD, "");
+                String last_time = SharedPrefUtil.getInstance(MyApplication.getInstance()).getT("LastAlarmTime", "2016/01/05 04:26:32.959");
+                String last_time2 = SharedPrefUtil.getInstance(MyApplication.getInstance()).getT("LastAlarmTime2", "2016/01/05 04:26:32.959");
+
+                SharedPrefUtil.getInstance(MyApplication.getInstance()).removeAll();
+
+                SharedPrefUtil.getInstance(MyApplication.getInstance()).saveObject(MyConstants.USERNAME, name);
+                SharedPrefUtil.getInstance(MyApplication.getInstance()).saveObject(MyConstants.PWD, pwd);
+                SharedPrefUtil.getInstance(MyApplication.getInstance()).saveObject("LastAlarmTime", last_time);
+                SharedPrefUtil.getInstance(MyApplication.getInstance()).saveObject("LastAlarmTime2", last_time2);
+                SharedPrefUtil.getInstance(MyApplication.getInstance()).remove("ip");
+                ToastUtils.showShort(getResources().getString(R.string.restored));
+            }
+        }, 2000);
+    }
+
+    /**
+     * 显示兼容模式对话框
+     */
+    private void showCompatibleDialog() {
+        if (dialogBuilder1 == null) {
+            dialogBuilder1 = NiftyDialogBuilder.getInstance(mActivityComponent.getActivityContext());
+        }
+        if (rb_Compatible != null) {
+            if (SharedPrefUtil.getInstance(MyApplication.getInstance()).getT("Compatibility", false)) {
+                rb_Compatible.setChecked(true);
+                rb_Incompatible.setChecked(false);
+            } else {
+                rb_Incompatible.setChecked(true);
+                rb_Compatible.setChecked(false);
+            }
+        }
+        dialogBuilder1
+                .withTitle("兼容模式")
+                .withTitleColor("#FFFFFF")
+                .withDividerColor("#11000000")
+                .withMessage(null)
+                .withMessageColor("#FFCFCFCF")
+                .withDialogColor("#AF444D50")
+                .withIcon(mContext.getResources().getDrawable(R.drawable.ic_logo2))
+                .withDuration(700)
+                .withEffect(Effectstype.SlideBottom)
+                .withButton1Text("取消")
+                .withButton2Text("确定")
+                .isCancelableOnTouchOutside(false)
+                .setCustomView(compatibleView, mActivityComponent.getActivityContext())
+                .setButton1Click(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialogBuilder1.dismiss();
+                    }
+                })
+                .setButton2Click(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        boolean isCompatible;
+                        isCompatible = rg_Compatible.getCheckedRadioButtonId() == rb_Compatible.getId();
+                        SharedPrefUtil.getInstance(MyApplication.getInstance()).saveObject("Compatibility", isCompatible);
+                        dialogBuilder1.dismiss();
+                    }
+                })
+                .show();    //展示
+    }
+
+    /**
+     * 注入View
+     */
     @Override
     protected void initInjector() {
         mActivityComponent.inject((MainActivity) mContext);
     }
 
+    /**
+     * 是否需要注册 EventBus
+     * @return
+     */
     @Override
     protected boolean isRegisterEventBus() {
         return false;
     }
 
-
+    /**
+     * 是否需要注入Arouter
+     * @return
+     */
     @Override
     protected boolean isNeedInject() {
         return false;
     }
 
+    /**
+     * 返回键监听
+     * @param keyCode
+     * @param event
+     * @return
+     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            alertDialog.dismiss();
             PackageManager pm = getPackageManager();
             ResolveInfo homeInfo = pm.resolveActivity(new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME), 0);
             ActivityInfo ai = homeInfo.activityInfo;
@@ -452,6 +490,10 @@ public class MainActivity extends BaseActivity<MainPresent> implements MainContr
         return super.onKeyDown(keyCode, event);
     }
 
+    /**
+     * 保存状态
+     * @param intent
+     */
     private void startActivitySafely(Intent intent) {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         try {
@@ -465,22 +507,22 @@ public class MainActivity extends BaseActivity<MainPresent> implements MainContr
     public void onViewClicked(View view) {
         if (!Util.isDoubleClick()) {
             switch (view.getId()) {
-                case R.id.ll_alert:
+                case R.id.ll_alert: //报警页面
                     ARouter.getInstance().build(MyConstants.ALERT).navigation();
                     break;
-                case R.id.ll_yinhuan:
+                case R.id.ll_yinhuan://隐患页面
                     ARouter.getInstance().build(MyConstants.DANGER).navigation();
                     break;
-                case R.id.ll_cewen:
+                case R.id.ll_cewen://非介入式界面
                     ARouter.getInstance().build(MyConstants.CEWEN).navigation();
                     break;
-                case R.id.ll_jiance:
+                case R.id.ll_jiance://监测页面
                     ARouter.getInstance().build(MyConstants.MONITOR).navigation();
                     break;
-                case R.id.ll_gongdan:
+                case R.id.ll_gongdan://工单页面
                     ARouter.getInstance().build(MyConstants.AFFAIR).navigation();
                     break;
-                case R.id.ll_buzhuo:
+                case R.id.ll_buzhuo://捕捉页面
                     ARouter.getInstance().build(MyConstants.REPORT)
                             .withBoolean(MyConstants.FROM_MAIN, true)
                             .navigation();
@@ -488,10 +530,10 @@ public class MainActivity extends BaseActivity<MainPresent> implements MainContr
 //                case R.id.ll_baobiao:
 //                    ARouter.getInstance().build(MyConstants.FORM).navigation();
 //                    break;
-                case R.id.iv_set:
+                case R.id.iv_set://设置界面
                     drawerLayout.openDrawer(Gravity.START);
                     break;
-                case R.id.ll_shaoma://
+                case R.id.ll_shaoma://扫码页面
                     ARouter.getInstance().build(MyConstants.CAPTUCRE).navigation();
                     break;
                 default:
@@ -500,6 +542,10 @@ public class MainActivity extends BaseActivity<MainPresent> implements MainContr
         }
     }
 
+    /**
+     * 显示下载 对话框
+     * @param update
+     */
     @Override
     public void showDownloadDialog(final Update update) {
         runOnUiThread(new Runnable() {
@@ -570,6 +616,9 @@ public class MainActivity extends BaseActivity<MainPresent> implements MainContr
 
     }
 
+    /**
+     * 初始化 兼容模式对话框 View
+     */
     private void initCompatibleView() {
         compatibleView = LayoutInflater.from(mActivityComponent.getActivityContext()).inflate(R.layout.compatibility_mode, null);
         rb_Compatible = compatibleView.findViewById(R.id.rb_Compatible);
@@ -578,6 +627,9 @@ public class MainActivity extends BaseActivity<MainPresent> implements MainContr
 
     }
 
+    /**
+     * 初始化下载对话框 View
+     */
     private void initDialogView() {
         dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialog_update, null);
         tv_update_log = dialogView.findViewById(R.id.tv_update_log);

@@ -8,6 +8,7 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -71,13 +72,9 @@ public class AssessActivity extends BaseActivity<AssessPresent> implements Asses
     LinearLayout llDanger;
     @BindView(R.id.btn_assess1)
     Button btnAssess1;
-//    @BindView(R.id.pd_name_spinner)
-//    NiceSpinner pdNameSpinner;
 
     private AccessTask thread;
-
     private WeakReference<String[]> mItems; //站室名称数组
-//    private String[] mItems;    //站室名称数组
 
     private ArrayList<RoomListBean.RowsEntity> rooms;
     private int selectPos = 0;
@@ -88,9 +85,10 @@ public class AssessActivity extends BaseActivity<AssessPresent> implements Asses
 
 
     @Inject
-    DangerAdapter adapter;
+    DangerAdapter adapter;//注入adapter
 
     private MyHandler handler = new MyHandler(AssessActivity.this);
+    private boolean stop;
 
     private static class MyHandler extends Handler {
 
@@ -105,13 +103,18 @@ public class AssessActivity extends BaseActivity<AssessPresent> implements Asses
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            if (weakReference.get().stop) {
+                weakReference.get().flProgress.setVisibility(View.GONE);
+                weakReference.get().adapter.getData().clear();
+                weakReference.get().adapter.notifyDataSetChanged();
+                return;
+            }
             int size = weakReference.get().danger_list.size();
             if (size > 0) {
                 int i = msg.what;
                 if (weakReference.get().pbScanning != null) {
                     weakReference.get().pbScanning.setProgress(i);
                 }
-//                double j = 100.0 / size;
                 int pos = msg.arg1;
                 if (pos + 1 != weakReference.get().lastCount) {
                     weakReference.get().lastCount = pos + 1;
@@ -140,6 +143,7 @@ public class AssessActivity extends BaseActivity<AssessPresent> implements Asses
                         weakReference.get().tvFind.setText("共发现");
                         weakReference.get().cbGetList.setVisibility(View.VISIBLE);
                         weakReference.get().btnAssess1.setVisibility(View.GONE);
+                        Log.e("aaaa", "View.GONE 1" + weakReference.get().getClass().getSimpleName());
                     }
                 }
             } else {
@@ -149,24 +153,34 @@ public class AssessActivity extends BaseActivity<AssessPresent> implements Asses
                 weakReference.get().tvFind.setText("共发现");
                 weakReference.get().cbGetList.setVisibility(View.VISIBLE);
                 weakReference.get().btnAssess1.setVisibility(View.GONE);
+                Log.e("aaaa", "View.GONE 2");
             }
         }
     }
 
+    /**
+     * 加载布局
+     * @return
+     */
     @Override
     public int inflateContentView() {
         return R.layout.activity_assess;
     }
 
+    /**
+     * 注入View
+     */
     @Override
     protected void initInjector() {
         mActivityComponent.inject(this);
 
     }
 
+    /**
+     * 初始化数据
+     */
     @Override
     protected void initData() {
-//        pdNameSpinner.setVisibility(View.GONE);
         rvDangers.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         rvDangers.addItemDecoration(new SimplePaddingDecoration(mContext));
         rvDangers.setAdapter(adapter);
@@ -178,17 +192,17 @@ public class AssessActivity extends BaseActivity<AssessPresent> implements Asses
         llDanger.setVisibility(View.GONE);
         thread = new AccessTask();
 
-        initLinstener();
+        initListener();
     }
 
-    private void initLinstener() {
+    /**
+     * 初始化监听事件
+     */
+    private void initListener() {
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 BugList.ListmapBean bug = (BugList.ListmapBean) adapter.getData().get(position);
-//                Intent intent = new Intent(mContext, DangerDetailActivity.class);
-//                intent.putExtra("bug", bug);
-//                startActivity(intent);
                 if (!Util.isDoubleClick()) {
                     ARouter.getInstance().build(MyConstants.DANGER_DETAIL)
                             .withParcelable("bug", bug)
@@ -212,11 +226,19 @@ public class AssessActivity extends BaseActivity<AssessPresent> implements Asses
         });
     }
 
+    /**
+     * 是否需要注册 EventBus
+     * @return
+     */
     @Override
     protected boolean isRegisterEventBus() {
         return false;
     }
 
+    /**
+     * 是否需要注入Arouter
+     * @return
+     */
     @Override
     protected boolean isNeedInject() {
         return false;
@@ -234,6 +256,7 @@ public class AssessActivity extends BaseActivity<AssessPresent> implements Asses
                     ToastUtils.showShort(R.string.net_error);
                     return;
                 }
+                stop = false;
                 clearData();
                 assert mPresenter != null;
                 mPresenter.getBugList(deliver(selectPos));
@@ -245,32 +268,25 @@ public class AssessActivity extends BaseActivity<AssessPresent> implements Asses
                     ToastUtils.showShort(R.string.net_error);
                     return;
                 }
-                if ("重新诊断".contentEquals(btnAssess1.getText().toString().trim())) {
-                    thread.stop = true;
-                    clearData();
-                    btnAssess1.setText("停止诊断");
-                    assert mPresenter != null;
-                    mPresenter.getBugList(deliver(selectPos));
-                    return;
-                }
-                if ("停止诊断".contentEquals(btnAssess1.getText().toString().trim())) {
-//                    if (thread.isAlive()) {
-                    llDanger.setVisibility(View.GONE);
-                    btnAssess1.setVisibility(View.VISIBLE);
-                    thread.stop = true;
-                    btnAssess1.setGravity(Gravity.CENTER);
-//                    }
-                    clearData();
-                    btnAssess1.setText("重新诊断");
-                    return;
-                }
-//                if (thread.isAlive()) {
-//                    llDanger.setVisibility(View.GONE);
-//                    btnAssess1.setVisibility(View.VISIBLE);
+//                if ("重新诊断".contentEquals(btnAssess1.getText().toString().trim())) {
 //                    thread.stop = true;
-//                    btnAssess1.setText("重新诊断");
-//                    btnAssess1.setGravity(Gravity.CENTER);
+//                    clearData();
+//                    btnAssess1.setText("停止诊断");
+//                    assert mPresenter != null;
+//                    mPresenter.getBugList(deliver(selectPos));
+//                    return;
 //                }
+                if ("停止诊断".contentEquals(btnAssess1.getText().toString().trim())) {
+                    stop = true;
+                    thread.stop = true;
+//                    llDanger.setVisibility(View.GONE);
+                    cbGetList.setVisibility(View.VISIBLE);
+                    btnAssess1.setVisibility(View.GONE);
+                    btnAssess1.setGravity(Gravity.CENTER);
+                    clearData();
+//                    btnAssess1.setText("重新诊断");
+                    return;
+                }
                 else {
                     btnAssess1.setText("停止诊断");
                     btnAssess1.setVisibility(View.VISIBLE);
@@ -283,6 +299,11 @@ public class AssessActivity extends BaseActivity<AssessPresent> implements Asses
         }
     }
 
+    /**
+     * 获取 站室PID
+     * @param selectPos
+     * @return
+     */
     private int deliver(int selectPos) {
         if (selectPos == 0) {
             return 0;
@@ -291,6 +312,9 @@ public class AssessActivity extends BaseActivity<AssessPresent> implements Asses
         }
     }
 
+    /**
+     * 清除数据
+     */
     private void clearData() {
         thread.stop = true;
         lastCount = -1;
@@ -300,6 +324,10 @@ public class AssessActivity extends BaseActivity<AssessPresent> implements Asses
         tvDangerNum.setTextColor(Color.GREEN);
     }
 
+    /**
+     * 设置站室列表
+     * @param roomListBean
+     */
     public void setRoomlist(RoomListBean roomListBean) {
         rooms = roomListBean.getRows();
         mItems = new WeakReference<>(new String[rooms.size() + 1]);
@@ -312,6 +340,10 @@ public class AssessActivity extends BaseActivity<AssessPresent> implements Asses
         btnAssess1.setEnabled(mItems.get().length > 0);
     }
 
+    /**
+     * 设置缺陷列表
+     * @param bugList
+     */
     public void setBuglist(BugList bugList) {
         danger_list = bugList.getListmap();
         pbScanning.setMax(100);
@@ -319,6 +351,7 @@ public class AssessActivity extends BaseActivity<AssessPresent> implements Asses
     }
 
     /**
+     * 开始诊断
      * 启动分线程
      */
     private void startAssess() {
@@ -327,6 +360,8 @@ public class AssessActivity extends BaseActivity<AssessPresent> implements Asses
             tvFind.setText("共发现");
             cbGetList.setVisibility(View.VISIBLE);
             btnAssess1.setVisibility(View.GONE);
+            Log.e("aaaa", "View.GONE 3");
+            return;
         }
         if (thread != null) {
             thread.stop = true;
@@ -348,7 +383,7 @@ public class AssessActivity extends BaseActivity<AssessPresent> implements Asses
                     if (stop) {
                         break;
                     }
-                    SystemClock.sleep(50);
+                    SystemClock.sleep(100);
                     if (handler != null) {
                         Message message = Message.obtain();
                         message.what = (int) ((float) i / (float) danger_list.size() * 100f);
@@ -358,9 +393,12 @@ public class AssessActivity extends BaseActivity<AssessPresent> implements Asses
                     }
                 }
                 stop = true;
+                Message message = Message.obtain();
+                handler.sendMessage(message);
             }
         }
     }
+
 
     @Override
     protected void onDestroy() {

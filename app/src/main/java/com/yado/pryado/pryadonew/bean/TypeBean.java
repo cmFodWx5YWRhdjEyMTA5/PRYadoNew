@@ -18,8 +18,8 @@ public class TypeBean implements Serializable {
     public static class HymannewBean implements Serializable {
         /**
          * total : 15
-         * total1 : 0
-         * total2 : 15
+         * total1 : 0 >0 常规
+         * total2 : 15 > 0 非介入
          */
 
         private String total;

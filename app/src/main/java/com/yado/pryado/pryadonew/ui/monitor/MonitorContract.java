@@ -22,7 +22,7 @@ public interface MonitorContract {
     interface Presenter extends BaseContract.BasePresenter<View> {
 
         /**
-         * 获取站室
+         * 获取站室列表
          */
         void getRoomList();
 

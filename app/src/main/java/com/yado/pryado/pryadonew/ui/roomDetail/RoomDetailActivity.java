@@ -18,6 +18,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -122,7 +123,6 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
     ScrollView scrollView;
     @BindView(R.id.title)
     ViewGroup title;
-    //    @BindView(R.id.webview2)
     WebView webview2;
     @BindView(R.id.emptyLayout)
     EmptyLayout emptyLayout;
@@ -188,8 +188,6 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
             switch (msg.what) {
                 case 1://成功获取配电房运行状态；
                     name.setText(roomStatusBean.getPdname());
-//                    name.setTextSize(TypedValue.COMPLEX_UNIT_PX, widthScreen / 22);
-//                    tvDate.setTextSize(TypedValue.COMPLEX_UNIT_PX, widthScreen / 25);
                     setStatus(roomStatusBean.getStatus());
                     hiPointHisData = roomStatusBean.getHiPointHisData();
                     if (hiPointHisData == null) {
@@ -251,13 +249,20 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
         }
     };
     private Configuration mConfiguration;
-    private boolean isFullScreen;
+    private boolean isFullScreen;//是否全屏
 
+    /**
+     * 加载布局
+     * @return
+     */
     @Override
     public int inflateContentView() {
         return R.layout.activity_room_detail;
     }
 
+    /**
+     * 初始化数据
+     */
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void initData() {
@@ -285,7 +290,10 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
 //        mPresenter.getGraphType(room.getPID());
     }
 
-
+    /**
+     * 设置数据到View中
+     * @param position
+     */
     private void setView(int position) {
         if (linechart.getData() != null) {
             linechart.clearValues();
@@ -339,7 +347,6 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
 
     }
 
-    //
     @Override
     public boolean onTouch(View v, MotionEvent event) {
 //        firstX = event.getRawX();
@@ -382,7 +389,9 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
 //        return gd.onTouchEvent(event);
     }
 
-
+    /**
+     * 初始化View
+     */
     @SuppressLint({"NewApi", "ClickableViewAccessibility"})
     private void initView() {
         setStatus(room.getStatus());
@@ -411,6 +420,7 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
             }
         });
 
+        //悬浮按钮
         dragView = new DragView.Builder()
                 .setActivity(this)
                 .setSize(150)
@@ -419,17 +429,21 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
                 .build();
         dragView.setUpListener(new DragView.OnUpListener() {
             @Override
-            public void gestureUp() {
+            public void gestureUp() {//手势抬起
                 circleImageView.setBackground(getDrawable(R.drawable.circle_image));
             }
 
             @Override
-            public void gestureDown() {
+            public void gestureDown() {//手势按下
                 circleImageView.setBackground(getDrawable(R.drawable.circle_image2));
             }
         });
     }
 
+    /**
+     * 设置配电房状态
+     * @param status
+     */
     private void setStatus(String status) {
         String mStatus;
         int color;
@@ -450,6 +464,9 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
         tvStatus.setTextColor(color);
     }
 
+    /**
+     * 初始化WebView
+     */
     @SuppressLint({"WrongConstant", "SetJavaScriptEnabled"})
     private void initWebView() {
         if (webview == null) {
@@ -509,6 +526,10 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
         }
     }
 
+    /**
+     * 一次图平面图切换
+     * @param i
+     */
     private void changeView(int i) {
         if (i % 2 == 0) {
             client = new OneGraphClient((Activity) mContext, pid);
@@ -527,12 +548,18 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
         }
     }
 
-
+    /**
+     * 注入View
+     */
     @Override
     protected void initInjector() {
         mActivityComponent.inject(this);
     }
 
+    /**
+     * 是否需要注册 EventBus
+     * @return
+     */
     @Override
     protected boolean isRegisterEventBus() {
         return true;
@@ -545,6 +572,7 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
         }
     }
 
+    //获取温度HTML
     @Subscribe
     public void onMaxDivEvent(Message message) {
         if (message.what == 1) {
@@ -561,7 +589,10 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
 
     }
 
-
+    /**
+     * 是否需要注入Arouter
+     * @return
+     */
     @Override
     protected boolean isNeedInject() {
         return true;
@@ -588,6 +619,9 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
         }
     }
 
+    /**
+     * 舒适化设备列表弹窗
+     */
     private void initPopWindow() {
         if (popupWindow == null) {
             popupWindow = new CommonPopupWindow.Builder(this)
@@ -606,6 +640,9 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
 
     }
 
+    /**
+     * 初始化弹窗View
+     */
     private void initPopView() {
         popView = LayoutInflater.from(mContext).inflate(R.layout.popup_item2, null);
         rv_devices = popView.findViewById(R.id.rv_devices);
@@ -627,6 +664,10 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
         });
     }
 
+    /**
+     * 切换曲线
+     * @param checkedId
+     */
     private void trySetData(int checkedId) {
         assert mPresenter != null;
         switch (checkedId) {
@@ -756,6 +797,10 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
         }
     }
 
+    /**
+     * 设置站室详情信息
+     * @param roomDetail
+     */
     @Override
     public void setRoomDetail(RoomDetail roomDetail) {
         this.roomStatusBean = roomDetail;
@@ -765,11 +810,16 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
         pbLoading.setVisibility(View.GONE);
     }
 
+    //设置错误信息
     @Override
     public void setError(Throwable error) {
         handler.sendEmptyMessage(2);
     }
 
+    /**
+     * 拼接 并显示站室运行状况 webView2
+     * @param string
+     */
     @Override
     public void setMaxDivResource(String string) {
         webView2Enable = true;
@@ -791,6 +841,10 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
 
     }
 
+    /**
+     * 设置设备列表
+     * @param listBean
+     */
     @Override
     public void setDeviceInfoListBean(DeviceInfoListBean listBean) {
         if (listBean.getRows() != null && listBean.getRows().size() > 0) {
@@ -806,20 +860,18 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
         int ori = mConfiguration.orientation; //获取屏幕方向
         if (ori == Configuration.ORIENTATION_LANDSCAPE) {
             //横屏
-//            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//强制为竖屏
             title.setVisibility(View.GONE);
             if (webView2Enable && webview2 != null) {
                 webview2.setVisibility(View.GONE);
             }
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏
         } else if (ori == Configuration.ORIENTATION_PORTRAIT) {
             //竖屏
-//            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);//强制为横屏
             title.setVisibility(View.VISIBLE);
-//            name.setTextSize(18);
-//            tvDate.setTextSize(18);
             if (webView2Enable && webview2 != null) {
                 webview2.setVisibility(View.VISIBLE);
             }
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); //显示状态栏
         }
         dragView.getRootLayout().removeView(dragView.getDragView());
         dragView.getmBuilder().setView(null);
@@ -902,6 +954,9 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
         }
     }
 
+    /**
+     * 销毁WebView
+     */
     private void destroyWebView() {
         if (webview != null) {
             // 如果先调用destroy()方法，则会命中if (isDestroyed()) return;这一行代码，需要先onDetachedFromWindow()，再
@@ -937,6 +992,9 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
         }
     }
 
+    /**
+     * js 调用Java接口
+     */
     public class JavaScriptInterface {
         /**
          * 与js交互时用到的方法，在js里直接调用的

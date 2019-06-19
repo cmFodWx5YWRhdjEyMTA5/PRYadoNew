@@ -67,18 +67,31 @@ public class AccountInfoFragment extends BaseFragment<DeviceDetailPresent> imple
     private WeakReference<DeviceDetailBean2> mBean;
 //    private DeviceDetailBean2 mBean;
     @Inject
-    DangerAdapter adapter;
+    DangerAdapter adapter;  //注入adapter
 
+    /**
+     * 是否注册 EventBus
+     * @return
+     */
     @Override
     protected boolean isRegisterEventBus() {
         return false;
     }
 
+    /**
+     * 加载布局
+     * @return
+     */
     @Override
     public int getLayoutId() {
         return R.layout.fragment_account_information;
     }
 
+    /**
+     * 获取 AccountInfoFragment 实例
+     * @param mBean
+     * @return
+     */
     public static AccountInfoFragment newInstance(DeviceDetailBean2 mBean) {
         Bundle bundle = new Bundle();
         bundle.putParcelable("DeviceDetailBean", mBean);
@@ -87,16 +100,23 @@ public class AccountInfoFragment extends BaseFragment<DeviceDetailPresent> imple
         return fragment;
     }
 
+    /**
+     * 注入View
+     */
     @Override
     protected void initInjector() {
         mFragmentComponent.inject(this);
     }
 
+    //初始化View
     @Override
     public void initView() {
 
     }
 
+    /**
+     * 加载数据
+     */
     @Override
     protected void loadData() {
         scrollView.setCurrentScrollableContainer(this);
@@ -109,6 +129,9 @@ public class AccountInfoFragment extends BaseFragment<DeviceDetailPresent> imple
 
     }
 
+    /**
+     * 设置数据 到View中
+     */
     private void setView() {
         if (mBean != null) {
             tvDeviceCode.setText("设备编码  :  " + mBean.get().getDeviceCode());
@@ -128,6 +151,9 @@ public class AccountInfoFragment extends BaseFragment<DeviceDetailPresent> imple
         }
     }
 
+    /**
+     * 初始化 RecyclerView
+     */
     private void initRecyclerView() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(context);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -148,8 +174,10 @@ public class AccountInfoFragment extends BaseFragment<DeviceDetailPresent> imple
         });
     }
 
-
-
+    /**
+     * 设置 缺陷数据
+     * @param bugList
+     */
     public void setBuglist(BugList bugList) {
         List<BugList.ListmapBean> danger_list = bugList.getListmap();
         if (danger_list != null && danger_list.size() > 0) {

@@ -21,9 +21,6 @@ import javax.inject.Inject;
 
 public class PasswordSettingPresent extends BasePresenter<PasswordSettingContract.View, PasswordSettingModel> implements PasswordSettingContract.Presenter {
 
-//    @Inject
-//    CartoonFragmentModel model;
-
     /**
      * 注入到Fragment
      */
@@ -31,6 +28,12 @@ public class PasswordSettingPresent extends BasePresenter<PasswordSettingContrac
     public PasswordSettingPresent() {
     }
 
+    /**
+     * 修改密码
+     * @param username  用户名
+     * @param oldPassword   旧密码
+     * @param newPassword   新密码
+     */
     @Override
     public void changePW(String username, String oldPassword, String newPassword) {
         mModel.changePW(username, oldPassword, newPassword, new INetListener<Object, Throwable, Object>() {

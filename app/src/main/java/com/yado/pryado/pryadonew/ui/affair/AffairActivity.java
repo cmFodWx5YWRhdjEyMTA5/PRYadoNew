@@ -37,11 +37,18 @@ public class AffairActivity extends BaseActivity<AffairPresent> implements Affai
     private int count;
     private QBadgeView badgeView;
 
+    /**
+     * 获取布局
+     * @return
+     */
     @Override
     public int inflateContentView() {
         return R.layout.activity_affair;
     }
 
+    /**
+     * 初始化数据
+     */
     @Override
     protected void initData() {
 //        pdNameSpinner.setVisibility(View.GONE);
@@ -51,16 +58,27 @@ public class AffairActivity extends BaseActivity<AffairPresent> implements Affai
         mPresenter.getCounts();
     }
 
+    /**
+     * 注入View
+     */
     @Override
     protected void initInjector() {
         mActivityComponent.inject(this);
     }
 
+    /**
+     * 是否需要注册EventBus
+     * @return
+     */
     @Override
     protected boolean isRegisterEventBus() {
         return true;
     }
 
+    /**
+     * 是否需要注入Arouter
+     * @return
+     */
     @Override
     protected boolean isNeedInject() {
         return false;
@@ -89,6 +107,7 @@ public class AffairActivity extends BaseActivity<AffairPresent> implements Affai
     @Override
     protected void onResume() {
         super.onResume();
+        //获取角标
         if (badgeView != null) {
             badgeView.bindTarget(llUpcoming).setBadgeNumber(SharedPrefUtil.getInstance(MyApplication.getInstance()).getT(MyConstants.counts_upcoming, 0));
         }
@@ -114,6 +133,10 @@ public class AffairActivity extends BaseActivity<AffairPresent> implements Affai
         }
     }
 
+    /**
+     * 设置角标
+     * @param count
+     */
     @Override
     public void setBadgeView(int count) {
 //      badgeView.bindTarget(llUpcoming).setBadgeNumber(0);

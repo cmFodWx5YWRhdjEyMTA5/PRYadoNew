@@ -35,7 +35,9 @@ public class MonitorPresent extends BasePresenter<MonitorContract.View, MonitorM
     public MonitorPresent() {
     }
 
-
+    /**
+     * 获取站室列表
+     */
     @Override
     public void getRoomList() {
         mModel.getRoomList(new INetListener<Object, Throwable, Object>() {
@@ -60,6 +62,11 @@ public class MonitorPresent extends BasePresenter<MonitorContract.View, MonitorM
         });
     }
 
+    /**
+     * 获取站室平面图是否是常规图
+     *
+     * @param pid
+     */
     @Override
     public void getGraphType(int pid, final RoomListBean.RowsEntity room, final List<RoomListBean.RowsEntity> rooms, final int position) {
         mModel.getGraphType(pid, new INetListener<Object, Throwable, Object>() {
@@ -91,7 +98,10 @@ public class MonitorPresent extends BasePresenter<MonitorContract.View, MonitorM
         });
     }
 
-
+    /**
+     * 处理特殊站室
+     * @param rooms
+     */
     public void handle(List<RoomListBean.RowsEntity> rooms) {
         int[] j = new int[]{-1, -1, -1, -1};
         for (int i = 0; i < rooms.size(); i++) {

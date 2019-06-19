@@ -31,6 +31,9 @@ public class AlertModel extends BaseModel implements AlertContract.Model{
         prApi = PRRetrofit.getInstance(MyApplication.getInstance()).getApi();
     }
 
+    /**
+     * 获取站室
+     */
     @Override
     public void getRoomList(final INetListener<Object, Throwable, Object> listener) {
         prApi
@@ -63,6 +66,13 @@ public class AlertModel extends BaseModel implements AlertContract.Model{
                 });
     }
 
+    /**
+     * 获取站室历史数据
+     * @param AlarmTime  报警时间
+     * @param pid
+     * @param did
+     * @param tagid
+     */
     @Override
     public void getPointHisData(String AlarmTime, String pid, String did, String tagid, final INetListener<Object, Throwable, Object> listener) {
         prApi
@@ -95,6 +105,13 @@ public class AlertModel extends BaseModel implements AlertContract.Model{
                 });
     }
 
+    /**
+     * 获取报警列表
+     * @param rows  页数
+     * @param type  类型
+     * @param page
+     * @param pid
+     */
     @Override
     public void getAlertList(int rows, int type, int page, int pid, EmptyLayout emptyLayout, final INetListener<Object, Throwable, Object> listener) {
         prApi
@@ -128,6 +145,12 @@ public class AlertModel extends BaseModel implements AlertContract.Model{
                 });
     }
 
+    /**
+     * 获取报警列表
+     * @param rows  数量
+     * @param page
+     * @param pid
+     */
     @Override
     public void getAlertList_1(int rows, int page, String startDate, String endDate, int pid, EmptyLayout emptyLayout, final INetListener<Object, Throwable, Object> listener) {
         prApi

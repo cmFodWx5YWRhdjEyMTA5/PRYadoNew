@@ -54,6 +54,9 @@ public class DeviceDetailPresent extends BasePresenter<DeviceDetailContract.View
     public DeviceDetailPresent() {
     }
 
+    /**
+     * 获取详情
+     */
     @Override
     public void getDetail(String did, MyProgressDialog progressDialog) {
         mModel.getDetail(did,progressDialog, new INetListener<Object, Throwable, Object>() {
@@ -74,6 +77,9 @@ public class DeviceDetailPresent extends BasePresenter<DeviceDetailContract.View
         });
     }
 
+    /**
+     * 获取详情
+     */
     @Override
     public void getDetail2(String did1, String did2) {
         mModel.getDetail2(did1, did2, new INetListener<Object, Throwable, Object>() {
@@ -95,6 +101,9 @@ public class DeviceDetailPresent extends BasePresenter<DeviceDetailContract.View
         });
     }
 
+    /**
+     * 获取隐患列表
+     */
     @Override
     public void getBugList(String did) {
         mModel.getBugList(did, new INetListener<Object, Throwable, Object>() {
@@ -116,6 +125,9 @@ public class DeviceDetailPresent extends BasePresenter<DeviceDetailContract.View
         });
     }
 
+    /**
+     * 获取点数据
+     */
     @Override
     public void getPointData(String dateTime, String hour, String pid, String did, String tagid) {
         mModel.getPointData(dateTime, hour, pid, did, tagid, new INetListener<Object, Throwable, Object>() {
@@ -137,6 +149,9 @@ public class DeviceDetailPresent extends BasePresenter<DeviceDetailContract.View
         });
     }
 
+    /**
+     * 上传隐患
+     */
     @Override
     public void postNewBug(String pID, int did, String bugLocation, String bugDesc) {
         mModel.postNewBug(pID, did, bugLocation, bugDesc, new INetListener<Object, Throwable, Object>() {
@@ -158,6 +173,10 @@ public class DeviceDetailPresent extends BasePresenter<DeviceDetailContract.View
         });
     }
 
+    /**
+     * 获取编码详情
+     * @param code
+     */
     @Override
     public void getInfoByCode(String code) {
         mModel.getInfoByCode(code, new INetListener<Object, Throwable, Object>() {

@@ -59,6 +59,9 @@ public class RoomDetailPresent extends BasePresenter<RoomDetailContract.View, Ro
     public RoomDetailPresent() {
     }
 
+    /**
+     * 获取站室详情
+     */
     @Override
     public void getRoomDetail(int pid, int ver) {
         mModel.getRoomDetail(pid, ver, new INetListener<Object, Throwable, Object>() {
@@ -80,6 +83,10 @@ public class RoomDetailPresent extends BasePresenter<RoomDetailContract.View, Ro
         });
     }
 
+    /**
+     * 获取最高温的浮窗div
+     * @param pid
+     */
     @Override
     public void getMaxDiv(int pid) {
         mModel.getMaxDiv(pid, new INetListener<Object, Throwable, Object>() {
@@ -105,6 +112,12 @@ public class RoomDetailPresent extends BasePresenter<RoomDetailContract.View, Ro
         });
     }
 
+    /**
+     * 获取配电房所有的设备列表
+     * @param pid
+     * @param pagesize
+     * @param pageindex
+     */
     @Override
     public void getDeviceInfoList(int pid, int pagesize, int pageindex) {
         mModel.getDeviceInfoList(pid, pagesize, pageindex, new INetListener<Object, Throwable, Object>() {
@@ -169,6 +182,11 @@ public class RoomDetailPresent extends BasePresenter<RoomDetailContract.View, Ro
         }
     }
 
+    /**
+     * 获取屏幕宽度
+     * @param context
+     * @return
+     */
     public int getScreenWidth(Context context) {
         WindowManager manager = ((BaseActivity)context).getWindowManager();
         DisplayMetrics outMetrics = new DisplayMetrics();
@@ -176,6 +194,13 @@ public class RoomDetailPresent extends BasePresenter<RoomDetailContract.View, Ro
         return outMetrics.widthPixels;
     }
 
+    /**
+     * 获取URL返回格式 分非介入式和常规两种
+     * @param gragh
+     * @param pid
+     * @param type
+     * @return
+     */
     public String getWebUrl(TypeBean gragh, int pid, int type) {
 //        return "http://113.106.90.51:8008/Monitor/AppPlanInfo?pid=211";
         String url;
@@ -281,6 +306,12 @@ public class RoomDetailPresent extends BasePresenter<RoomDetailContract.View, Ro
         }
     }
 
+    /**
+     * 转换数据并添加到LineDataSet中
+     * @param point
+     * @param hisDevData
+     * @return
+     */
     public LineData transform_data(String point, LinkedHashMap<String, String> hisDevData) {
         ArrayList<String> xVals = new ArrayList<String>();
         ArrayList<Entry> yVals = new ArrayList<Entry>();//第一条折线；；
@@ -315,6 +346,12 @@ public class RoomDetailPresent extends BasePresenter<RoomDetailContract.View, Ro
         return new LineData(xVals, dataSets);
     }
 
+    /**
+     * 获取X轴数据
+     * @param key
+     * @param type
+     * @return
+     */
     private String getXvalue(String key, int type) {
         String result = "";
         switch (type) {

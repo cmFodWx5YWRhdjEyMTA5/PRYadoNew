@@ -15,12 +15,28 @@ public interface RoomDetailContract {
 
 
     interface View extends BaseContract.BaseView {
+        /**
+         * 设置站室详情信息
+         * @param roomDetail
+         */
         void setRoomDetail(RoomDetail roomDetail);
 
+        /**
+         * 设置错误信息
+         * @param error
+         */
         void setError(Throwable error);
 
+        /**
+         * 设置最高温度Div
+         * @param string
+         */
         void setMaxDivResource(String string);
 
+        /**
+         * 设置设备列表
+         * @param listBean
+         */
         void setDeviceInfoListBean(DeviceInfoListBean listBean);
     }
 

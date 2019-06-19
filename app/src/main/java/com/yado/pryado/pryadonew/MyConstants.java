@@ -25,14 +25,14 @@ public class MyConstants {
 
     public static final String FROM_LOGIN = "from_login";
 
-    public static int[] array = new int[]{
+    public static int[] array = new int[]{//RecyclerView item 颜色
             Color.parseColor("#d08d03"),
             Color.parseColor("#027a98"),
             Color.parseColor("#71a904"),
             Color.parseColor("#f92e74"),
     };
 
-    public static int[] COLORS = new int[]{
+    public static int[] COLORS = new int[]{//报警界面 RecyclerView item颜色
             Color.parseColor("#669900"),
             Color.parseColor("#fec34a"),
             Color.parseColor("#FFF2AD21"),

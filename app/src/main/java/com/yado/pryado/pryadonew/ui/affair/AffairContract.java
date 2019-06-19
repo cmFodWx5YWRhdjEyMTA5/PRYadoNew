@@ -18,6 +18,7 @@ public interface AffairContract {
         //设置代办数量
         void setCounts(int count);
 
+        //设置角标
         void setBadgeView(int count);
 
     }

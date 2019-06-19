@@ -43,15 +43,22 @@ public class MyTodoActivity extends BaseActivity {
     private List<BaseFragment> fragments;
 
     private FragmentPagerAdapter mAdapter;
-    private TaskListFragment fragment1;
-    private TaskListFragment fragment2;
+    private TaskListFragment fragment1;//日常巡检
+    private TaskListFragment fragment2;//应急抢修
     private List<String> titles = new ArrayList<>();
 
+    /**
+     * 加载布局
+     * @return
+     */
     @Override
     public int inflateContentView() {
         return R.layout.activity_my_todo_actovity;
     }
 
+    /**
+     * 初始化数据
+     */
     @Override
     protected void initData() {
 //        pdNameSpinner.setVisibility(View.GONE);
@@ -63,9 +70,12 @@ public class MyTodoActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        sendBroadcast(new Intent().setAction(MyConstants.NOTICE_CANCEL_ACTION)); //发送广播
+        sendBroadcast(new Intent().setAction(MyConstants.NOTICE_CANCEL_ACTION)); //发送广播,取消通知栏的通知
     }
 
+    /**
+     * 初始化fragment
+     */
     private void initFragments() {
         fragments = new ArrayList<>();
         fragment1 = TaskListFragment.newInstance(getString(R.string.richangxunjian));
@@ -101,11 +111,19 @@ public class MyTodoActivity extends BaseActivity {
         tabLayout.setupWithViewPager(idVp);
     }
 
+    /**
+     * 是否需要注册 EventBus
+     * @return
+     */
     @Override
     protected boolean isRegisterEventBus() {
         return false;
     }
 
+    /**
+     * 是否需要注入Arouter
+     * @return
+     */
     @Override
     protected boolean isNeedInject() {
         return false;

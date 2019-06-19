@@ -74,11 +74,21 @@ public class RealtimeDataFragment extends BaseFragment<DeviceDetailPresent> impl
     private CustomMarkerView mv;
     //    private DeviceDetailBean2.RealTimeParamsBean realTimeParamsBean;
 
+    /**
+     * 是否注册 EventBus
+     * @return
+     */
     @Override
     protected boolean isRegisterEventBus() {
         return false;
     }
 
+    /**
+     * 获取 RealtimeDataFragment 实例
+     * @param mBean
+     * @param pid
+     * @return
+     */
     public static RealtimeDataFragment newInstance(DeviceDetailBean2 mBean, int pid) {
         Bundle bundle = new Bundle();
         bundle.putParcelable("DeviceDetailBean", mBean);
@@ -88,21 +98,32 @@ public class RealtimeDataFragment extends BaseFragment<DeviceDetailPresent> impl
         return fragment;
     }
 
+    /**
+     * 加载布局
+     * @return
+     */
     @Override
     public int getLayoutId() {
         return R.layout.fragmnet_realtime_data;
     }
 
+    /**
+     * 注入 View
+     */
     @Override
     protected void initInjector() {
         mFragmentComponent.inject(this);
     }
 
+    //初始化View
     @Override
     public void initView() {
 
     }
 
+    /**
+     * 加载数据
+     */
     @Override
     protected void loadData() {
         mBean =  getArguments().getParcelable("DeviceDetailBean");
@@ -121,6 +142,9 @@ public class RealtimeDataFragment extends BaseFragment<DeviceDetailPresent> impl
         }
     }
 
+    /**
+     * 初始化RecyclerView
+     */
     private void initRecyclerView() {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         rcRealTimeData.setLayoutManager(mLayoutManager);
@@ -163,6 +187,7 @@ public class RealtimeDataFragment extends BaseFragment<DeviceDetailPresent> impl
         });
     }
 
+    //设置折线样式
     public void setLineDatas(String pName, HisData2 hisData) {
 
         mPresenter.setLineType(lineChart, mFragmentComponent.getActivityContext());
@@ -177,15 +202,19 @@ public class RealtimeDataFragment extends BaseFragment<DeviceDetailPresent> impl
 
     }
 
-
-
-
-
+    /**
+     * 设置曲线数据
+     * @param hisData2
+     */
     public void setHisData(HisData2 hisData2) {
         setLineDatas(realTimeParamsBean.get().getPName(), hisData2);
         progressBar.setVisibility(View.GONE);
     }
 
+    /**
+     * 显示Dialog
+     * @param realTimeParamsBean
+     */
     private void showDialog(DeviceDetailBean2.RealTimeParamsBean realTimeParamsBean) {
         if (dialogBuilder == null) {
             dialogBuilder = NiftyDialogBuilder.getInstance(context);
@@ -223,6 +252,9 @@ public class RealtimeDataFragment extends BaseFragment<DeviceDetailPresent> impl
                 }).show();    //展示
     }
 
+    /**
+     * 初始化Dialog View
+     */
     private void initDialogView() {
         chartView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_his, null);
         lineChart = chartView.findViewById(R.id.lineChart);

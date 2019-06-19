@@ -14,8 +14,16 @@ public interface TaskContract {
 
 
     interface View extends BaseContract.BaseView {
+        /**
+         * 获取工单详情信息
+         * @param orderId
+         */
         void  getDetail(int orderId);
 
+        /**
+         * 设置工单详情信息
+         * @param detail
+         */
         void setOrderDetail(OrderDetail detail);
     }
 
@@ -45,6 +53,11 @@ public interface TaskContract {
          */
         void saveOrderInfo(String orderID, String isQualified, String checkInfo, float latitude, float longtitude, String rectification);
 
+        /**
+         * 删除文件
+         * @param fileName
+         * @param ctype
+         */
         void postDelete(String fileName, String ctype);
     }
 
@@ -74,6 +87,12 @@ public interface TaskContract {
          */
         void saveOrderInfo(String orderID, String isQualified, String checkInfo, float latitude, float longtitude, String rectification, INetListener<Object, Throwable, Object> listener);
 
+        /**
+         * 删除文件
+         * @param fileName
+         * @param ctype
+         * @param listener
+         */
         void postDelete(String fileName, String ctype, INetListener<Object, Throwable, Object> listener);
     }
 

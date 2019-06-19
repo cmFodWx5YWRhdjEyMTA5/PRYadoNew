@@ -11,15 +11,23 @@ import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.alibaba.android.arouter.launcher.ARouter;
+import com.blankj.utilcode.util.ToastUtils;
+import com.yado.pryado.pryadonew.ActivityManager;
 import com.yado.pryado.pryadonew.MyApplication;
 import com.yado.pryado.pryadonew.MyConstants;
 import com.yado.pryado.pryadonew.R;
+import com.yado.pryado.pryadonew.base.BaseActivity;
 import com.yado.pryado.pryadonew.bean.ListmapBean;
 import com.yado.pryado.pryadonew.bean.OrderList;
 import com.yado.pryado.pryadonew.bean.PullBean;
@@ -31,8 +39,11 @@ import com.yado.pryado.pryadonew.subscriber.DefaultDisposablePoolImpl;
 import com.yado.pryado.pryadonew.subscriber.PRSubscriber;
 import com.yado.pryado.pryadonew.ui.DialogActivity;
 import com.yado.pryado.pryadonew.ui.alert.AlertActivity;
+import com.yado.pryado.pryadonew.ui.login.LoginActivity;
 import com.yado.pryado.pryadonew.ui.todo.MyTodoActivity;
 import com.yado.pryado.pryadonew.util.SharedPrefUtil;
+import com.yado.pryado.pryadonew.util.UserLogoutUtil;
+import com.yado.pryado.pryadonew.util.Util;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -93,7 +104,7 @@ public class PollingService extends Service {
 //        NotificationChannel chan2 = new NotificationChannel(NEW_ORDER_CHANNEL,
 //                getString(R.string.new_order), NotificationManager.IMPORTANCE_HIGH);
 //        mManager.createNotificationChannel(chan2);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             mManager.createNotificationChannels(Arrays.asList(
                     new NotificationChannel(ALARM_CHANNEL,
                             getString(R.string.alarm), NotificationManager.IMPORTANCE_DEFAULT),
@@ -232,6 +243,52 @@ public class PollingService extends Service {
             Log.e(TAG, last_time);
             getAlarm(last_time);
         }
+        getNetPhoneMac();
+    }
+
+    private void getNetPhoneMac() {
+        prApi.getPhoneMac(SharedPrefUtil.getInstance(MyApplication.getInstance()).getT(MyConstants.USERNAME, "unknown"),
+                SharedPrefUtil.getInstance(MyApplication.getInstance()).getT(MyConstants.PWD, "unknown"))
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new PRSubscriber<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        super.onSubscribe(d);
+                        addSubscription(d);
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        Log.e("getPhoneMac", s);
+                        if (!s.equals(Util.getIMEI(MyApplication.getInstance().getApplicationContext()))) {
+                            Handler handlerThree = new Handler(Looper.getMainLooper());
+                            handlerThree.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ToastUtils.showShort("该账户已在其他设备登录！");
+
+                                }
+                            });
+                            handlerThree.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+//                                    SystemClock.sleep(1000);
+                                    ARouter.getInstance().build(MyConstants.LOGIN).navigation();
+                                    stopSelf();
+                                    MyApplication.getActivityManager().popAllExcludeLogin();
+                                }
+                            }, 1000);
+
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                    }
+                });
     }
 
     private void getAlarm(String last_time) {
@@ -298,7 +355,7 @@ public class PollingService extends Service {
                                         if (!MyApplication.getInstance().isBackground()) { //应用在前台弹出对话框
                                             Intent intent = new Intent();
                                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                            intent.setClass(getApplicationContext(),DialogActivity.class);
+                                            intent.setClass(getApplicationContext(), DialogActivity.class);
                                             startActivity(intent);
                                         }
 
@@ -352,10 +409,13 @@ public class PollingService extends Service {
         this.flag = false;
         super.onDestroy();
         prApi = null;
+        Log.e("userLogout", "onDestroy");
         PRRetrofit.getInstance(MyApplication.getInstance()).reset();
         if (disposablePool != null) {
             disposablePool.clearPool();
         }
         disposablePool = null;
+
     }
+
 }

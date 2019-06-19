@@ -118,10 +118,10 @@ public class DangerFragment extends BaseFragment<DeviceDetailPresent> implements
 
 
     @Inject
-    PhotoAdapter normalAdapter;
+    PhotoAdapter normalAdapter;//注入adapter
 
     @Inject
-    PhotoAdapter infraredAdapter;
+    PhotoAdapter infraredAdapter;//注入红外adapter
 
     private LocationUtil locationUtil;
 
@@ -147,6 +147,7 @@ public class DangerFragment extends BaseFragment<DeviceDetailPresent> implements
 //        }
 //    };
 
+
     private MyHandler handler = new MyHandler(DangerFragment.this);
 
     private static class MyHandler extends Handler {
@@ -155,7 +156,6 @@ public class DangerFragment extends BaseFragment<DeviceDetailPresent> implements
 
         MyHandler(DangerFragment dangerFragment) {
             this.weakReference = new WeakReference<>(dangerFragment);
-
         }
 
         @Override
@@ -182,16 +182,31 @@ public class DangerFragment extends BaseFragment<DeviceDetailPresent> implements
         initReceiver();
     }
 
+    /**
+     * 是否注册 EventBus
+     * @return
+     */
     @Override
     protected boolean isRegisterEventBus() {
         return true;
     }
 
+    /**
+     * 加载布局
+     * @return
+     */
     @Override
     public int getLayoutId() {
         return R.layout.danger_fragment;
     }
 
+    /**
+     * 获取 DangerFragment 实例
+     * @param encode
+     * @param detailBean
+     * @param pid
+     * @return
+     */
     public static DangerFragment newInstance(String encode, DeviceDetailBean2 detailBean, int pid) {
         Bundle bundle = new Bundle();
         bundle.putString(MyConstants.ENCODE, encode);
@@ -202,16 +217,23 @@ public class DangerFragment extends BaseFragment<DeviceDetailPresent> implements
         return fragment;
     }
 
+    /**
+     * 注入 View
+     */
     @Override
     protected void initInjector() {
         mFragmentComponent.inject(this);
     }
 
+    //初始化View
     @Override
     public void initView() {
 
     }
 
+    /**
+     * 加载数据
+     */
     @Override
     protected void loadData() {
         initRecyclerView();
@@ -248,6 +270,9 @@ public class DangerFragment extends BaseFragment<DeviceDetailPresent> implements
         });
     }
 
+    /**
+     * 初始化 RecyclerView
+     */
     private void initRecyclerView() {
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(context);
         linearLayoutManager1.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -259,12 +284,16 @@ public class DangerFragment extends BaseFragment<DeviceDetailPresent> implements
         rvInfraredPhotos.setAdapter(infraredAdapter);
     }
 
+    /**
+     *初始化 上传 View
+     */
     private void initUploadView() {
         progressView = LayoutInflater.from(context).inflate(R.layout.defect_upload_item, null);
         numberProgressBar = progressView.findViewById(R.id.np_progress);
         tv_msg = progressView.findViewById(R.id.tv_msg);
     }
 
+    //保存数据
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -289,7 +318,7 @@ public class DangerFragment extends BaseFragment<DeviceDetailPresent> implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null) {   //取出保存的数据
             voice_path = savedInstanceState.getString("voice_path");
             voiceName = savedInstanceState.getString("voiceName");
             upLoadPhotos = savedInstanceState.getStringArrayList("upLoadPhotos");
@@ -301,6 +330,7 @@ public class DangerFragment extends BaseFragment<DeviceDetailPresent> implements
     @Override
     public void onResume() {
         super.onResume();
+        //获取红外图像数据
         if (AddPhotoUtil.getInstance(context).fromInfred && path != null) {
             AddPhotoUtil.getInstance(context).getInfrared(path.get(), temps, minTemp, maxTemp, upLoadInfred);
             infraredAdapter.setNewData(upLoadInfred);
@@ -372,7 +402,9 @@ public class DangerFragment extends BaseFragment<DeviceDetailPresent> implements
         minTemp = obj.getMinTemp();
     }
 
-
+    /**
+     * 初始化广播
+     */
     private void initReceiver() {
         //调用红外app需要
         //注册广播
@@ -423,6 +455,7 @@ public class DangerFragment extends BaseFragment<DeviceDetailPresent> implements
         }
     }
 
+    //显示dialog
     private void showDialog() {
         if (dialogBuilder == null) {
             dialogBuilder = NiftyDialogBuilder.getInstance(context);
@@ -464,6 +497,9 @@ public class DangerFragment extends BaseFragment<DeviceDetailPresent> implements
         tv_msg.setText("是否上传隐患？");
     }
 
+    /**
+     * 上传隐患
+     */
     private void postNewBug() {
         if (mDeviceInfo == null) {
             ToastUtils.showShort("没有信息!");
@@ -488,11 +524,18 @@ public class DangerFragment extends BaseFragment<DeviceDetailPresent> implements
         mPresenter.postNewBug(mDeviceInfo.getPID(), mDeviceInfo.getDID(), bugLocation.getText().toString() + " " + latitude.getText().toString() + " " + longitude.getText().toString(), note.getText().toString() + " 隐患状态：" + riskStatus);
     }
 
+    /**
+     * 设置 设备信息
+     * @param deviceInfo
+     */
     public void setDeviceInfo(DeviceInfo deviceInfo) {
         mDeviceInfo = deviceInfo;
         setViewAndData();
     }
 
+    /**
+     * 设置数据到View中
+     */
     private void setViewAndData() {
         tvPName.setText("配电房：" + mDeviceInfo.getPName());
         tvDeviceName.setText("设备名称：" + mDeviceInfo.getDeviceName());
@@ -527,13 +570,21 @@ public class DangerFragment extends BaseFragment<DeviceDetailPresent> implements
         thread.start();
     }
 
+    //设置经纬度
+    @SuppressLint("DefaultLocale")
     private void setText(LatLng latLng) {
         if (latLng != null) {
-            latitude.setText(String.format("纬度：%.4f", latLng.latitude));
-            longitude.setText(String.format("经度：%.4f", latLng.longitude));
+            if (latitude != null) {
+                latitude.setText(String.format("纬度：%.4f", latLng.latitude));
+                longitude.setText(String.format("经度：%.4f", latLng.longitude));
+            }
         }
     }
 
+    /**
+     * 设置提交隐患结果
+     * @param postBugResult
+     */
     public void setPostBugResult(PostBugResult postBugResult) {
         int resultCode = postBugResult.getResultCode();
         if (resultCode == 1) {
@@ -545,6 +596,10 @@ public class DangerFragment extends BaseFragment<DeviceDetailPresent> implements
         }
     }
 
+    /**
+     * 上传文件
+     * @param bugId
+     */
     public void uploadFile(String bugId) {
         //展示
         OkhttpUtils.getInstance().setProgressListener(new OkhttpUtils.ProgressListener() {

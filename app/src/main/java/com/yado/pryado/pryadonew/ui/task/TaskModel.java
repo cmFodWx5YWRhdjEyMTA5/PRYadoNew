@@ -36,6 +36,10 @@ public class TaskModel extends BaseModel implements TaskContract.Model {
         prApi = PRRetrofit.getInstance(MyApplication.getInstance()).getApi();
     }
 
+    /**
+     * 获取工单详细情况
+     * @param orderId  工单id
+     */
     @Override
     public void getOrderDetail(int orderId, EmptyLayout emptyLayout, final INetListener<Object, Throwable, Object> listener) {
         prApi
@@ -68,6 +72,11 @@ public class TaskModel extends BaseModel implements TaskContract.Model {
                 });
     }
 
+    /**
+     * 获取工单列表
+     * @param pid  设备id
+     * @param orderState 工单状态
+     */
     @Override
     public void getOrderList(String pid, int orderState, EmptyLayout emptyLayout, final INetListener<Object, Throwable, Object> listener) {
         prApi
@@ -99,6 +108,15 @@ public class TaskModel extends BaseModel implements TaskContract.Model {
                 });
     }
 
+    /**
+     * 提交到数据库
+     * @param orderID 工单id
+     * @param isQualified  是否合格（1是/0否）
+     * @param checkInfo 检查情况
+     * @param latitude 纬度
+     * @param longtitude 经度
+     * @param rectification 整改信息
+     */
     @Override
     public void saveOrderInfo(String orderID, String isQualified, String checkInfo, float latitude, float longtitude, String rectification, final INetListener<Object, Throwable, Object> listener) {
         prApi
@@ -132,6 +150,12 @@ public class TaskModel extends BaseModel implements TaskContract.Model {
                 });
     }
 
+    /**
+     * 删除文件
+     * @param fileName
+     * @param ctype
+     * @param listener
+     */
     @Override
     public void postDelete(String fileName, String ctype, final INetListener<Object, Throwable, Object> listener) {
         prApi

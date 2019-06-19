@@ -158,19 +158,13 @@ public class TaskActivity extends BaseActivity<TaskPresent> implements TaskContr
             video_name, videostatusMessage, path;
     private String video_path;
 
-    //    private String voice_net_name = "";
-//    private String voice_path = "";//当前录音；
     private String voice_net = "";//网络录音；
-    //    private String video_path;
-//    private String video_name;
-//    private String videostatusMessage;
-//    private String path;
     private List<OrderDetail.PhotoUrlBean> photos_net_maps;
     private ArrayList<String> mInfraredPathList = new ArrayList<>();
     private ArrayList<String> photos_path = new ArrayList<>();//当前显示的照片集合；
     private ArrayList<String> photos_net = new ArrayList<>();//网络照片集合；
     private static String TAG = "TaskActivity";
-    private HashMap<String, String> temps = new HashMap<>();
+    private HashMap<String, String> temps = new HashMap<>();//温度集合
 
     private float maxTemp, minTemp;
     private NiftyDialogBuilder niftyDialogBuilder;
@@ -206,16 +200,26 @@ public class TaskActivity extends BaseActivity<TaskPresent> implements TaskContr
         }
     }
 
+    /**
+     * 加载布局
+     * @return
+     */
     @Override
     public int inflateContentView() {
         return R.layout.activity_task;
     }
 
+    /**
+     * 注入View
+     */
     @Override
     protected void initInjector() {
         mActivityComponent.inject(this);
     }
 
+    /**
+     * 初始化数据
+     */
     @Override
     protected void initData() {
 //        pdNameSpinner.setVisibility(View.GONE);
@@ -250,12 +254,18 @@ public class TaskActivity extends BaseActivity<TaskPresent> implements TaskContr
 
     }
 
+    /**
+     * 初始化上传Dialog View
+     */
     private void initUploadView() {
         progressView = LayoutInflater.from(mContext).inflate(R.layout.defect_upload_item, null);
         numberProgressBar = progressView.findViewById(R.id.np_progress);
         tv_msg = progressView.findViewById(R.id.tv_msg);
     }
 
+    /**
+     * 初始化 RecyclerView
+     */
     private void initRecyclerView() {
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(mContext);
         linearLayoutManager1.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -290,12 +300,20 @@ public class TaskActivity extends BaseActivity<TaskPresent> implements TaskContr
 
     }
 
+    /**
+     * 获取工单详情
+     * @param orderId
+     */
     @Override
     public void getDetail(int orderId) {
         assert mPresenter != null;
         mPresenter.getOrderDetail(orderId, emptyLayout);
     }
 
+    /**
+     * 设置工单详情
+     * @param detail
+     */
     @Override
     public void setOrderDetail(OrderDetail detail) {
         emptyLayout.setErrorType(EmptyLayout.HIDE_LAYOUT);
@@ -303,6 +321,10 @@ public class TaskActivity extends BaseActivity<TaskPresent> implements TaskContr
         setOrderDetailInfo(detail);
     }
 
+    /**
+     * 设置工单信息到View中
+     * @param detail
+     */
     private void setOrderDetailInfo(OrderDetail detail) {
         tvName.setText(detail.getOrderName());
         tvCheckDate.setText(getDate(detail.getCheckDate()));
@@ -362,6 +384,11 @@ public class TaskActivity extends BaseActivity<TaskPresent> implements TaskContr
         infraredAdapter.setNewData(mInfraredPathList);
     }
 
+    /**
+     * 获取时间
+     * @param planDate
+     * @return
+     */
     private String getDate(String planDate) {
         try {
             if (!TextUtils.isEmpty(planDate)) {
@@ -375,6 +402,11 @@ public class TaskActivity extends BaseActivity<TaskPresent> implements TaskContr
         }
     }
 
+    /**
+     * 获取状态等级
+     * @param priority
+     * @return
+     */
     private String getPrior(String priority) {
         switch (priority) {
             case "1":
@@ -388,6 +420,11 @@ public class TaskActivity extends BaseActivity<TaskPresent> implements TaskContr
         }
     }
 
+    /**
+     * 获取真实URL
+     * @param originUrl
+     * @return
+     */
     private String getRealUrl(String originUrl) {
         if (!TextUtils.isEmpty(originUrl)) {
             return originUrl.replace("~", SharedPrefUtil.getInstance(MyApplication.getInstance()).getString(MyConstants.BASE_URL, EadoUrl.BASE_URL_WEB));
@@ -395,16 +432,27 @@ public class TaskActivity extends BaseActivity<TaskPresent> implements TaskContr
         return "";
     }
 
+    /**
+     * 是否需要注册 EventBus
+     * @return
+     */
     @Override
     protected boolean isRegisterEventBus() {
         return true;
     }
 
+    /**
+     * 是否需要注入Arouter
+     * @return
+     */
     @Override
     protected boolean isNeedInject() {
         return true;
     }
 
+    /**
+     * 注册广播
+     */
     void initReceiver() {
         //调用红外app需要
         //注册广播
@@ -456,14 +504,8 @@ public class TaskActivity extends BaseActivity<TaskPresent> implements TaskContr
                     RecorderAndShootUtil.getInstance(mContext).getmRecordService().stopPlaying();
                 }
                 RecorderAndShootUtil.getInstance(mContext).gotoCaptureActivity();
-//                gotoCaptureActivity();
                 break;
             case R.id.iv_thumbnail:
-//                if (tvRecordPlay.isPlaying()) {
-//                    tvRecordPlay.stopPlay();
-//                    mRecordService.stopPlaying();
-//                }
-//                playVideo();
                 if (tvRecordPlay.isPlaying()) {
                     tvRecordPlay.stopPlay();
                     RecorderAndShootUtil.getInstance(mContext).getmRecordService().stopPlaying();
@@ -497,6 +539,9 @@ public class TaskActivity extends BaseActivity<TaskPresent> implements TaskContr
         }
     }
 
+    /**
+     * 显示提价工单对话框
+     */
     private void showSubmitDialog() {
         tv_msg.setText("是否提交？");
         niftyDialogBuilder
@@ -529,6 +574,9 @@ public class TaskActivity extends BaseActivity<TaskPresent> implements TaskContr
                 .show();    //展示
     }
 
+    /**\
+     * 提交工单
+     */
     private void submit() {//提交参数；
         //IsQualified 是否合格（1是/0否）,CheckInfo 检查情况 ，Latitude 纬度 ，Longtitude 经度
         if (OkhttpUtils.getInstance().compareMax(photos_path, RecorderAndShootUtil.getInstance(mContext).getVoice_path(), mInfraredPathList)) {
@@ -541,12 +589,18 @@ public class TaskActivity extends BaseActivity<TaskPresent> implements TaskContr
 
     }
 
+    //隐藏对话框
     public void hideDialog() {
         if (niftyDialogBuilder != null) {
             niftyDialogBuilder.dismiss();
         }
     }
 
+    /**
+     * 转换经纬度信息
+     * @param aFloat
+     * @return
+     */
     private float getLtdOrLtd(String aFloat) {
         float result = 0;
         try {
@@ -702,6 +756,11 @@ public class TaskActivity extends BaseActivity<TaskPresent> implements TaskContr
         }
     }
 
+    /**
+     * 删除之前的文件
+     * @param fileName
+     * @param ctype
+     */
     private void postDelete(String fileName, String ctype) {
         assert mPresenter != null;
         mPresenter.postDelete(fileName, ctype);

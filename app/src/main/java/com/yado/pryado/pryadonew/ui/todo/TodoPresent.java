@@ -24,6 +24,9 @@ public class TodoPresent extends BasePresenter<TodoContract.View, TodoModel> imp
     public TodoPresent() {
     }
 
+    /**
+     * 获取代办
+     */
     @Override
     public void getAwaitOrder(String orderType, EmptyLayout emptyLayout) {
         mModel.getAwaitOrder(orderType, emptyLayout, new INetListener<Object, Throwable, Object>() {

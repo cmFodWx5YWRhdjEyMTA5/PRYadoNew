@@ -60,12 +60,13 @@ public class OkhttpUtils {
     private static final int FINISHDOWN = 4;
     private static final int DOWNERROR = 5;
     private static final int UPDATEPROGRESS = 7;
-    private int M = 1 * 1024 * 1024;//1M=1024KB,1KB=1024bytes;
+    private int M = 1024 * 1024;//1M=1024KB,1KB=1024bytes;
 
     private ProgressListener progressListener;
 
     //私有化构造器；
     private OkhttpUtils() {
+        //初始化 mOkHttpClient
         mOkHttpClient = new OkHttpClient.Builder()
                 .readTimeout(99, TimeUnit.SECONDS)
                 .writeTimeout(99, TimeUnit.SECONDS)
@@ -76,6 +77,7 @@ public class OkhttpUtils {
 //        mOkHttpClient.setCookieHandler(new CookieManager(new PersistentCookieStore(MyApplication.getContext()), CookiePolicy.ACCEPT_ALL));
     }
 
+    //重置
     public void reset(){
         if(mInstance != null) {
             mInstance = null;
@@ -237,6 +239,18 @@ public class OkhttpUtils {
         });
     }
 
+    /**
+     * 上传隐患上报的文件
+     * @param upLoadPhotos 照片
+     * @param voice_path    录音
+     * @param video_path    视频
+     * @param upLoadInfred  红外图片
+     * @param mActivity 当前View
+     * @param orderId   工单ID
+     * @param dialog    对话框
+     * @param type  类型
+     * @param temps 红外温度数据
+     */
     public void upLoadFile(ArrayList<String> upLoadPhotos, String voice_path, String video_path, ArrayList<String> upLoadInfred, final Activity mActivity, String orderId, final NiftyDialogBuilder dialog, String type, HashMap<String, String> temps) {
         if (compareMax(upLoadPhotos, voice_path, upLoadInfred)) {
             return;

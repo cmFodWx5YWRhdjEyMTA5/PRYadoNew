@@ -55,11 +55,18 @@ public class DeviceDetailActivity2 extends BaseActivity<DeviceDetailPresent> imp
     @Inject
     RealTimeDataAdapter adapter;
 
+    /**
+     * 加载布局
+     * @return
+     */
     @Override
     public int inflateContentView() {
         return R.layout.activity_device_detail2;
     }
 
+    /**
+     * 初始化数据
+     */
     @Override
     protected void initData() {
 //        pdNameSpinner.setVisibility(View.GONE);
@@ -76,16 +83,27 @@ public class DeviceDetailActivity2 extends BaseActivity<DeviceDetailPresent> imp
         getRealTask.start();
     }
 
+    /**
+     * 是否需要注册 EventBus
+     * @return
+     */
     @Override
     protected boolean isRegisterEventBus() {
         return false;
     }
 
+    /**
+     * 注入 View
+     */
     @Override
     protected void initInjector() {
         mActivityComponent.inject(this);
     }
 
+    /**
+     * 是否需要注册 Arouter
+     * @return
+     */
     @Override
     protected boolean isNeedInject() {
         return true;
@@ -96,6 +114,10 @@ public class DeviceDetailActivity2 extends BaseActivity<DeviceDetailPresent> imp
         finish();
     }
 
+    /**
+     * 设置数据
+     * @param realTimeParamsBeans
+     */
     public void setDataList(List<DeviceDetailBean2.RealTimeParamsBean> realTimeParamsBeans) {
         if (realTimeParamsBeans != null) {
             emptyLayout.setVisibility(View.GONE);
@@ -107,6 +129,9 @@ public class DeviceDetailActivity2 extends BaseActivity<DeviceDetailPresent> imp
         }
     }
 
+    /**
+     * 初始化RecyclerView
+     */
     private void initRecyclerView() {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
         rcRealTimeParam.setLayoutManager(mLayoutManager);
@@ -115,6 +140,7 @@ public class DeviceDetailActivity2 extends BaseActivity<DeviceDetailPresent> imp
         rcRealTimeParam.setAdapter(adapter);
     }
 
+    //每隔10s获取一次数据
     class GetRealTask extends Thread {
         volatile boolean stop = false;
 
@@ -127,6 +153,7 @@ public class DeviceDetailActivity2 extends BaseActivity<DeviceDetailPresent> imp
         }
     }
 
+    //获取数据
     private void getData() {
         assert mPresenter != null;
         mPresenter.getDetail2(did1.get(), did2.get());

@@ -24,7 +24,7 @@ public abstract class LoginManager {
     }
 
     private void login(final String name, final String pwd) {
-        PRRetrofit.getInstance(MyApplication.getInstance()).getApi().userLogin(name, pwd)
+        PRRetrofit.getInstance(MyApplication.getInstance()).getApi().userLogin(name, pwd, Util.getIMEI(MyApplication.getInstance().getApplicationContext()))
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -37,8 +37,14 @@ public abstract class LoginManager {
 
                     @Override
                     public void onNext(String s) {
-                        if (!TextUtils.isEmpty(s) && !s.contains("错误")) {
-                            goToMain();
+                        if (!TextUtils.isEmpty(s)) {
+                            if(s.contains("-1")) {
+                                ToastUtils.showShort("此账号已登录！");
+                            } else if (s.contains("请检查用户名密码")) {
+                                ToastUtils.showShort(s);
+                            } else {
+                                goToMain();
+                            }
                         } else {
                             ToastUtils.showShort("用户名或密码错误!");
                             goToLogin();

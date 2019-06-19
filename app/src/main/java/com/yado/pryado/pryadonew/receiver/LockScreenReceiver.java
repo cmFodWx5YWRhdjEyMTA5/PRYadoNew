@@ -9,6 +9,9 @@ import android.util.Log;
 
 import com.yado.pryado.pryadonew.ui.LockActivity;
 
+/**
+ * 监听屏幕息屏广播
+ */
 public class LockScreenReceiver extends BroadcastReceiver {
     private static final String TAG = "LockScreenMsgReceiver";
     private static final String NOTICE_CANCEL = "notice_cancel";

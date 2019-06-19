@@ -76,10 +76,6 @@ public class AlertActivity extends BaseActivity<AlertPresent> implements AlertCo
     private static final int TYPE_MONTH = 2;
     private static final int TYPE_ALL = 3;
 
-    //    private String[] mItems;    //站室名称数组
-    private WeakReference<String[]> mItems;   //站室名称数组
-
-
     private List<RoomListBean.RowsEntity> rooms = new ArrayList<>();
 
     private List<BaseFragment> fragments;
@@ -111,22 +107,31 @@ public class AlertActivity extends BaseActivity<AlertPresent> implements AlertCo
     @Inject
     RoomsSpinnerAdapter adapter;
 
-
+    /**
+     * 加载布局
+     * @return
+     */
     @Override
     public int inflateContentView() {
         return R.layout.activity_alert;
     }
 
+    /**
+     * 注入View
+     */
     @Override
     protected void initInjector() {
         mActivityComponent.inject(this);
     }
 
+    /**
+     * 初始化数据
+     */
     @SuppressLint("SimpleDateFormat")
     @Override
     protected void initData() {
         name.setText(getResources().getString(R.string.baojin));
-        llRooms = vsSpinner.inflate().findViewById(R.id.ll_rooms);
+        llRooms = vsSpinner.inflate().findViewById(R.id.ll_rooms)   ;
         tvRoomName = llRooms.findViewById(R.id.tv_room_name);
         ivRooms = llRooms.findViewById(R.id.iv_rooms);
         initFragments();
@@ -143,6 +148,9 @@ public class AlertActivity extends BaseActivity<AlertPresent> implements AlertCo
         initListener();
     }
 
+    /**
+     * 初始化时间
+     */
     private void initDate() {
         formatter_year = new SimpleDateFormat("yyyy ");
         formatter_mouth = new SimpleDateFormat("MM ");
@@ -159,6 +167,9 @@ public class AlertActivity extends BaseActivity<AlertPresent> implements AlertCo
         date.set(year_int, momth_int - 1, day_int - 1);
     }
 
+    /**
+     * TabLayout点击事件
+     */
     private View.OnClickListener mTabOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -176,19 +187,19 @@ public class AlertActivity extends BaseActivity<AlertPresent> implements AlertCo
                                 return;
                             }
                             switchDate++;
-                            String year_str = formatter_year.format(date);
-                            int year_int = (int) Double.parseDouble(year_str);
+                            String yearStr = formatter_year.format(date);
+                            int yearInt = (int) Double.parseDouble(yearStr);
 
-                            String momth_str = formatter_mouth.format(date);
-                            int momth_int = (int) Double.parseDouble(momth_str);
+                            String monthStr = formatter_mouth.format(date);
+                            int monthInt = (int) Double.parseDouble(monthStr);
 
-                            String day_str = formatter_day.format(date);
-                            int day_int = (int) Double.parseDouble(day_str);
-                            if (momth_int == 1) {
-                                momth_int = 13;
-                                year_int = year_int - 1;
+                            String dayStr = formatter_day.format(date);
+                            int dayInt = (int) Double.parseDouble(dayStr);
+                            if (monthInt == 1) {
+                                monthInt = 13;
+                                yearInt = yearInt - 1;
                             }
-                            ((AlertActivity) mActivityComponent.getActivity()).date.set(year_int, momth_int - 1, day_int);
+                            ((AlertActivity) mActivityComponent.getActivity()).date.set(yearInt, monthInt - 1, dayInt);
                             if (switchDate % 2 == 1) {
                                 fragmentAll.setStartDate(DateUtils.dateToStr(date));
                                 isSure = true;
@@ -224,24 +235,30 @@ public class AlertActivity extends BaseActivity<AlertPresent> implements AlertCo
         }
     };
 
+    /**
+     * 初始化日期区间
+     */
     private void initRangeDate() {
         Date curDate = new Date(System.currentTimeMillis());//获取当前时间
-        String year_str = formatter_year.format(curDate);
-        int year_int = (int) Double.parseDouble(year_str);
+        String yearStr = formatter_year.format(curDate);
+        int yearInt = (int) Double.parseDouble(yearStr);
 
 
-        String momth_str = formatter_mouth.format(curDate);
-        int momth_int = (int) Double.parseDouble(momth_str);
+        String monthStr = formatter_mouth.format(curDate);
+        int monthInt = (int) Double.parseDouble(monthStr);
 
-        String day_str = formatter_day.format(curDate);
-        int day_int = (int) Double.parseDouble(day_str);
+        String dayStr = formatter_day.format(curDate);
+        int dayInt = (int) Double.parseDouble(dayStr);
 
         startDate = Calendar.getInstance();
         startDate.set(2013, 1, 1);//设置起始年份
         endDate = Calendar.getInstance();
-        endDate.set(year_int, momth_int, day_int);//设置结束年份
+        endDate.set(yearInt, monthInt, dayInt);//设置结束年份
     }
 
+    /**
+     * 初始化监听事件
+     */
     private void initListener() {
         tvShouye.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -302,7 +319,9 @@ public class AlertActivity extends BaseActivity<AlertPresent> implements AlertCo
         getByPid(pid);
     }
 
-
+    /**
+     * 初始化Fragment
+     */
     private void initFragments() {
         fragments = new ArrayList<>();
         fragmentDay = AlertFragment.newInstance(TYPE_DAY);
@@ -322,6 +341,10 @@ public class AlertActivity extends BaseActivity<AlertPresent> implements AlertCo
         mAdapter = new MyPagerAdapter(getSupportFragmentManager(), fragments, titles);
     }
 
+    /**
+     * 请求网络数据
+     * @param pid
+     */
     private void getByPid(int pid) {
         reGet(fragmentDay, pid);
         reGet(fragmentWeek, pid);
@@ -329,22 +352,39 @@ public class AlertActivity extends BaseActivity<AlertPresent> implements AlertCo
         reGet(fragmentAll, pid);
     }
 
+    /**
+     * 重新请求
+     * @param fragment
+     * @param pid
+     */
     private void reGet(AlertFragment fragment, int pid) {
         if (fragment != null) {
             fragment.onRefresh(pid);
         }
     }
 
+    /**
+     * 是否注册 EventBus
+     * @return
+     */
     @Override
     protected boolean isRegisterEventBus() {
         return false;
     }
 
+    /**
+     * 是否需要注册 Arouter
+     * @return
+     */
     @Override
     protected boolean isNeedInject() {
         return false;
     }
 
+    /**
+     * 设置 下拉框数据
+     * @param rooms
+     */
     public void setRooms(List<RoomListBean.RowsEntity> rooms) {
         if (rooms.size() > 0) {
             RoomListBean.RowsEntity rowsEntity = new RoomListBean.RowsEntity();
@@ -362,6 +402,9 @@ public class AlertActivity extends BaseActivity<AlertPresent> implements AlertCo
 
     }
 
+    /**
+     * 初始化站室列表弹窗
+     */
     private void initPopWindow() {
         if (popupWindow == null) {
             popupWindow = new CommonPopupWindow.Builder(this)
@@ -385,6 +428,9 @@ public class AlertActivity extends BaseActivity<AlertPresent> implements AlertCo
 
     }
 
+    /**
+     * 初始化
+     */
     private void initPopView() {
         popView = LayoutInflater.from(mContext).inflate(R.layout.popup_item2, null);
         rv_rooms = popView.findViewById(R.id.rv_devices);

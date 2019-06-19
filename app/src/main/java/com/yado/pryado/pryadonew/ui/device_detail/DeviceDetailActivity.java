@@ -72,11 +72,19 @@ public class DeviceDetailActivity extends BaseActivity<DeviceDetailPresent> impl
         }
     }
 
+    /**
+     * 加载布局
+     * @return
+     */
     @Override
     public int inflateContentView() {
         return R.layout.activity_device_detail;
     }
 
+    /**
+     * 保存数据
+     * @param outState
+     */
     @Override
     protected void onSaveInstanceState(Bundle outState) {//存储状态，用于下一次重建activity使用；
         Log.e(TAG, "保存detailBean");
@@ -88,6 +96,10 @@ public class DeviceDetailActivity extends BaseActivity<DeviceDetailPresent> impl
     }
 
 
+    /**
+     * 取出保存的数据
+     * @param savedInstanceState
+     */
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {//恢复时调用
         if (savedInstanceState != null) {
@@ -100,11 +112,17 @@ public class DeviceDetailActivity extends BaseActivity<DeviceDetailPresent> impl
         super.onRestoreInstanceState(savedInstanceState);
     }
 
+    /**
+     * 注册 View
+     */
     @Override
     protected void initInjector() {
         mActivityComponent.inject(this);
     }
 
+    /**
+     * 初始化数据
+     */
     @Override
     protected void initData() {
 //        pdNameSpinner.setVisibility(View.GONE);
@@ -126,6 +144,9 @@ public class DeviceDetailActivity extends BaseActivity<DeviceDetailPresent> impl
         }
     }
 
+    /**
+     * 设置 View
+     */
     private void setViewAndData() {
         initFragments();
         viewPager.setVisibility(View.VISIBLE);
@@ -139,6 +160,9 @@ public class DeviceDetailActivity extends BaseActivity<DeviceDetailPresent> impl
         tabLayout.setupWithViewPager(viewPager);
     }
 
+    /**
+     * 从服务器获取数据
+     */
     private void getDataFromServer() {
         showLoadingDialog();
         viewPager.setVisibility(View.GONE);
@@ -147,6 +171,9 @@ public class DeviceDetailActivity extends BaseActivity<DeviceDetailPresent> impl
 
     }
 
+    /**
+     * 显示Dialog
+     */
     public void showLoadingDialog() {
         if (progressDialog == null) {
             progressDialog = new MyProgressDialog(mContext, R.style.MyProgressDialog);
@@ -155,17 +182,27 @@ public class DeviceDetailActivity extends BaseActivity<DeviceDetailPresent> impl
         progressDialog.show();
     }
 
+    /**
+     * 隐藏dialog
+     */
     public void hideLoadingDialog() {
         if (progressDialog != null) {
             progressDialog.dismiss();
         }
     }
 
+    /**
+     * 设置 配电房数据
+     * @param detailBean
+     */
     public void setDeviceDetail(DeviceDetailBean2 detailBean) {
         this.detailBean =detailBean;
         setViewAndData();
     }
 
+    /**
+     * 初始化Fragment
+     */
     private void initFragments() {
         fragments = new ArrayList<>();
         fragments.add(RealtimeDataFragment.newInstance(detailBean, pid));
@@ -178,17 +215,31 @@ public class DeviceDetailActivity extends BaseActivity<DeviceDetailPresent> impl
         mAdapter = new MyPagerAdapter(getSupportFragmentManager(), fragments, titles);
     }
 
+    /**
+     *执行 DangerFragment 的 onActivityResult
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         fragments.get(2).onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * 是否需要注册 EventBus
+     * @return
+     */
     @Override
     protected boolean isRegisterEventBus() {
         return false;
     }
 
+    /**
+     * 是否需要注册 Arouter
+     * @return
+     */
     @Override
     protected boolean isNeedInject() {
         return true;

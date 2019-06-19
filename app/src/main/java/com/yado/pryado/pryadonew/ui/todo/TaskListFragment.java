@@ -44,8 +44,12 @@ public class TaskListFragment extends BaseFragment<TodoPresent> implements TodoC
     private String typeStr;
 
     @Inject
-    OrderListAdapter adapter;
+    OrderListAdapter adapter;//注入adapter
 
+    /**
+     * 是否需要注册 EventBus
+     * @return
+     */
     @Override
     protected boolean isRegisterEventBus() {
         return true;
@@ -58,11 +62,20 @@ public class TaskListFragment extends BaseFragment<TodoPresent> implements TodoC
         }
     }
 
+    /**
+     * 加载布局
+     * @return
+     */
     @Override
     public int getLayoutId() {
         return R.layout.fragment_tasklist;
     }
 
+    /**
+     * 获取TaskListFragment实例
+     * @param type
+     * @return
+     */
     public static TaskListFragment newInstance(String type) {
         Bundle bundle = new Bundle();
         bundle.putString(TASK_TYPE, type);
@@ -71,6 +84,9 @@ public class TaskListFragment extends BaseFragment<TodoPresent> implements TodoC
         return fragment;
     }
 
+    /**
+     * 注入View
+     */
     @Override
     protected void initInjector() {
         mFragmentComponent.inject(this);
@@ -81,6 +97,9 @@ public class TaskListFragment extends BaseFragment<TodoPresent> implements TodoC
 
     }
 
+    /**
+     * 加载数据
+     */
     @Override
     protected void loadData() {
         adapter.setContext(context);
@@ -97,12 +116,18 @@ public class TaskListFragment extends BaseFragment<TodoPresent> implements TodoC
         });
     }
 
+    /**
+     * 刷新
+     */
     private void refresh() {
         errorLayout.setErrorType(EmptyLayout.NETWORK_LOADING);
         assert mPresenter != null;
         mPresenter.getAwaitOrder(typeStr, errorLayout);
     }
 
+    /**
+     * 初始化事件监听
+     */
     private void initListener() {
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -126,6 +151,9 @@ public class TaskListFragment extends BaseFragment<TodoPresent> implements TodoC
         });
     }
 
+    /**
+     * 初始化RecyclerView
+     */
     private void initRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         rvOrderList.setLayoutManager(linearLayoutManager);
@@ -133,6 +161,10 @@ public class TaskListFragment extends BaseFragment<TodoPresent> implements TodoC
         rvOrderList.setAdapter(adapter);
     }
 
+    /**
+     * 设置工单列表
+     * @param orderList
+     */
     @Override
     public void setOrderList(List<ListmapBean> orderList) {
         if (orderList.size() > 0) {

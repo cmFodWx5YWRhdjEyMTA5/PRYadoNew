@@ -29,7 +29,9 @@ public class AssessModel extends BaseModel implements AssessContract.Model {
         prApi = PRRetrofit.getInstance(MyApplication.getInstance()).getApi();
     }
 
-
+    /**
+     * 获取站室
+     */
     @Override
     public void getRoomList(final INetListener<Object, Throwable, Object> listener) {
         prApi
@@ -60,6 +62,9 @@ public class AssessModel extends BaseModel implements AssessContract.Model {
                 });
     }
 
+    /**
+     * 获取隐患
+     */
     @Override
     public void getBugList(int pid, final INetListener<Object, Throwable, Object> listener) {
         prApi
@@ -93,6 +98,9 @@ public class AssessModel extends BaseModel implements AssessContract.Model {
 
     }
 
+    /**
+     * 获取隐患详情
+     */
     @Override
     public void getBugInfo(int bugId, final INetListener<Object, Throwable, Object> listener) {
         prApi

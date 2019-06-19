@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -19,10 +21,16 @@ import com.yado.pryado.pryadonew.ActivityManager;
 import com.yado.pryado.pryadonew.MyApplication;
 import com.yado.pryado.pryadonew.MyConstants;
 import com.yado.pryado.pryadonew.R;
+import com.yado.pryado.pryadonew.net.PRRetrofit;
+import com.yado.pryado.pryadonew.subscriber.PRSubscriber;
 import com.yado.pryado.pryadonew.ui.login.LoginActivity;
 import com.yado.pryado.pryadonew.ui.main.MainActivity;
 
 import java.lang.ref.WeakReference;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 @SuppressLint("StaticFieldLeak")
 public class DialogUtil {
@@ -71,8 +79,7 @@ public class DialogUtil {
                         dialogBuilder.dismiss();
                         if ("否".equals(btn1)) {
                         }else {
-                            excitApp();
-
+                            exitApp();
                         }
                     }
                 })
@@ -81,10 +88,37 @@ public class DialogUtil {
                     public void onClick(View v) {
                         dialogBuilder.dismiss();
                         if ("是".equals(btn2)) {     //注销登录
-                            // 1. 应用内简单的跳转
-                            ARouter.getInstance().build(MyConstants.LOGIN).navigation();
-//                            mContext.startActivity(new Intent(mContext, LoginActivity.class));
-                            ((MainActivity) mContext.get()).finish();
+                            PRRetrofit.getInstance(MyApplication.getContext()).getApi()
+                                    .userLogout(SharedPrefUtil.getInstance(MyApplication.getContext()).getT(MyConstants.USERNAME, "unknown"),
+                                            SharedPrefUtil.getInstance(MyApplication.getContext()).getT(MyConstants.PWD, "unknown"))
+                                    .subscribeOn(Schedulers.io())
+                                    .unsubscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(new PRSubscriber<String>(){
+                                        @Override
+                                        public void onSubscribe(Disposable d) {
+                                            super.onSubscribe(d);
+                                        }
+
+                                        @Override
+                                        public void onNext(String s) {
+                                            Log.e("userLogout", s);
+                                            if (s.equals("1")){
+                                                // 1. 应用内简单的跳转
+                                                ARouter.getInstance().build(MyConstants.LOGIN).navigation();
+                                                ((MainActivity) mContext.get()).finish();
+                                            }else {
+                                                ToastUtils.showShort("请检查网络！");
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable e) {
+                                            super.onError(e);
+                                            ARouter.getInstance().build(MyConstants.LOGIN).navigation();
+                                            ((MainActivity) mContext.get()).finish();
+                                        }
+                                    });
 
                         }else {   //后台运行
                             BackgroundProcess();
@@ -95,9 +129,36 @@ public class DialogUtil {
     }
 
 
-    private void excitApp() {
-        MyApplication.getActivityManager().popAllActivityExceptOne(mContext.get().getClass());
-        System.exit(0);
+    private void exitApp() {
+        PRRetrofit.getInstance(MyApplication.getContext()).getApi()
+                .userLogout(SharedPrefUtil.getInstance(MyApplication.getContext()).getT(MyConstants.USERNAME, "unknown"),
+                        SharedPrefUtil.getInstance(MyApplication.getContext()).getT(MyConstants.PWD, "unknown"))
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new PRSubscriber<String>(){
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        super.onSubscribe(d);
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        Log.e("userLogout", s);
+                        MyApplication.getActivityManager().popAllActivityExceptOne(mContext.get().getClass());
+                        MyApplication.getInstance().exit();
+//                        System.exit(0);//使用这个会重启
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        MyApplication.getActivityManager().popAllActivityExceptOne(mContext.get().getClass());
+                        MyApplication.getInstance().exit();
+//                        System.exit(0);
+                    }
+                });
+
     }
 
     private void BackgroundProcess() {

@@ -34,6 +34,9 @@ public class RoomDetailModel extends BaseModel implements RoomDetailContract.Mod
     }
 
 
+    /**
+     * 获取站室详情
+     */
     @Override
     public void getRoomDetail(int pid, int ver, final INetListener<Object, Throwable, Object> listener) {
         api
@@ -66,7 +69,10 @@ public class RoomDetailModel extends BaseModel implements RoomDetailContract.Mod
                 });
     }
 
-
+    /**
+     * 获取最高温的浮窗div
+     * @param pid
+     */
     @Override
     public void getMaxDiv(int pid, final INetListener<Object, Throwable, Object> listener) {
         api.getMaxDiv(pid)
@@ -97,6 +103,12 @@ public class RoomDetailModel extends BaseModel implements RoomDetailContract.Mod
                 });
     }
 
+    /**
+     * 获取配电房所有的设备列表
+     * @param pid
+     * @param pagesize
+     * @param pageindex
+     */
     @Override
     public void getDeviceInfoList(int pid, int pagesize, int pageindex, final INetListener<Object, Throwable, Object> listener) {
         api.getDeviceInfoList(pid, pagesize, pageindex)

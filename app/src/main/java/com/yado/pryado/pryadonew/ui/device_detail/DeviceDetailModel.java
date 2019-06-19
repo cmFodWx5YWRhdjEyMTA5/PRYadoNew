@@ -53,6 +53,9 @@ public class DeviceDetailModel extends BaseModel implements DeviceDetailContract
     }
 
 
+    /**
+     * 获取详情
+     */
     @Override
     public void getDetail(String did, MyProgressDialog progressDialog, final INetListener<Object, Throwable, Object> listener) {
         prApi
@@ -85,6 +88,9 @@ public class DeviceDetailModel extends BaseModel implements DeviceDetailContract
                 });
     }
 
+    /**
+     * 获取详情
+     */
     @Override
     public void getDetail2(String did1, String did2, final INetListener<Object, Throwable, Object> listener) {
         Observable
@@ -131,6 +137,9 @@ public class DeviceDetailModel extends BaseModel implements DeviceDetailContract
 
     }
 
+    /**
+     * 获取隐患列表
+     */
     @Override
     public void getBugList(String did, final INetListener<Object, Throwable, Object> listener) {
         prApi
@@ -159,6 +168,9 @@ public class DeviceDetailModel extends BaseModel implements DeviceDetailContract
                 });
     }
 
+    /**
+     * 获取点数据
+     */
     @Override
     public void getPointData(String dateTime, String hour, String pid, String did, String tagid, final INetListener<Object, Throwable, Object> listener) {
         prApi
@@ -187,6 +199,9 @@ public class DeviceDetailModel extends BaseModel implements DeviceDetailContract
                 });
     }
 
+    /**
+     * 上传隐患
+     */
     @Override
     public void postNewBug(String pID, int did, String bugLocation, String bugDesc, final INetListener<Object, Throwable, Object> listener) {
         prApi
@@ -215,6 +230,10 @@ public class DeviceDetailModel extends BaseModel implements DeviceDetailContract
                 });
     }
 
+    /**
+     * 获取编码详情
+     * @param code
+     */
     @Override
     public void getInfoByCode(String code, final INetListener<Object, Throwable, Object> listener) {
         prApi

@@ -43,7 +43,7 @@ public abstract class BaseFragment<T extends BaseContract.BasePresenter> extends
 
 
     /**
-     * 该类呗系统创建的时候调用
+     * 该类被系统创建的时候调用
      * @param savedInstanceState
      */
     @Override
@@ -92,16 +92,36 @@ public abstract class BaseFragment<T extends BaseContract.BasePresenter> extends
         }
     }
 
+    /**
+     * 是否需要注册EventBus
+     * @return
+     */
     protected abstract boolean isRegisterEventBus();
 
+    /**
+     * 获取布局
+     * @return
+     */
     public abstract int getLayoutId();
 
+    /**
+     * 吃书画注入器
+     */
     protected abstract void initInjector();
 
+    /**
+     * 初始化View
+     */
     public abstract void initView();
 
+    /**
+     * 加载数据
+     */
     protected abstract void loadData();
 
+    /**
+     * 懒加载
+     */
     private void lazyLoad() {
         //这里进行双重标记判断,是因为setUserVisibleHint会多次回调,并且会在onCreateView执行前回调,必须确保onCreateView加载完毕且页面可见,才加载数据
         if (isViewCreated && isUIVisible) {

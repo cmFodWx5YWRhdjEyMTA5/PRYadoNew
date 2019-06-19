@@ -31,6 +31,7 @@ public class AffairPresent extends BasePresenter<AffairContract.View, AffairMode
     public AffairPresent() {
     }
 
+    //获取代办数量
     @Override
     public void getCounts() {
         mModel.getCounts(new INetListener<Object, Throwable, Object>() {
@@ -50,6 +51,7 @@ public class AffairPresent extends BasePresenter<AffairContract.View, AffairMode
         });
     }
 
+    //设置代办数量
     @Override
     public void setCounts(int count) {
         mModel.setCounts(count, new INetListener<Object, Throwable, Object>() {

@@ -41,6 +41,7 @@ public class AffairModel extends BaseModel implements AffairContract.Model{
         prApi = PRRetrofit.getInstance(MyApplication.getInstance()).getApi();
     }
 
+    //获取代办数量
     @Override
     public void getCounts(final INetListener<Object, Throwable, Object> listener) {
         Observable
@@ -91,6 +92,7 @@ public class AffairModel extends BaseModel implements AffairContract.Model{
                 });
     }
 
+    //设置代办数量
     @Override
     public void setCounts(int count, final INetListener<Object, Throwable, Object> listener) {
         Observable.just(count)

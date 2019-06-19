@@ -143,10 +143,10 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
     @Inject
     TempMonitorDataAdapter2 adapter2;
 
-    private List<TempMonitorBean> monitorBeanList;
-    private List<TempMonitorBean> monitorBeanList2;
-    private List<String> tagIds = new ArrayList<>();
-    private List<String> tagIds2 = new ArrayList<>();
+    private List<TempMonitorBean> monitorBeanList;//供两个 RecyclerView使用
+    private List<TempMonitorBean> monitorBeanList2;//供两条曲线使用
+    private List<String> tagIds = new ArrayList<>();//上面两个表格的 tagId集合
+    private List<String> tagIds2 = new ArrayList<>();//下面两条曲线的 tagId集合
     private String did;
     private int pid;
     private String station;
@@ -157,37 +157,53 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
     private View footerView;
     private View footerView2;
     private String startDate1, startDate2, endDate1, endDate2;
-    private List<LinkedHashMap<String, String>> dataSets1 = new ArrayList<>();
-    private List<LinkedHashMap<String, String>> dataSets2 = new ArrayList<>();
-    private List<List<String>> xValues1 = new ArrayList<>();
-    private List<List<String>> xValues2 = new ArrayList<>();
+    private List<LinkedHashMap<String, String>> dataSets1 = new ArrayList<>();//第一条曲线的数据集合
+    private List<LinkedHashMap<String, String>> dataSets2 = new ArrayList<>();//第二条曲线的数据集合
+    private List<List<String>> xValues1 = new ArrayList<>();//第一条曲线X轴数据集合
+    private List<List<String>> xValues2 = new ArrayList<>();//第二条曲线真实时间数据集合
 
-    private int type1, type2;
+    private int type1, type2;//选择的类型，有日，周，月三种
     private int[] colors;
-    private XYMarkerView mv;
-    private XYMarkerView mv1;
+    private XYMarkerView mv;//第一个提示框
+    private XYMarkerView mv1;//第二个提示框
 
-    private List<List<String>> yValues1 = new ArrayList<>();
-    private List<List<String>> xValues11 = new ArrayList<>();
-    private List<String> noDataTagIds = new ArrayList<>();
+    private List<List<String>> yValues1 = new ArrayList<>();//第一条曲线数据集合， 这个是用来echarts插件用的
+    private List<List<String>> xValues11 = new ArrayList<>();//第一条曲线真实时间数据集合
+    private List<String> noDataTagIds = new ArrayList<>();//没有数据的设备
 
     private boolean isFirst;
 
+    /**
+     * 是否需要注册 EventBus
+     * @return
+     */
     @Override
     protected boolean isRegisterEventBus() {
         return true;
     }
 
+    /**
+     * 加载布局
+     * @return
+     */
     @Override
     public int getLayoutId() {
         return R.layout.fragment_temp_monitor_assess;
     }
 
+    /**
+     * 注入View
+     */
     @Override
     protected void initInjector() {
         mFragmentComponent.inject(this);
     }
 
+    /**
+     * 获取TempMonitorAssessFragment 实例
+     * @param pid
+     * @return
+     */
     public static TempMonitorAssessFragment newInstance(int pid) {
         Bundle bundle = new Bundle();
         bundle.putInt("pid", pid);
@@ -201,6 +217,9 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
 
     }
 
+    /**
+     * 加载数据
+     */
     @Override
     protected void loadData() {
         assert getArguments() != null;
@@ -228,9 +247,12 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
 
     }
 
+    /**
+     * 初始化 MarkerView
+     */
     private void initMarkerView() {
-        mv = new XYMarkerView(context, R.layout.marker_view);
-        mv1 = new XYMarkerView(context, R.layout.marker_view);
+        mv = new XYMarkerView(context, R.layout.marker_view);//上面那条
+        mv1 = new XYMarkerView(context, R.layout.marker_view);//下面那条
         linechart.setMarkerView(mv);
         linechart2.setMarkerView(mv1);
         mv.setChartView(linechart);
@@ -239,6 +261,9 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
         mv1.setType(2);
     }
 
+    /**
+     * 初始化时间监听
+     */
     private void initListener() {
         linechart.setOnChartGestureListener(this);
         linechart2.setOnChartGestureListener(this);
@@ -246,11 +271,17 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
         rgLoad.setOnCheckedChangeListener(this);
     }
 
+    /**
+     * 初始化RecyclerView的 footerView
+     */
     private void initFooterView() {
         footerView = LayoutInflater.from(mFragmentComponent.getActivityContext()).inflate(R.layout.footer, null);
         footerView2 = LayoutInflater.from(mFragmentComponent.getActivityContext()).inflate(R.layout.footer, null);
     }
 
+    /**
+     * 初始化RecyclerView
+     */
     private void initRecyclerView() {
         RecyclerView.LayoutManager mLayoutManager1 = new LinearLayoutManager(getContext());
         RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(getContext());
@@ -267,6 +298,11 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
         adapter2.addFooterView(footerView2);
     }
 
+    /**
+     * 刷新数据
+     * @param did
+     * @param station
+     */
     @SuppressLint("SetTextI18n")
     public void onRefresh(String did, String station) {
         if (station != null) {
@@ -276,6 +312,7 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
         emptyLayout.setErrorType(EmptyLayout.NETWORK_LOADING);
         llContent.setVisibility(View.GONE);
         this.did = did;
+        //清除数据
         if (linechart.getLineData() != null) {
             linechart.clear();
             linechart.notifyDataSetChanged();
@@ -302,7 +339,10 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
         mPresenter.getDetail(this.did);
     }
 
-
+    /**
+     * 设置设备详情
+     * @param detailBean
+     */
     public void setDeviceDetail(DeviceDetailBean2 detailBean) {
         if (detailBean.getRealTimeParams() != null && detailBean.getRealTimeParams().size() > 0) {
             if (monitorBeanList == null) {
@@ -314,8 +354,8 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
             tagIds.clear();
             tagIds2.clear();
             for (int i = 0; i < detailBean.getRealTimeParams().size(); i++) {
-                if (!detailBean.getRealTimeParams().get(i).getPName().contains("仪表室") &&
-                        detailBean.getRealTimeParams().get(i).getDataTypeID().equals("120")) {
+                if (!detailBean.getRealTimeParams().get(i).getPName().contains("仪表室") &&    //仪表室没有测温数据，
+                        detailBean.getRealTimeParams().get(i).getDataTypeID().equals("120")) {//120表示非介入式温度
                     if (detailBean.getRealTimeParams().get(i).getTagID() == null) {
                         if (detailBean.getRealTimeParams().get(i).getTagIDA() != null) {
                             tagIds2.add(detailBean.getRealTimeParams().get(i).getTagIDA());
@@ -359,7 +399,7 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
             currentIndex = tagIds.size();
             if (tagIds.size() > 0) {
                 assert mPresenter != null;
-                mPresenter.loadVagueRealTime(Integer.parseInt(tagIds.get(0)), Integer.parseInt(did), pid);
+                mPresenter.loadVagueRealTime(Integer.parseInt(tagIds.get(0)), Integer.parseInt(did), pid);//获取非介入实时数据
             }
 
             isFirst = true;
@@ -369,14 +409,14 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
             rbDay.setChecked(true);
             rbDay.setTextColor(Color.GREEN);
             rbDay1.setTextColor(Color.GREEN);
-            startDate1 = DateUtils.getStringDateShort() + " 00:00:00";
+            startDate1 = DateUtils.getStringDateShort() + " 00:00:00";//初始化时间
             endDate1 = DateUtils.getStringDate();
             startDate2 = DateUtils.getStringDateShort() + " 00:00:00";
             endDate2 = DateUtils.getStringDate();
             noDataTagIds.clear();
             assert mPresenter != null;
-            mPresenter.loadMonitorHistoryGraph(pid, Integer.parseInt(tagIds2.get(0)), startDate1, endDate1);
-            mPresenter.loadVagueHistoryGraph(Integer.parseInt(tagIds2.get(0)), startDate2, endDate2);
+            mPresenter.loadMonitorHistoryGraph(pid, Integer.parseInt(tagIds2.get(0)), startDate1, endDate1);//获取非介入式曲线
+            mPresenter.loadVagueHistoryGraph(Integer.parseInt(tagIds2.get(0)), startDate2, endDate2);//获取常规曲线
             isFirst = false;
 
         } else {
@@ -385,8 +425,13 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
 
     }
 
+    /**
+     * 设置非介入式实时数据
+     * @param vagueRealTimeBean
+     */
     public void setVagueRealTimeBean(VagueRealTimeBean vagueRealTimeBean) {
-        if (monitorBeanList != null && monitorBeanList.size() > 0 && vagueRealTimeBean.getRows() != null && vagueRealTimeBean.getRows().size() > 0 && currentIndex > 0) {
+        if (monitorBeanList != null && monitorBeanList.size() > 0 && vagueRealTimeBean.getRows() != null &&
+                vagueRealTimeBean.getRows().size() > 0 && currentIndex > 0) {
             monitorBeanList.get(monitorBeanList.size() - currentIndex).setDynamicTemo(vagueRealTimeBean.getRows().get(0).getDynamicTemp());
             monitorBeanList.get(monitorBeanList.size() - currentIndex).setStaticTemp(vagueRealTimeBean.getRows().get(0).getStaticTemp());
             monitorBeanList.get(monitorBeanList.size() - currentIndex).setTempRate(vagueRealTimeBean.getRows().get(0).getTemprise_rate());
@@ -398,7 +443,7 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
             monitorBeanList.get(monitorBeanList.size() - currentIndex).setTagid(vagueRealTimeBean.getRows().get(0).getTagid());
 
             if (currentIndex2 > 0) {
-                if (!vagueRealTimeBean.getRows().get(0).getPosition().contains("仪表室")) {
+                if (!vagueRealTimeBean.getRows().get(0).getPosition().contains("仪表室")) {//仪表室没有非介入式测温 排除
                     monitorBeanList2.get(monitorBeanList2.size() - currentIndex2).setDynamicTemo(vagueRealTimeBean.getRows().get(0).getDynamicTemp());
                     monitorBeanList2.get(monitorBeanList2.size() - currentIndex2).setStaticTemp(vagueRealTimeBean.getRows().get(0).getStaticTemp());
                     monitorBeanList2.get(monitorBeanList2.size() - currentIndex2).setTempRate(vagueRealTimeBean.getRows().get(0).getTemprise_rate());
@@ -419,29 +464,24 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
             }
         }
         if (currentIndex == 0) {
-//            if (noDataTagIds.size() > 0) {
-//                for (int i = 0; i < monitorBeanList2.size(); i++) {
-//                    for (String tagId : noDataTagIds) {
-//                        if (monitorBeanList2.get(i).getTagid().equals(tagId)) {
-//                            monitorBeanList2.remove(i);
-//                        }
-//                    }
-//                }
-//            }
-            addLegend(monitorBeanList2);
-            adapter.setNewData(monitorBeanList);
+            addLegend(monitorBeanList2);//添加图例
+            adapter.setNewData(monitorBeanList);//adapter设置数据源
             adapter2.setNewData(monitorBeanList);
-            mv.setMonitorBeanList(monitorBeanList2);
+            mv.setMonitorBeanList(monitorBeanList2);//为提示框设置数据集合
             mv1.setMonitorBeanList(monitorBeanList2);
-            mv.setNoDataTagIds(noDataTagIds);
+            mv.setNoDataTagIds(noDataTagIds);//为提示框设置没有数据的设备集合
             mv1.setNoDataTagIds(noDataTagIds);
-            mv.setStation(station);
+            mv.setStation(station);//设置站室
             mv1.setStation(station);
             emptyLayout.setErrorType(EmptyLayout.HIDE_LAYOUT);
             llContent.setVisibility(View.VISIBLE);
         }
     }
 
+    /**
+     * 添加图例
+     * @param monitorBeanList2
+     */
     private void addLegend(List<TempMonitorBean> monitorBeanList2) {
         if (monitorBeanList2.size() > 0) {
             llDec.removeAllViews();
@@ -452,6 +492,11 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
         }
     }
 
+    /**
+     * 动态添加图例
+     * @param monitorBeanList2
+     * @param i
+     */
     @SuppressLint("SetTextI18n")
     private void addTextView(List<TempMonitorBean> monitorBeanList2, int i) {
         Drawable drawableLeft = null;
@@ -479,6 +524,10 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
         llDec1.addView(textView2);
     }
 
+    /**
+     * 设置PID
+     * @param pid
+     */
     public void setPid(int pid) {
         this.pid = pid;
         isFirst = true;
@@ -502,12 +551,15 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
         }
     }
 
-
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
         trySetData(checkedId);
     }
 
+    /**
+     * RadioGroup 切换监听
+     * @param checkedId
+     */
     private void trySetData(int checkedId) {
         switch (checkedId) {
             case R.id.rb_day:
@@ -536,7 +588,7 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
                 if (!isFirst) {
                     isFirst = false;
                     assert mPresenter != null;
-                    mPresenter.loadMonitorHistoryGraph(pid, Integer.parseInt(tagIds2.get(0)), startDate1, endDate1);
+                    mPresenter.loadMonitorHistoryGraph(pid, Integer.parseInt(tagIds2.get(0)), startDate1, endDate1);//获取曲线数据
                 }
                 rbDay.setTextColor(Color.GREEN);
                 rbWeek.setTextColor(Color.BLACK);
@@ -888,6 +940,10 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
         }
     }
 
+    /**
+     * 设置非介入曲线数据（下面那条）
+     * @param vagueHistoryGraphBeans
+     */
     public void setVagueHistoryGraphBean(List<VagueHistoryGraphBean> vagueHistoryGraphBeans) {
         if (vagueHistoryGraphBeans != null) {
             LinkedHashMap<String, String> datas = new LinkedHashMap<>();
@@ -946,6 +1002,10 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
         btnPre2.setEnabled(true);
     }
 
+    /**
+     * 设置常规曲线数据（上面那条）
+     * @param hisData
+     */
     public void setHisData(List<VagueHistoryGraphBean> hisData) {
         if (hisData != null) {
             LinkedHashMap<String, String> datas = new LinkedHashMap<>();
@@ -1022,6 +1082,7 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
     }
 
     /**
+     * echarts控件 此处不用
      * 根据https://mvnrepository.com/artifact/com.github.abel533/ECharts
      * 结合http://echarts.baidu.com/examples.html官方实例
      * 配置json数据
@@ -1076,10 +1137,6 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
         legend.setTextStyle(textStyle);
         legend.data(legends);
         option.legend(legend);
-        //grid
-//            Grid grid = new Grid();
-//            grid.y2(80);
-//            option.grid(grid);
         //xAxis
         List<Axis> xAxis = new ArrayList<Axis>();
         CategoryAxis categoryAxis = new CategoryAxis();
@@ -1098,12 +1155,7 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
         option.xAxis(xAxis);
         //yAxis
         List<Axis> yAxis = new ArrayList<Axis>();
-//        {
-//            ValueAxis valueAxis = new ValueAxis();
-//            valueAxis.name("水量");
-//            valueAxis.axisLabel(new AxisLabel().formatter("{value} ml"));
-//            yAxis.add(valueAxis);
-//        }
+
         {
             ValueAxis valueAxis = new ValueAxis();
 //            valueAxis.name("温度°C");
@@ -1122,39 +1174,6 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
             series.add(bar);
         }
 
-//        {
-//            Line bar = new Line();
-//            bar.name(legend1).type(SeriesType.line).yAxisIndex(0);
-//            List data = new ArrayList();
-//            double arrays[] = {2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3};
-//            for (double value : arrays){
-//                data.add(value);
-//            }
-//            bar.setData(data);
-//            series.add(bar);
-//        }
-//        {
-//            Line bar = new Line();
-//            bar.name(legend2).type(SeriesType.line).yAxisIndex(0);
-//            List data = new ArrayList();
-//            double arrays[] = {2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3};
-//            for (double value : arrays){
-//                data.add(value);
-//            }
-//            bar.setData(data);
-//            series.add(bar);
-//        }
-//        {
-//            Line line = new Line();
-//            line.name(legend3).type(SeriesType.line).yAxisIndex(0);
-//            List data = new ArrayList();
-//            double arrays[] = {2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2};
-//            for (double value : arrays){
-//                data.add(value);
-//            }
-//            line.setData(data);
-//            series.add(line);
-//        }
         option.series(series);
         //
         return option;
@@ -1284,6 +1303,7 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
 
     }
 
+    //设置错误信息
     public void setError(int type) {
         if (type == 1) {
             pbLoading.setVisibility(View.GONE);
@@ -1303,6 +1323,9 @@ public class TempMonitorAssessFragment extends BaseFragment<TempMonitorPresent> 
 
     }
 
+    /**
+     * 刷新曲线（echarts 控件使用，此处没有用到）
+     */
     public void reFreshLine() {
         ViewParent parent = barChartWebView1.getParent();
         if (parent != null) {

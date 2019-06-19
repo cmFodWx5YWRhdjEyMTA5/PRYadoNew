@@ -1,6 +1,5 @@
 package com.yado.pryado.pryadonew.ui.adapter;
 
-import android.graphics.Color;
 import android.support.annotation.Nullable;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;

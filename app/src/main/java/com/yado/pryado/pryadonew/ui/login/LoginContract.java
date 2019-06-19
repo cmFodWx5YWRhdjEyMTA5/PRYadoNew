@@ -14,15 +14,36 @@ public interface LoginContract {
 
 
     interface View extends BaseContract.BaseView{
+        /**
+         * 跳转到MainActivity
+         */
         void  goToMain();
 
+        /**
+         * 显示加载对话框
+         */
         void showLoadingDialog();
 
+        /**
+         * 隐藏对话框
+         */
         void hideLoadingDialog();
 
+        /**
+         * 显示确认登录提示框
+         * @param username
+         * @param password
+         */
+        void showCheckDialog(String username, String password);
     }
 
     interface Presenter extends BaseContract.BasePresenter<View>{
+
+        /**
+         * 检查是否登录
+         */
+
+        void checkLogin(String username, String password);
 
         /**
          *用户登录
@@ -37,6 +58,12 @@ public interface LoginContract {
     }
 
     interface Model extends BaseContract.BaseModel {
+
+        /**
+         * 检查是否登录
+         */
+        void checkLogin(String username, String password, INetListener<Object, Throwable, Object> listener);
+
         /**
          *用户登录
          */

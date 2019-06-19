@@ -1,6 +1,10 @@
 package com.yado.pryado.pryadonew.ui.login;
 
+import android.os.Handler;
+import android.os.SystemClock;
 import android.text.TextUtils;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.yado.pryado.pryadonew.MyApplication;
@@ -30,29 +34,75 @@ public class LoginPresent extends BasePresenter<LoginContract.View, LoginModel> 
     public LoginPresent() {
     }
 
+    /**
+     * 检查是否登录
+     */
+    @Override
+    public void checkLogin(final String username, final String password) {
+        mView.showLoadingDialog();
+        mModel.checkLogin(username, password, new INetListener<Object, Throwable, Object>() {
+            @Override
+            public void success(Object o) {
+                String msg = (String) o;
+                if (!TextUtils.isEmpty(msg)){
+                    if (msg.equals("1")){
+                        login(username, password);
+                    } else if (msg.equals("2")){
+                        mView.showCheckDialog(username, password);
+                    } else {
+                        ToastUtils.showShort("登录失败！");
+                        mView.hideLoadingDialog();
+                    }
+                } else {
+                    ToastUtils.showShort("登录失败！");
+                    mView.hideLoadingDialog();
+                }
+
+            }
+
+            @Override
+            public void failed(Throwable throwable) {
+                ToastUtils.showShort("登录失败！");
+                mView.hideLoadingDialog();
+            }
+
+            @Override
+            public void loading(Object o) {
+
+            }
+        });
+    }
+
+    /**
+     *用户登录
+     */
     @Override
     public void login(final String username, final String password) {
-        mView.showLoadingDialog();
         mModel.login(username, password, new INetListener<Object, Throwable, Object>() {
             @Override
             public void success(Object o) {
                 String msg = (String) o;
-                mView.hideLoadingDialog();
-                if (!TextUtils.isEmpty(msg) && ! msg.contains("错误")) {
-                    SharedPrefUtil.getInstance(MyApplication.getInstance()).saveObject(MyConstants.USERNAME, username);
-                    SharedPrefUtil.getInstance(MyApplication.getInstance()).saveObject(MyConstants.PWD, password);
-                    SharedPrefUtil.getInstance(MyApplication.getInstance()).saveObject("Sessionid", msg);
-                    UserEntityDao userEntityDao = MyApplication.getInstance().getDaoSession().getUserEntityDao();
-                    UserEntity user = userEntityDao.queryBuilder().where(UserEntityDao.Properties.Username.eq(username)).unique();
-                    if (user != null) {
-                        userEntityDao.update(user);
-                    } else {
-                        userEntityDao.insert(new UserEntity(null, username, password, msg));
+                Log.e("login", msg);
+                if (!TextUtils.isEmpty(msg)) {
+                    if (msg.contains("请检查用户名密码")) {
+                        ToastUtils.showShort(msg);
+                        mView.hideLoadingDialog();
+                    } else {//5rlc5akq3eog0peoiwjrhtd3☆1
+                        SharedPrefUtil.getInstance(MyApplication.getInstance()).saveObject("Sessionid", msg);
+                        SharedPrefUtil.getInstance(MyApplication.getInstance()).saveObject(MyConstants.USERNAME, username);
+                        SharedPrefUtil.getInstance(MyApplication.getInstance()).saveObject(MyConstants.PWD, password);
+                        UserEntityDao userEntityDao = MyApplication.getInstance().getDaoSession().getUserEntityDao();
+                        UserEntity user = userEntityDao.queryBuilder().where(UserEntityDao.Properties.Username.eq(username)).unique();
+                        if (user != null) {
+                            userEntityDao.update(user);
+                        } else {
+                            userEntityDao.insert(new UserEntity(null, username, password, msg));
+                        }
+                        mView.goToMain();
                     }
-                    mView.goToMain();
-                } else {
-                    ToastUtils.showShort(msg);
                 }
+                mView.hideLoadingDialog();
+
             }
 
             @Override
@@ -67,6 +117,9 @@ public class LoginPresent extends BasePresenter<LoginContract.View, LoginModel> 
         });
     }
 
+    /**
+     * 取消登录
+     */
     @Override
     public void cancelLogin() {
         mModel.cancelLogin();

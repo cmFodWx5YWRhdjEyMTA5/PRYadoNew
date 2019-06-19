@@ -43,7 +43,7 @@ public class HisOrderActivity extends BaseActivity<HisOrderPresent> implements H
     TextView name;
 
     @Inject
-    OrderListAdapter adapter;
+    OrderListAdapter adapter;//注入adapter
 //    @BindView(R.id.pd_name_spinner)
 //    NiceSpinner pdNameSpinner;
 
@@ -51,16 +51,26 @@ public class HisOrderActivity extends BaseActivity<HisOrderPresent> implements H
 //    private String username;
 
 
+    /**
+     * 加载布局
+     * @return
+     */
     @Override
     public int inflateContentView() {
         return R.layout.activity_his_order;
     }
 
+    /**
+     * 注入 View
+     */
     @Override
     protected void initInjector() {
         mActivityComponent.inject(this);
     }
 
+    /**
+     * 初始化数据
+     */
     @Override
     protected void initData() {
 //        pdNameSpinner.setVisibility(View.GONE);
@@ -75,6 +85,9 @@ public class HisOrderActivity extends BaseActivity<HisOrderPresent> implements H
         mPresenter.getHisOrderList(username.get(), MyConstants.ORDER_TYPE_COMPLETE, null, emptyLayout);
     }
 
+    /**
+     * 初始化监听事件
+     */
     private void initListener() {
         emptyLayout.setOnLayoutClickListener(new View.OnClickListener() {
             @Override
@@ -101,6 +114,9 @@ public class HisOrderActivity extends BaseActivity<HisOrderPresent> implements H
         return emptyLayout;
     }
 
+    /**
+     * 初始化RecyclerView
+     */
     private void initRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         rvHisOrder.setLayoutManager(linearLayoutManager);
@@ -108,11 +124,19 @@ public class HisOrderActivity extends BaseActivity<HisOrderPresent> implements H
         rvHisOrder.setAdapter(adapter);
     }
 
+    /**
+     * 是否注入EventBus
+     * @return
+     */
     @Override
     protected boolean isRegisterEventBus() {
         return false;
     }
 
+    /**
+     *是否注入 Arouter
+     * @return
+     */
     @Override
     protected boolean isNeedInject() {
         return false;
@@ -124,6 +148,10 @@ public class HisOrderActivity extends BaseActivity<HisOrderPresent> implements H
         finish();
     }
 
+    /**
+     * 设置工单列表
+     * @param orderList
+     */
     public void setOrderList(OrderList orderList) {
         if (orderList.getListmap() != null && orderList.getListmap().size() <= 0) {
             emptyLayout.setErrorType(EmptyLayout.NODATA);

@@ -109,15 +109,12 @@ public class DangerDetailActivity extends BaseActivity<AssessPresent> implements
     TextView tvValue2;
     @BindView(R.id.tv_value3)
     TextView tvValue3;
-//    @BindView(R.id.pd_name_spinner)
-//    NiceSpinner pdNameSpinner;
     @BindView(R.id.title_bar)
     RelativeLayout titleBar;
     @BindView(R.id.status_bar)
     View statusBar;
 
     private String videoUrl;
-//    private String videoUrl;
     private List<BugInfo.PhotoUrlBean> photos_net_maps;
     private ArrayList<String> photos_infrared_net = new ArrayList<>();
     private ArrayList<String> photos_net = new ArrayList<>();
@@ -125,7 +122,7 @@ public class DangerDetailActivity extends BaseActivity<AssessPresent> implements
     private int open1, open2, open3;
 
     @Inject
-    PhotoAdapter photoAdapter;
+    PhotoAdapter photoAdapter;//注入adapter
     @Inject
     PhotoAdapter infredAdapter;
 
@@ -133,38 +130,40 @@ public class DangerDetailActivity extends BaseActivity<AssessPresent> implements
     public BugList.ListmapBean bug;
     private String voice_net;
 
-
+    /**
+     * 加载布局
+     * @return
+     */
     @Override
     public int inflateContentView() {
         return R.layout.activity_danger_detail;
     }
 
+    /**
+     * 注入View
+     */
     @Override
     protected void initInjector() {
         mActivityComponent.inject(this);
     }
 
+    /**
+     * 初始化数据
+     */
     @Override
     protected void initData() {
         titleBar.setBackgroundColor(getResources().getColor(R.color.transparent));
         statusBar.setBackgroundColor(getResources().getColor(R.color.transparent));
-//        pdNameSpinner.setVisibility(View.GONE);
         name.setText("隐患详情");
         tvPre.setText("返回");
         initRecyclerView();
-//        final BugList.ListmapBean bug = getIntent().getParcelableExtra("bug");
         assert mPresenter != null;
         mPresenter.getBugInfo(bug.getBugID());
-//        mRecordService = new RecordService(mContext);
-//
-//        mRecordService.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//            @Override
-//            public void onCompletion(MediaPlayer mp) {
-//                tvRecordPlay.stopPlay();
-//            }
-//        });
     }
 
+    /**
+     * 初始化 RecyclerView
+     */
     private void initRecyclerView() {
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(mContext);
         linearLayoutManager1.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -198,6 +197,10 @@ public class DangerDetailActivity extends BaseActivity<AssessPresent> implements
         });
     }
 
+    /**
+     * 设置缺陷信息到View
+     * @param bugInfo
+     */
     public void setBugInfo(BugInfo bugInfo) {
         tvVoltageLevel.setText(bugInfo.getVoltageLevel());
         tvDeviceModel.setText(bugInfo.getDeviceModel());
@@ -238,7 +241,11 @@ public class DangerDetailActivity extends BaseActivity<AssessPresent> implements
 //        setPhotoAdapter();
     }
 
-
+    /**
+     * 获取 URL
+     * @param originUrl
+     * @return
+     */
     private String getRealUrl(String originUrl) {
         if (!TextUtils.isEmpty(originUrl)) {
             return originUrl.replace("~", SharedPrefUtil.getInstance(MyApplication.getInstance()).getString(MyConstants.BASE_URL, EadoUrl.BASE_URL_WEB));
@@ -246,12 +253,19 @@ public class DangerDetailActivity extends BaseActivity<AssessPresent> implements
         return "";
     }
 
-
+    /**
+     * 是否需要注册 EventBus
+     * @return
+     */
     @Override
     protected boolean isRegisterEventBus() {
         return false;
     }
 
+    /**
+     * 是否需要注入 Arouter
+     * @return
+     */
     @Override
     protected boolean isNeedInject() {
         return true;
@@ -320,7 +334,7 @@ public class DangerDetailActivity extends BaseActivity<AssessPresent> implements
                 }
                 open3++;
                 break;
-            case R.id.tv_video_play:
+            case R.id.tv_video_play://播放视频
                 if (tvRecordPlay.isPlaying()) {
                     tvRecordPlay.stopPlay();
                     RecorderAndShootUtil.getInstance(mContext).getmRecordService().stopPlaying();
@@ -328,7 +342,7 @@ public class DangerDetailActivity extends BaseActivity<AssessPresent> implements
                 RecorderAndShootUtil.getInstance(mContext).playVideo(videoUrl);
 //                playVideo();
                 break;
-            case R.id.tv_record_play:
+            case R.id.tv_record_play://播放录音
                 RecorderAndShootUtil.getInstance(mContext).playRecord(voice_net, tvRecordPlay);
                 break;
             default:

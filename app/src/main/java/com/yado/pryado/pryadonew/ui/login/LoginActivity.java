@@ -82,16 +82,12 @@ public class LoginActivity extends BaseActivity<LoginPresent> implements LoginCo
     private WeakReference<String> title;
     private WeakReference<Boolean> isLogin;
     private boolean isIP = true;
-    // 第二种方法（再按一次退出程序）两秒内双击返回键退出app
-    private long exitTime = 0;
+    private long showTime = 0;
     private NiceSpinner ip_spinner;
     private WeakReference<String[]> mItems;
     private List<String> mIps;
     private View dialogView;
-//    private TextView tv_point1;
-//    private TextView tv_point2;
-//    private TextView tv_point3;
-//    private TextView tv_point4;
+
     private TextView tv_change;
     private EditText et_ip1;
     private EditText et_ip2;
@@ -107,6 +103,9 @@ public class LoginActivity extends BaseActivity<LoginPresent> implements LoginCo
         requestPermissions();
     }
 
+    /**
+     * 申请权限
+     */
     @SuppressLint("CheckResult")
     private void requestPermissions() {
         RxPermissions rxPermission = new RxPermissions((Activity) mContext);
@@ -136,11 +135,18 @@ public class LoginActivity extends BaseActivity<LoginPresent> implements LoginCo
 
     }
 
+    /**
+     * 加载布局
+     * @return
+     */
     @Override
     public int inflateContentView() {
         return R.layout.activity_login;
     }
 
+    /**
+     * 初始化数据
+     */
     @Override
     protected void initData() {
         AssetManager mgr = getAssets();
@@ -152,11 +158,18 @@ public class LoginActivity extends BaseActivity<LoginPresent> implements LoginCo
             userName.setText(SharedPrefUtil.getInstance(MyApplication.getInstance()).getString(MyConstants.USERNAME, ""));
             userPassword.setText(SharedPrefUtil.getInstance(MyApplication.getInstance()).getString(MyConstants.PWD, ""));
         }
+        initListener();
+    }
+
+    /**
+     * 初始化监听事件
+     */
+    private void initListener() {
         ivLogo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if ((System.currentTimeMillis() - exitTime) > 2000) {
-                    exitTime = System.currentTimeMillis();
+                if ((System.currentTimeMillis() - showTime) > 2000) {
+                    showTime = System.currentTimeMillis();
                 } else {
                     tv_change_ip.setVisibility(View.VISIBLE);
                 }
@@ -179,18 +192,19 @@ public class LoginActivity extends BaseActivity<LoginPresent> implements LoginCo
                 } else {
                     username = new WeakReference<>(userName.getText().toString().trim());
                     password = new WeakReference<>(userPassword.getText().toString().trim());
-//                    username = userName.getText().toString().trim();
-//                    password = userPassword.getText().toString().trim();
                     isLogin = new WeakReference<>(true);
 //                    isLogin = true;
                     assert mPresenter != null;
-                    mPresenter.login(username.get(), password.get());
+                    mPresenter.checkLogin(username.get(), password.get());
+//                    mPresenter.login(username.get(), password.get());//如果使用旧版请用这个登录
                 }
             }
         });
     }
 
-
+    /**
+     * 显示设置IP Dialog
+     */
     private void showIPDialog() {
         if (dialogBuilder == null) {
             dialogBuilder = NiftyDialogBuilder.getInstance(mContext);
@@ -226,7 +240,6 @@ public class LoginActivity extends BaseActivity<LoginPresent> implements LoginCo
                 .setButton2Click(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         String ip;
                         if (isIP) {
                             if (TextUtils.isEmpty(et_ip1.getText().toString().trim()) || TextUtils.isEmpty(et_ip2.getText().toString().trim()) || TextUtils.isEmpty(et_ip3.getText().toString().trim())
@@ -276,20 +289,6 @@ public class LoginActivity extends BaseActivity<LoginPresent> implements LoginCo
                     et_domain.setVisibility(View.VISIBLE);
                     ll_ip.setVisibility(View.GONE);
                     et_domain.setHint("yw.eado.com.cn");
-//                    et_ip2.setVisibility(View.GONE);
-//                    et_ip3.setVisibility(View.GONE);
-//                    et_ip4.setVisibility(View.GONE);
-//                    et_ip5.setVisibility(View.GONE);
-//                    tv_point1.setVisibility(View.GONE);
-//                    tv_point2.setVisibility(View.GONE);
-//                    tv_point3.setVisibility(View.GONE);
-//                    tv_point4.setVisibility(View.GONE);
-//                    et_ip1.setNextFocusForwardId(et_ip5.getId());
-//                    et_ip1.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-//                    et_ip2.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-//                    et_ip3.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-//                    et_ip4.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-//                    tv_change.setText("去设置IP");
 
                 } else {
                     if (dialogBuilder != null) {
@@ -304,19 +303,6 @@ public class LoginActivity extends BaseActivity<LoginPresent> implements LoginCo
                     et_ip3.setHint("108");
                     et_ip4.setHint("27");
                     et_ip5.setHint("8008");
-//                    et_ip2.setVisibility(View.VISIBLE);
-//                    et_ip3.setVisibility(View.VISIBLE);
-//                    et_ip4.setVisibility(View.VISIBLE);
-//                    et_ip5.setVisibility(View.VISIBLE);
-//                    tv_point1.setVisibility(View.VISIBLE);
-//                    tv_point2.setVisibility(View.VISIBLE);
-//                    tv_point3.setVisibility(View.VISIBLE);
-//                    tv_point4.setVisibility(View.VISIBLE);
-//                    et_ip1.setNextFocusForwardId(et_ip2.getId());
-//                    et_ip1.setInputType(InputType.TYPE_CLASS_NUMBER);
-//                    et_ip2.setInputType(InputType.TYPE_CLASS_NUMBER);
-//                    et_ip3.setInputType(InputType.TYPE_CLASS_NUMBER);
-//                    et_ip4.setInputType(InputType.TYPE_CLASS_NUMBER);
                 }
                 isIP = !isIP;
             }
@@ -349,13 +335,12 @@ public class LoginActivity extends BaseActivity<LoginPresent> implements LoginCo
         });
     }
 
+    /**
+     * 初始化IP 对话框 View
+     */
     private void initDialogView() {
         if (dialogView == null) {
             dialogView = LayoutInflater.from(this).inflate(R.layout.activity_set_ip, null);
-//            tv_point1 = dialogView.findViewById(R.id.tv_point1);
-//            tv_point2 = dialogView.findViewById(R.id.tv_point2);
-//            tv_point3 = dialogView.findViewById(R.id.tv_point3);
-//            tv_point4 = dialogView.findViewById(R.id.tv_point4);
             tv_change = dialogView.findViewById(R.id.tv_change);
             et_ip1 = dialogView.findViewById(R.id.ip_edit_text1);
             et_ip2 = dialogView.findViewById(R.id.ip_edit_text2);
@@ -368,7 +353,7 @@ public class LoginActivity extends BaseActivity<LoginPresent> implements LoginCo
             String ip = SharedPrefUtil.getInstance(MyApplication.getInstance()).getT(MyConstants.BASE_URL, "");
             if (ip.length() > 0) {
                 et_domain.setText(ip.substring(7));
-                String[] split =ip.substring(7).split("\\.");
+                String[] split = ip.substring(7).split("\\.");
                 if (split.length >= 4) {
                     et_ip1.setText(split[0]);
                     et_ip2.setText(split[1]);
@@ -379,24 +364,14 @@ public class LoginActivity extends BaseActivity<LoginPresent> implements LoginCo
             }
 
         }
-//        if (isIP) {
-//            tv_change.setText("设置域名");
-//            et_ip1.setInputType(InputType.TYPE_CLASS_NUMBER);
-//            et_ip2.setInputType(InputType.TYPE_CLASS_NUMBER);
-//            et_ip3.setInputType(InputType.TYPE_CLASS_NUMBER);
-//            et_ip4.setInputType(InputType.TYPE_CLASS_NUMBER);
-//        } else {
-//            tv_change.setText("设置IP");
-//            et_ip1.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-//            et_ip2.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-//            et_ip3.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-//            et_ip4.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-//        }
         ViewGroup.MarginLayoutParams layoutParams = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(SizeUtils.dp2px(15), SizeUtils.dp2px(10), SizeUtils.dp2px(15), 0);
         dialogView.setLayoutParams(layoutParams);
     }
 
+    /**
+     * 设置 IP 下拉框
+     */
     private void setIpSpinner() {
         mIps = SharedPrefUtil.getInstance(MyApplication.getInstance()).getIpList("ip");
         mItems = new WeakReference<>(new String[mIps.size() + 1]);
@@ -411,6 +386,10 @@ public class LoginActivity extends BaseActivity<LoginPresent> implements LoginCo
         }
     }
 
+    /**
+     * 获取IP 对话框 标题
+     * @return
+     */
     private String getDialogTitle() {
         if (isIP) {
             return "设置端口IP";
@@ -419,21 +398,35 @@ public class LoginActivity extends BaseActivity<LoginPresent> implements LoginCo
         }
     }
 
+    /**
+     * 是否注册EventBus
+     * @return
+     */
     @Override
     protected boolean isRegisterEventBus() {
         return false;
     }
 
+    /**
+     * 是否需要注入 arouter
+     * @return
+     */
     @Override
     protected boolean isNeedInject() {
         return false;
     }
 
+    /**
+     * 注入View
+     */
     @Override
     protected void initInjector() {
         mActivityComponent.inject((LoginActivity) mContext);
     }
 
+    /**
+     * 跳转到MainActivity
+     */
     @Override
     public void goToMain() {
         SharedPrefUtil.getInstance(MyApplication.getInstance()).saveObject(MyConstants.USERNAME, username.get());
@@ -447,11 +440,17 @@ public class LoginActivity extends BaseActivity<LoginPresent> implements LoginCo
         finish();
     }
 
+    /**
+     * 取消登录
+     */
     public void cancelLogin() {
         assert mPresenter != null;
         mPresenter.cancelLogin();
     }
 
+    /**
+     * 显示登录对话框
+     */
     @Override
     public void showLoadingDialog() {
         if (progressDialog == null) {
@@ -475,11 +474,53 @@ public class LoginActivity extends BaseActivity<LoginPresent> implements LoginCo
 
     }
 
+    /**
+     * 隐藏对话框
+     */
     @Override
     public void hideLoadingDialog() {
         if (progressDialog != null) {
             progressDialog.dismiss();
         }
+    }
+
+    /**
+     * 显示确认登录提示框
+     * @param username
+     * @param password
+     */
+    @Override
+    public void showCheckDialog(final String username, final String password) {
+        final NiftyDialogBuilder dialogBuilder1 = NiftyDialogBuilder.getInstance(mContext);
+        dialogBuilder1
+                .withTitle("提示")                               //标题.withTitle(null)  no title
+                .withTitleColor("#FFFFFF")                               //def  标题颜色
+                .withDividerColor("#11000000")                           //def
+                .withMessage("该账号已经登录或异常退出，是否要继续登录？")                 //.withMessage(null)  no Msg   内容
+                .withMessageColor("#FFCFCFCF")                          //def  | withMessageColor(int resid)   内容颜色
+                .withDialogColor("#AF444D50")                            //def  | withDialogColor(int resid)   dialog框颜色
+                .withIcon(mContext.getResources().getDrawable(R.drawable.ic_logo2))  //标题栏图标
+                .withDuration(700)                                      //def      动画持续时间
+                .withEffect(Effectstype.SlideBottom)                                     //def Effectstype.Slidetop  动画模式
+                .withButton1Text("取消")                                  //def gone     按钮文字
+                .withButton2Text("确定")                              //def gone
+                .isCancelableOnTouchOutside(false)                       //def    | isCancelable(true)是否支持点击dialog框外关闭dialog
+                .setButton1Click(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialogBuilder1.dismiss();
+                        hideLoadingDialog();
+                    }
+                })
+                .setButton2Click(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        assert mPresenter != null;
+                        mPresenter.login(username, password);
+                        dialogBuilder1.dismiss();
+                    }
+                })
+                .show();    //展示
     }
 
     @Override

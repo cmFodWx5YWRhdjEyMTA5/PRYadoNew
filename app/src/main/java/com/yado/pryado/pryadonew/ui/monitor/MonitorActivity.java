@@ -73,14 +73,10 @@ public class MonitorActivity extends BaseActivity<MonitorPresent> implements Mon
     private static final int ERROR_NET = 21;
     @BindView(R.id.name)
     TextView name;
-    //    @BindView(R.id.displaytype)
-//    CheckBox displaytype;
     @BindView(R.id.check_type)
     ViewStub checkType;
     @BindView(R.id.mapView)
     MapView mapView;
-//    @BindView(R.id.pd_name_spinner)
-//    NiceSpinner pdNameSpinner;
     private CommonPopupWindow popupWindow;
     private View popView;
     private RecyclerView rv_rooms;
@@ -101,14 +97,11 @@ public class MonitorActivity extends BaseActivity<MonitorPresent> implements Mon
     private MyHandler handler = new MyHandler(MonitorActivity.this);
 
 
-
     private static class MyHandler extends Handler {
-
         WeakReference<MonitorActivity> weakReference;
 
         MyHandler(MonitorActivity monitorActivity) {
             this.weakReference = new WeakReference<>(monitorActivity);
-
         }
 
         @Override
@@ -123,7 +116,6 @@ public class MonitorActivity extends BaseActivity<MonitorPresent> implements Mon
                 case NO_LOGIN:
                     ToastUtils.showShort("没有登录，请登录...");
                     ARouter.getInstance().build(MyConstants.LOGIN).navigation();
-//                    startActivity(new Intent(MonitorActivity.this, LoginActivity.class));
                     weakReference.get().finish();
                     break;
                 case ERROR_GET_JSON:
@@ -136,20 +128,28 @@ public class MonitorActivity extends BaseActivity<MonitorPresent> implements Mon
         }
     }
 
-
+    /**
+     * 加载布局
+     * @return
+     */
     @Override
     public int inflateContentView() {
         return R.layout.activity_monitor;
     }
 
+    /**
+     * 注入View
+     */
     @Override
     protected void initInjector() {
         mActivityComponent.inject(this);
     }
 
+    /**
+     * 初始化数据
+     */
     @Override
     protected void initData() {
-//        pdNameSpinner.setVisibility(View.GONE);
         name.setText("监测");
         ll_displayType = checkType.inflate().findViewById(R.id.ll_displayType);
         displaytype = ll_displayType.findViewById(R.id.displaytype);
@@ -180,10 +180,14 @@ public class MonitorActivity extends BaseActivity<MonitorPresent> implements Mon
         mPresenter.getRoomList();
     }
 
+    /**
+     * 初始化站点标志
+     */
     private void initMap() {
         assert mPresenter != null;
         mPresenter.handle(rooms);
         addIcon(R.drawable.point_green, R.drawable.point_yellow_light, R.drawable.point_yellow, R.drawable.point_red);
+        //圆点点击事件
         mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -191,13 +195,7 @@ public class MonitorActivity extends BaseActivity<MonitorPresent> implements Mon
                     Bundle x = marker.getExtraInfo();
                     final int position = x.getInt("position");
                     final RoomListBean.RowsEntity room = x.getParcelable("room");
-//                Intent intent=new Intent(MonitorActivity.this,RoomDetailActivity.class);
-//                intent.putExtra("room",room);
                     LatLng pt = new LatLng(Double.valueOf(room.getLongtitude()), Double.valueOf(room.getLatitude()));
-//创建InfoWindow , 传入 imageView， 地理坐标， y 轴偏移量
-//                InfoWindow mInfoWindow = new InfoWindow(textView, pt, -47);
-//显示InfoWindow
-//                mBaiduMap.showInfoWindow(mInfoWindow);
                     assert mPresenter != null;
                     mPresenter.getGraphType(room.getPID(), room, rooms, position);
 //                    ARouter.getInstance().build(MyConstants.ROOM_DETAIL)
@@ -217,30 +215,33 @@ public class MonitorActivity extends BaseActivity<MonitorPresent> implements Mon
             }
         }, 100);
 
-
+        //设置地图状态监听
         mBaiduMap.setOnMapStatusChangeListener(new BaiduMap.OnMapStatusChangeListener() {
             @Override
-            public void onMapStatusChangeStart(MapStatus mapStatus) {
+            public void onMapStatusChangeStart(MapStatus mapStatus) {//开始改变
 
             }
 
             @Override
-            public void onMapStatusChangeStart(MapStatus mapStatus, int i) {
+            public void onMapStatusChangeStart(MapStatus mapStatus, int i) {//开始改变
 
             }
 
             @Override
-            public void onMapStatusChange(MapStatus mapStatus) {
+            public void onMapStatusChange(MapStatus mapStatus) {//结束改变
 
             }
 
             @Override
-            public void onMapStatusChangeFinish(MapStatus mapStatus) {
+            public void onMapStatusChangeFinish(MapStatus mapStatus) {//结束改变
                 deliver(mapStatus);
             }
         });
     }
 
+    /**
+     * 初始化 百度Map
+     */
     private void initMapView() {
         mBaiduMap = mapView.getMap();
         mBaiduMap.setOnMapLoadedCallback(this);
@@ -260,6 +261,10 @@ public class MonitorActivity extends BaseActivity<MonitorPresent> implements Mon
         mBaiduMap.getUiSettings().setOverlookingGesturesEnabled(false);//禁止俯视仰视；
     }
 
+    /**
+     * 根据状态改变标签
+     * @param mapStatus
+     */
     private void deliver(MapStatus mapStatus) {
         Log.e(TAG, "deliver");
         if (mapStatus.zoom >= 8) {
@@ -275,7 +280,9 @@ public class MonitorActivity extends BaseActivity<MonitorPresent> implements Mon
         }
     }
 
-
+    /**
+     *设置点位置
+     */
     public void zoomToSpan() {
         if (mBaiduMap == null) {
             return;
@@ -293,6 +300,9 @@ public class MonitorActivity extends BaseActivity<MonitorPresent> implements Mon
         }
     }
 
+    /**
+     * 初始化站室对话框 View
+     */
     private void initPopView() {
         popView = LayoutInflater.from(mContext).inflate(R.layout.popup_item, null);
         rv_rooms = popView.findViewById(R.id.rv_rooms);
@@ -309,16 +319,18 @@ public class MonitorActivity extends BaseActivity<MonitorPresent> implements Mon
                 if (!Util.isDoubleClick()) {
                     assert mPresenter != null;
                     mPresenter.getGraphType(room.getPID(), room, rooms, position);
-//                    ARouter.getInstance().build(MyConstants.ROOM_DETAIL)
-//                            .withParcelable("room", room)
-//                            .withParcelableArrayList("room_list", (ArrayList<? extends Parcelable>) rooms)
-//                            .withInt("position", position)
-//                            .navigation();
                 }
             }
         });
     }
 
+    /**
+     * 向地图添加Icon 标志
+     * @param normal
+     * @param notice
+     * @param pre_alert
+     * @param alert
+     */
     private void addIcon(int normal, int notice, int pre_alert, int alert) {
         Log.e(TAG, "addIcon");
         if (normal_view == null) {
@@ -376,17 +388,28 @@ public class MonitorActivity extends BaseActivity<MonitorPresent> implements Mon
         }
     }
 
-
+    /**
+     * 是否注入 EventBus
+     * @return
+     */
     @Override
     protected boolean isRegisterEventBus() {
         return true;
     }
 
+    /**
+     * 是否需要注入Arouter
+     * @return
+     */
     @Override
     protected boolean isNeedInject() {
         return false;
     }
 
+    /**
+     * 设置站室列表
+     * @param rows
+     */
     public void setRooms(ArrayList<RoomListBean.RowsEntity> rows) {
         this.rooms = rows;
         adapter.setNewData(this.rooms);
@@ -435,7 +458,9 @@ public class MonitorActivity extends BaseActivity<MonitorPresent> implements Mon
         }
     }
 
-
+    /**
+     * 初始化 展示列表弹窗
+     */
     private void initPopWindow() {
         if (popupWindow == null) {
             popupWindow = new CommonPopupWindow.Builder(this)

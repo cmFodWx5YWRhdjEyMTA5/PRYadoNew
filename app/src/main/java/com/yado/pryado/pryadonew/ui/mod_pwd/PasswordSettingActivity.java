@@ -41,39 +41,57 @@ public class PasswordSettingActivity extends BaseActivity<PasswordSettingPresent
     MyClearEditText etNewPassword;
     @BindView(R.id.et_new_password_confirm)
     MyClearEditText etNewPasswordConfirm;
-//    @BindView(R.id.pd_name_spinner)
-//    NiceSpinner pdNameSpinner;
     @BindView(R.id.btn_determine)
     Button btnDetermine;
     private String newPassword;
 
+    /**
+     * 加载布局
+     * @return
+     */
     @Override
     public int inflateContentView() {
         return R.layout.activity_password_setting;
     }
 
+    /**
+     * 初始化数据
+     */
     @Override
     protected void initData() {
-//        pdNameSpinner.setVisibility(View.GONE);
         name.setText("修改密码");
         initEvent();
     }
 
+    /**
+     * 是否需要注入 EventBus
+     * @return
+     */
     @Override
     protected boolean isRegisterEventBus() {
         return false;
     }
 
+    /**
+     * 注入View
+     */
     @Override
     protected void initInjector() {
         mActivityComponent.inject(this);
     }
 
+    /**
+     * 是否要注入 Arouter
+     * @return
+     */
     @Override
     protected boolean isNeedInject() {
         return false;
     }
 
+    /**
+     * 初始化 EditText 事件监听
+     */
     private void initEvent() {
         final char[] sumChar = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
                 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
@@ -137,6 +155,9 @@ public class PasswordSettingActivity extends BaseActivity<PasswordSettingPresent
         }
     }
 
+    /**
+     * 显示更改密码对话框
+     */
     private void showChangePWDDiaolog() {
         final NiftyDialogBuilder dialogBuilder = NiftyDialogBuilder.getInstance(mContext);
         dialogBuilder
@@ -170,6 +191,9 @@ public class PasswordSettingActivity extends BaseActivity<PasswordSettingPresent
                 .show();    //展示
     }
 
+    /**
+     * 修改密码
+     */
     private void changePwd() {
        String oldPassword = etOldPassword.getText().toString().trim();
 //        String oldPassword = etOldPassword.getText().toString();
@@ -198,6 +222,10 @@ public class PasswordSettingActivity extends BaseActivity<PasswordSettingPresent
         }
     }
 
+    /**
+     * 设置修改后返回的Bean对象
+     * @param changePwdBean
+     */
     @Override
     public void setChangePwdBean(ChangePwNean changePwdBean) {
         int code = changePwdBean.getCode();

@@ -14,6 +14,7 @@ import io.reactivex.disposables.Disposable;
 public class DefaultDisposablePoolImpl implements IDisposablePool {
     private CompositeDisposable mDisposable;
 
+    //添加一个请求
     @Override
     public void addDisposable(Disposable disposable) {
         if (mDisposable == null) {
@@ -23,11 +24,13 @@ public class DefaultDisposablePoolImpl implements IDisposablePool {
         }
     }
 
+    //删除一个请求
     @Override
     public void deleteDisposable(Disposable disposable) {
         mDisposable.delete(disposable);
     }
 
+    //清除请求
     @Override
     public void clearPool() {
         if (mDisposable != null) {

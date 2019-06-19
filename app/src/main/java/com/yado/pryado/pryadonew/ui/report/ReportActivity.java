@@ -119,7 +119,7 @@ public class ReportActivity extends BaseActivity<ReportPresent> implements Repor
     private List<String> mInfraredList = new ArrayList<>();
 
     @Inject
-    PhotoAdapter normalAdapter;
+    PhotoAdapter normalAdapter;//注入adapter
 
     @Inject
     PhotoAdapter infraredAdapter;
@@ -167,9 +167,13 @@ public class ReportActivity extends BaseActivity<ReportPresent> implements Repor
         }
     }
 
+    //红外广播
     private DetectInfraredReceiver reciver;
 
-
+    /**
+     * 加载布局
+     * @return
+     */
     @Override
     public int inflateContentView() {
         return R.layout.activity_report;
@@ -180,6 +184,9 @@ public class ReportActivity extends BaseActivity<ReportPresent> implements Repor
         mActivityComponent.inject(this);
     }
 
+    /**
+     * 初始化数据
+     */
     @Override
     protected void initData() {
 //        pdNameSpinner.setVisibility(View.GONE);
@@ -192,18 +199,24 @@ public class ReportActivity extends BaseActivity<ReportPresent> implements Repor
             name.setText("隐患上报");
         }
         initRecyclerView();
-        initLinstener();
+        initListener();
         assert mPresenter != null;
         mPresenter.getRoomList();
         initUploadView();
     }
 
+    /**
+     * 初始化上传文件View
+     */
     private void initUploadView() {
         progressView = LayoutInflater.from(mContext).inflate(R.layout.defect_upload_item, null);
         numberProgressBar = progressView.findViewById(R.id.np_progress);
         tv_msg = progressView.findViewById(R.id.tv_msg);
     }
 
+    /**
+     * 注册广播
+     */
     private void initReceiver() {
         //调用红外app需要
         //注册广播
@@ -213,6 +226,9 @@ public class ReportActivity extends BaseActivity<ReportPresent> implements Repor
         registerReceiver(reciver, filter);
     }
 
+    /**
+     * 初始化 RecyclerView
+     */
     private void initRecyclerView() {
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(mContext);
         linearLayoutManager1.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -225,7 +241,10 @@ public class ReportActivity extends BaseActivity<ReportPresent> implements Repor
 
     }
 
-    private void initLinstener() {
+    /**
+     * 初始化监听事件
+     */
+    private void initListener() {
         roomsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
@@ -267,7 +286,10 @@ public class ReportActivity extends BaseActivity<ReportPresent> implements Repor
         });
     }
 
-
+    /**
+     * 设置站室列表
+     * @param roomListBean
+     */
     public void setRoomlist(RoomListBean roomListBean) {
         rooms = roomListBean.getRows();
         mItems = new WeakReference<>(new String[rooms.size() + 1]);
@@ -279,11 +301,19 @@ public class ReportActivity extends BaseActivity<ReportPresent> implements Repor
         roomsSpinner.attachDataSource(dataset);
     }
 
+    /**
+     * 是否需要注册 EventBus
+     * @return
+     */
     @Override
     protected boolean isRegisterEventBus() {
         return true;
     }
 
+    /**
+     * 是否需要注入Arouter
+     * @return
+     */
     @Override
     protected boolean isNeedInject() {
         return false;
@@ -296,37 +326,37 @@ public class ReportActivity extends BaseActivity<ReportPresent> implements Repor
             case R.id.tv_shouye:
                 finish();
                 break;
-            case R.id.tv_record_add:
+            case R.id.tv_record_add://录音
                 RecorderAndShootUtil.getInstance(mContext).recordSound(tvRecordName);
                 break;
-            case R.id.tv_record_play:
+            case R.id.tv_record_play://播放录音
                 RecorderAndShootUtil.getInstance(mContext).playRecord(tvRecordName.getText().toString(), tvRecordPlay);
                 break;
-            case R.id.tv_video_add:
+            case R.id.tv_video_add://录制视频
                 if (tvRecordPlay.isPlaying()) {
                     tvRecordPlay.stopPlay();
                     RecorderAndShootUtil.getInstance(mContext).getmRecordService().stopPlaying();
                 }
                 RecorderAndShootUtil.getInstance(mContext).gotoCaptureActivity();
                 break;
-            case R.id.iv_thumbnail:
+            case R.id.iv_thumbnail://播放视频
                 if (tvRecordPlay.isPlaying()) {
                     tvRecordPlay.stopPlay();
                     RecorderAndShootUtil.getInstance(mContext).getmRecordService().stopPlaying();
                 }
                 RecorderAndShootUtil.getInstance(mContext).playVideo(videofilename);
                 break;
-            case R.id.ib_add_image:
+            case R.id.ib_add_image://添加照片
                 AddPhotoUtil.getInstance(mContext).addPic((ArrayList<String>) mPicList);
                 break;
-            case R.id.ib_add_infrared:
+            case R.id.ib_add_infrared://添加红外照片
                 if (mInfraredList.size() >= 5) {
                     ToastUtils.showShort("您最多能添加5张红外照片！");
                 } else {
                     AddPhotoUtil.getInstance(mContext).goToInfredApp();
                 }
                 break;
-            case R.id.btn_submit:
+            case R.id.btn_submit://提交
                 showDialog();
                 break;
             default:
@@ -334,6 +364,9 @@ public class ReportActivity extends BaseActivity<ReportPresent> implements Repor
         }
     }
 
+    /**
+     * 显示提交对话框
+     */
     private void showDialog() {
         if (dialogBuilder == null) {
             dialogBuilder = NiftyDialogBuilder.getInstance(mContext);
@@ -376,6 +409,9 @@ public class ReportActivity extends BaseActivity<ReportPresent> implements Repor
         tv_msg.setText("是否上传隐患？");
     }
 
+    /**
+     * 上传新的隐患
+     */
     private void postNewBug() {
         if (pid <= 0) {
             ToastUtils.showShort("配电房不存在");
@@ -404,6 +440,7 @@ public class ReportActivity extends BaseActivity<ReportPresent> implements Repor
     @Override
     protected void onResume() {
         super.onResume();
+        //获取红外图像信息
         if (AddPhotoUtil.getInstance(mContext).fromInfred && path != null) {
             AddPhotoUtil.getInstance(mContext).getInfrared(path.get(), temps, minTemp, maxTemp, mInfraredList);
             infraredAdapter.setNewData(mInfraredList);
@@ -475,6 +512,10 @@ public class ReportActivity extends BaseActivity<ReportPresent> implements Repor
         }
     }
 
+    /**
+     * 上传 文件到服务器
+     * @param bugId
+     */
     public void uploadFile(String bugId) {
         //展示
         OkhttpUtils.getInstance().setProgressListener(new OkhttpUtils.ProgressListener() {

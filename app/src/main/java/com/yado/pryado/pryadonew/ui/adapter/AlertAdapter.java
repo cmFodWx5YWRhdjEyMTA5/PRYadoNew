@@ -30,6 +30,7 @@ import javax.inject.Inject;
 public class AlertAdapter extends BaseQuickAdapter<AlertBean.RowsBean, BaseViewHolder> {
     private ItemAnimHelper itemAnimHelper;
 
+    //注入adapter
     @Inject
     public AlertAdapter() {
         super(R.layout.item_alert, null);

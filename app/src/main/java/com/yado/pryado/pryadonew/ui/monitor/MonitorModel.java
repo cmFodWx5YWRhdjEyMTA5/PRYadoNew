@@ -25,6 +25,9 @@ public class MonitorModel extends BaseModel implements MonitorContract.Model{
     @Inject
     public MonitorModel(){}
 
+    /**
+     * 获取站室列表
+     */
     @Override
     public void getRoomList(final INetListener<Object, Throwable, Object> listener) {
         PRRetrofit.getInstance(MyApplication.getInstance()).getApi()
@@ -58,6 +61,11 @@ public class MonitorModel extends BaseModel implements MonitorContract.Model{
                 });
     }
 
+    /**
+     * 获取站室平面图是否是常规图
+     *
+     * @param pid
+     */
     @Override
     public void getGraphType(int pid, final INetListener<Object, Throwable, Object> listener) {
         PRRetrofit.getInstance(MyApplication.getInstance()).getApi().getGraphType(pid)
@@ -81,7 +89,6 @@ public class MonitorModel extends BaseModel implements MonitorContract.Model{
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
-//                        clearPool();
                         deleteDisposable(disposable);
                         listener.failed(e);
                     }

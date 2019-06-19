@@ -40,7 +40,9 @@ public class TempMonitorModel extends BaseModel implements TempMonitorContract.M
         prApi = PRRetrofit.getInstance(MyApplication.getInstance()).getApi();
     }
 
-
+    /**
+     * 获取站室
+     */
     @Override
     public void getRoomList(final INetListener<Object, Throwable, Object> listener) {
         prApi
@@ -73,6 +75,9 @@ public class TempMonitorModel extends BaseModel implements TempMonitorContract.M
                 });
     }
 
+    /**
+     * 获取报警状态
+     */
     @Override
     public void loadVagueAlarm(int pid, String alarmConfirm, String startDate, String endDate, final INetListener<Object, Throwable, Object> listener) {
         prApi
@@ -104,6 +109,9 @@ public class TempMonitorModel extends BaseModel implements TempMonitorContract.M
                 });
     }
 
+    /**
+     * 获取站室历史数据
+     */
     @Override
     public void loadMonitorHistoryGraph(int pid, int tagId, String startDate, String endDate, final INetListener<Object, Throwable, Object> listener) {
         prApi.loadMonitorHistoryGraph(pid, tagId, startDate, endDate)
@@ -135,7 +143,9 @@ public class TempMonitorModel extends BaseModel implements TempMonitorContract.M
                 });
     }
 
-
+    /**
+     * 获取详情
+     */
     @Override
     public void getDetail(String did, final INetListener<Object, Throwable, Object> listener) {
         prApi
@@ -169,6 +179,13 @@ public class TempMonitorModel extends BaseModel implements TempMonitorContract.M
                 });
     }
 
+    /**
+     * 获取非介入式测温实时数据
+     *
+     * @param tagId
+     * @param did
+     * @param pid
+     */
     @Override
     public void loadVagueRealTime(int tagId, int did, int pid, final INetListener<Object, Throwable, Object> listener) {
         prApi
@@ -201,6 +218,13 @@ public class TempMonitorModel extends BaseModel implements TempMonitorContract.M
                 });
     }
 
+    /**
+     * 获取非介入式测温历史曲线数据
+     *
+     * @param tagID
+     * @param startDate
+     * @param endDate
+     */
     @Override
     public void loadVagueHistoryGraph(int tagID, String startDate, String endDate, final INetListener<Object, Throwable, Object> listener) {
         prApi
@@ -233,6 +257,13 @@ public class TempMonitorModel extends BaseModel implements TempMonitorContract.M
                 });
     }
 
+    /**
+     * 获取站室状态
+     * @param pid
+     * @param did
+     * @param type
+     * @param listener
+     */
     @Override
     public void getStatusData(int pid, int did, int type, final INetListener<Object, Throwable, Object> listener) {
         prApi.getStatusData(pid, did, type)
@@ -263,6 +294,11 @@ public class TempMonitorModel extends BaseModel implements TempMonitorContract.M
                 });
     }
 
+    /**
+     * 获取站室平面图是否是常规图
+     *
+     * @param pid
+     */
     @Override
     public void getGraphType(int pid, final INetListener<Object, Throwable, Object> listener) {
         prApi.getGraphType(pid)
@@ -293,6 +329,12 @@ public class TempMonitorModel extends BaseModel implements TempMonitorContract.M
                 });
     }
 
+    /**
+     * 获取配电房所有的设备列表
+     * @param pid
+     * @param pagesize
+     * @param pageindex
+     */
     @Override
     public void getDeviceInfoList(int pid, int pagesize, int pageindex, final INetListener<Object, Throwable, Object> listener) {
         prApi.getDeviceInfoList(pid, pagesize, pageindex)

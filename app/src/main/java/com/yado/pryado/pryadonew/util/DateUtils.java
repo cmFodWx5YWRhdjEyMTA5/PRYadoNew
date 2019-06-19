@@ -288,6 +288,19 @@ public class DateUtils {
     }
 
     /**
+     * 获得几天之前或者几天之后的日期
+     * @param diff 差值：正的往后推，负的往前推
+     * @return
+     */
+    @SuppressLint("SimpleDateFormat")
+    public static String getOtherDay(int diff) {
+        SimpleDateFormat format = new SimpleDateFormat(DATE_TO_STRING_DETAIAL_PATTERN);
+        Calendar mCalendar = Calendar.getInstance();
+        mCalendar.add(Calendar.DATE, diff);
+        return format.format(mCalendar.getTime());
+    }
+
+    /**
      * 时间前推或后推分钟,其中JJ表示分钟.
      */
     public static String getPreTime(String sj1, String jj) {
@@ -306,9 +319,10 @@ public class DateUtils {
     /**
      * 得到一个时间延后或前移几天的时间,nowdate为时间,delay为前移或后延的天数
      */
+    @SuppressLint("SimpleDateFormat")
     public static String getNextDay(String nowdate, String delay) {
         try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+           SimpleDateFormat format = new SimpleDateFormat(DATE_TO_STRING_DETAIAL_PATTERN);
             SimpleDateFormat format2 = new SimpleDateFormat(DATE_TO_STRING_SHORT_PATTERN);
             String mdate = "";
             Date d;

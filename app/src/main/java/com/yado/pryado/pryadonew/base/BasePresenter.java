@@ -28,7 +28,7 @@ public class BasePresenter<T extends BaseContract.BaseView, M extends BaseModel>
             mView = null;
         }
         if (mModel != null) {
-            mModel.clearPool();
+            mModel.clearPool();//清除请求
             mModel = null;
         }
     }

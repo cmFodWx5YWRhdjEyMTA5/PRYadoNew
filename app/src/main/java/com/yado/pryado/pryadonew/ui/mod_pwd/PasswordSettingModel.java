@@ -23,6 +23,12 @@ public class PasswordSettingModel extends BaseModel implements PasswordSettingCo
     public PasswordSettingModel() {
     }
 
+    /**
+     * 修改密码
+     * @param username  用户名
+     * @param oldPassword   旧密码
+     * @param newPassword   新密码
+     */
     @Override
     public void changePW(String username, String oldPassword, String newPassword, final INetListener<Object, Throwable, Object> listener) {
         PRRetrofit.getInstance(MyApplication.getInstance()).getApi()

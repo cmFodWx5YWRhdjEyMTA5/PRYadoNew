@@ -25,6 +25,7 @@ import com.yado.pryado.pryadonew.bean.Update;
 import com.yado.pryado.pryadonew.net.INetListener;
 import com.yado.pryado.pryadonew.ui.widgit.CustomMarkerView;
 import com.yado.pryado.pryadonew.ui.widgit.EmptyLayout;
+import com.yado.pryado.pryadonew.util.DateUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -47,7 +48,9 @@ public class AlertPresent extends BasePresenter<AlertContract.View, AlertModel> 
     public AlertPresent() {
     }
 
-
+    /**
+     * 获取站室
+     */
     @Override
     public void getRoomList() {
         mModel.getRoomList(new INetListener<Object, Throwable, Object>() {
@@ -72,6 +75,13 @@ public class AlertPresent extends BasePresenter<AlertContract.View, AlertModel> 
         });
     }
 
+    /**
+     * 获取站室历史数据
+     * @param alarmTime  报警时间
+     * @param pid
+     * @param did
+     * @param tagid
+     */
     @Override
     public void getPointHisData(String alarmTime, String pid, String did, String tagid) {
         mModel.getPointHisData(alarmTime, pid, did, tagid, new INetListener<Object, Throwable, Object>() {
@@ -93,6 +103,13 @@ public class AlertPresent extends BasePresenter<AlertContract.View, AlertModel> 
         });
     }
 
+    /**
+     * 获取报警列表
+     * @param rows  页数
+     * @param type  类型
+     * @param page
+     * @param pid
+     */
     @Override
     public void getAlertList(int rows, int type, int page, int pid, EmptyLayout emptyLayout) {
         mModel.getAlertList(rows, type, page, pid, emptyLayout, new INetListener<Object, Throwable, Object>() {
@@ -113,6 +130,12 @@ public class AlertPresent extends BasePresenter<AlertContract.View, AlertModel> 
         });
     }
 
+    /**
+     * 获取报警列表
+     * @param rows  页数
+     * @param page
+     * @param pid
+     */
     @Override
     public void getAlertList_1(int rows, int page, String startDate, String endDate, int pid, EmptyLayout emptyLayout) {
         mModel.getAlertList_1(rows, page, startDate, endDate, pid, emptyLayout, new INetListener<Object, Throwable, Object>() {
@@ -166,6 +189,33 @@ public class AlertPresent extends BasePresenter<AlertContract.View, AlertModel> 
         leftAxis3.enableGridDashedLine(10f, 10f, 0f);
         leftAxis3.setDrawLimitLinesBehindData(true);
         mChart3.getAxisRight().setEnabled(false);
+    }
+
+    /**
+     * 获取间隔时间
+     */
+    public String getInternalDate(int type) {
+        String startDate, endDate;
+        switch (type) {
+            case 0:
+                startDate = DateUtils.getStringDateShort() + " 00:00:00";
+                endDate = DateUtils.getStringDate();
+                break;
+            case 1:
+                startDate = DateUtils.startWeek(DateUtils.getNow()) + " 00:00:00";
+                endDate = DateUtils.getStringDate();
+                break;
+            case 2:
+                endDate = DateUtils.getStringDateMiddle() + ":00:00";
+                startDate = DateUtils.timeStamp2Date(Long.parseLong(DateUtils.getSupportBeginDayofMonth(DateUtils.strToDate(endDate))), null);
+                break;
+            default:
+                endDate = DateUtils.getPreOrNextDate(DateUtils.strToDate(DateUtils.getStringDateShort()), true) + " 23:59:59";
+                startDate = endDate.split(" ")[0] + " 00:00:00";
+                break;
+        }
+        return startDate + "*" + endDate;
+
     }
 
 }

@@ -30,7 +30,9 @@ public class HisOrderModel extends BaseModel implements HisOrderContract.Model {
     public HisOrderModel() {
     }
 
-
+    /**
+     * 获取历史工单
+     */
     @Override
     public void getHisOrderList(String username, int orderState, String orderType, EmptyLayout emptyLayout,  final INetListener<Object, Throwable, Object> listener) {
         PRRetrofit.getInstance(MyApplication.getInstance()).getApi()

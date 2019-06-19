@@ -17,7 +17,8 @@ public interface TodoContract {
 
 
     interface View extends BaseContract.BaseView {
-      void setOrderList(List<ListmapBean> orderList);
+        //设置工单列表
+        void setOrderList(List<ListmapBean> orderList);
     }
 
     interface Presenter extends BaseContract.BasePresenter<View> {

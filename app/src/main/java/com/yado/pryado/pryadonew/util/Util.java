@@ -1,8 +1,12 @@
 package com.yado.pryado.pryadonew.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.telephony.TelephonyManager;
+
+import com.yado.pryado.pryadonew.MyApplication;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,6 +43,23 @@ public class Util {
             return 0;
         }
     }
+
+    //获取手机IMEI号
+    @SuppressLint("MissingPermission")
+    public static String getIMEI(Context context) {
+        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        String imei = telephonyManager.getDeviceId();
+        return imei;
+    }
+
+    //获取手机IMSI号
+    @SuppressLint("MissingPermission")
+    public static String getIMSI(Context context){
+        TelephonyManager mTelephonyMgr = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+       String imsi = mTelephonyMgr.getSubscriberId();
+        return imsi ;
+    }
+
 
     public static String matchChanel(String webUrl) {
         Pattern pattern = Pattern.compile("drv=\\d*");

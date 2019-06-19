@@ -16,9 +16,6 @@ import javax.inject.Inject;
 
 public class AssessPresent extends BasePresenter<AssessContract.View, AssessModel> implements AssessContract.Presenter {
 
-//    @Inject
-//    CartoonFragmentModel model;
-
     /**
      * 注入到Fragment
      */
@@ -26,6 +23,9 @@ public class AssessPresent extends BasePresenter<AssessContract.View, AssessMode
     public AssessPresent() {
     }
 
+    /**
+     * 获取站室
+     */
     @Override
     public void getRoomList() {
         mModel.getRoomList(new INetListener<Object, Throwable, Object>() {
@@ -46,6 +46,9 @@ public class AssessPresent extends BasePresenter<AssessContract.View, AssessMode
         });
     }
 
+    /**
+     * 获取隐患
+     */
     @Override
     public void getBugList(int pid) {
         mModel.getBugList(pid, new INetListener<Object, Throwable, Object>() {
@@ -66,6 +69,9 @@ public class AssessPresent extends BasePresenter<AssessContract.View, AssessMode
         });
     }
 
+    /**
+     * 获取隐患详情
+     */
     @Override
     public void getBugInfo(int bugId) {
         mModel.getBugInfo(bugId, new INetListener<Object, Throwable, Object>() {

@@ -26,6 +26,9 @@ public class ReportModel extends BaseModel implements ReportContract.Model {
     public ReportModel() {
     }
 
+    /**
+     * 获取站室
+     */
     @Override
     public void getRoomList(final INetListener<Object, Throwable, Object> listener) {
         PRRetrofit.getInstance(MyApplication.getInstance()).getApi()
@@ -57,6 +60,9 @@ public class ReportModel extends BaseModel implements ReportContract.Model {
                 });
     }
 
+    /**
+     * 隐患上报
+     */
     @Override
     public void postNewBug(int pid, String bugLocation, String bugDesc, final INetListener<Object, Throwable, Object> listener) {
         PRRetrofit.getInstance(MyApplication.getInstance()).getApi()

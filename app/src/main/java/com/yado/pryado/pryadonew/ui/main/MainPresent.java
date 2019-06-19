@@ -28,9 +28,6 @@ import static com.yado.pryado.pryadonew.ui.main.MainActivity.REQUEST_CODE_UNKNOW
 
 public class MainPresent extends BasePresenter<MainContract.View, MainModel> implements MainContract.Presenter {
 
-//    @Inject
-//    CartoonFragmentModel model;
-
     /**
      * 注入到Fragment
      */
@@ -38,7 +35,9 @@ public class MainPresent extends BasePresenter<MainContract.View, MainModel> imp
     public MainPresent() {
     }
 
-
+    /**
+     * 检查更新
+     */
     @Override
     public void CheckUpdate(final int versionCode) {
         mModel.CheckUpdate(versionCode, new INetListener<Object, Throwable, Object>() {
@@ -63,6 +62,11 @@ public class MainPresent extends BasePresenter<MainContract.View, MainModel> imp
         });
     }
 
+    /**
+     * 下载安装
+     * @param downloadUrl
+     * @param handler
+     */
     @Override
     public void DownLoadApk(String downloadUrl, Handler handler) {
         mModel.DownLoadApk(downloadUrl, handler, new INetListener<Object, Throwable, Object>() {
@@ -83,6 +87,11 @@ public class MainPresent extends BasePresenter<MainContract.View, MainModel> imp
         });
     }
 
+    /**
+     * 安装apk
+     * @param apkfile
+     * @param activity
+     */
     public void installApk(File apkfile, BaseActivity activity) {
         ToastUtils.showShort("存放apk路径==" + apkfile.getAbsolutePath());
 //        File apkfile = new File(saveFileName);

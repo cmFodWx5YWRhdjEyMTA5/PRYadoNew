@@ -26,6 +26,9 @@ public class ReportPresent extends BasePresenter<ReportContract.View, ReportMode
     public ReportPresent() {
     }
 
+    /**
+     * 获取站室
+     */
     @Override
     public void getRoomList() {
         mModel.getRoomList(new INetListener<Object, Throwable, Object>() {
@@ -46,6 +49,9 @@ public class ReportPresent extends BasePresenter<ReportContract.View, ReportMode
         });
     }
 
+    /**
+     * 隐患上报
+     */
     @Override
     public void postNewBug(int pid, String bugLocation, String bugDesc) {
         mModel.postNewBug(pid, bugLocation, bugDesc, new INetListener<Object, Throwable, Object>() {

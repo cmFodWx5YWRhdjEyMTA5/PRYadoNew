@@ -31,6 +31,9 @@ public class MainModel extends BaseModel implements MainContract.Model{
         prApi = PRRetrofit.getInstance(MyApplication.getInstance()).getApi();
     }
 
+    /**
+     * 检查更新
+     */
     @Override
     public void CheckUpdate(final int versionCode, final INetListener<Object, Throwable, Object> listener) {
         prApi
@@ -63,6 +66,9 @@ public class MainModel extends BaseModel implements MainContract.Model{
                 });
     }
 
+    /**
+     * 下载安装
+     */
     @Override
     public void DownLoadApk(String downloadUrl, Handler handler,  INetListener<Object, Throwable, Object> listener) {
         OkhttpUtils.getInstance().downLoad(downloadUrl, EadoUrl.DEFAULT_SAVE_FILE_PATH, handler);

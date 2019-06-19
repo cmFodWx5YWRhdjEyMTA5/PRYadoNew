@@ -66,7 +66,9 @@ public class TempMonitorPresent extends BasePresenter<TempMonitorContract.View, 
     public TempMonitorPresent() {
     }
 
-
+    /**
+     * 获取站室
+     */
     @Override
     public void getRoomList() {
         mModel.getRoomList(new INetListener<Object, Throwable, Object>() {
@@ -88,6 +90,9 @@ public class TempMonitorPresent extends BasePresenter<TempMonitorContract.View, 
         });
     }
 
+    /**
+     * 获取报警状态
+     */
     @Override
     public void loadVagueAlarm(int pid, String alarmConfirm, String startDate, String endDate) {
         mModel.loadVagueAlarm(pid, alarmConfirm, startDate, endDate, new INetListener<Object, Throwable, Object>() {
@@ -108,6 +113,9 @@ public class TempMonitorPresent extends BasePresenter<TempMonitorContract.View, 
         });
     }
 
+    /**
+     * 获取站室历史数据
+     */
     @Override
     public void loadMonitorHistoryGraph(int pid, int tagId, String startDate, String endDate) {
         mModel.loadMonitorHistoryGraph(pid, tagId, startDate, endDate, new INetListener<Object, Throwable, Object>() {
@@ -130,7 +138,13 @@ public class TempMonitorPresent extends BasePresenter<TempMonitorContract.View, 
         });
     }
 
-
+    /**
+     * 获取非介入式测温历史曲线数据
+     *
+     * @param tagID
+     * @param startDate
+     * @param endDate
+     */
     @Override
     public void loadVagueHistoryGraph(int tagID, String startDate, String endDate) {
         mModel.loadVagueHistoryGraph(tagID, startDate, endDate, new INetListener<Object, Throwable, Object>() {
@@ -153,6 +167,9 @@ public class TempMonitorPresent extends BasePresenter<TempMonitorContract.View, 
         });
     }
 
+    /**
+     * 获取详情
+     */
     @Override
     public void getDetail(String did) {
         mModel.getDetail(did, new INetListener<Object, Throwable, Object>() {
@@ -174,6 +191,13 @@ public class TempMonitorPresent extends BasePresenter<TempMonitorContract.View, 
         });
     }
 
+    /**
+     * 获取非介入式测温实时数据
+     *
+     * @param tagId
+     * @param did
+     * @param pid
+     */
     @Override
     public void loadVagueRealTime(int tagId, int did, int pid) {
         mModel.loadVagueRealTime(tagId, did, pid, new INetListener<Object, Throwable, Object>() {
@@ -195,6 +219,12 @@ public class TempMonitorPresent extends BasePresenter<TempMonitorContract.View, 
         });
     }
 
+    /**
+     * 获取站室状态
+     * @param pid
+     * @param did
+     * @param type
+     */
     @Override
     public void getStatusData(int pid, int did, int type) {
         mModel.getStatusData(pid, did, type, new INetListener<Object, Throwable, Object>() {
@@ -220,6 +250,11 @@ public class TempMonitorPresent extends BasePresenter<TempMonitorContract.View, 
         });
     }
 
+    /**
+     * 获取站室平面图是否是常规图
+     *
+     * @param pid
+     */
     @Override
     public void getGraphType(int pid) {
         mModel.getGraphType(pid, new INetListener<Object, Throwable, Object>() {
@@ -244,7 +279,12 @@ public class TempMonitorPresent extends BasePresenter<TempMonitorContract.View, 
         });
     }
 
-
+    /**
+     * 获取配电房所有的设备列表
+     * @param pid
+     * @param pagesize
+     * @param pageindex
+     */
     @Override
     public void getDeviceInfoList(int pid, int pagesize, int pageindex) {
         mModel.getDeviceInfoList(pid, pagesize, pageindex, new INetListener<Object, Throwable, Object>() {
@@ -310,6 +350,13 @@ public class TempMonitorPresent extends BasePresenter<TempMonitorContract.View, 
         }
     }
 
+    /**
+     * 转换曲线数据
+     * @param hisData
+     * @param type
+     * @param colors
+     * @return
+     */
     public LineData transform_data(List<LinkedHashMap<String, String>> hisData, int type, int[] colors) {
 
 //        ArrayList<String> xVals = new ArrayList<>();
@@ -407,7 +454,11 @@ public class TempMonitorPresent extends BasePresenter<TempMonitorContract.View, 
         }
     }
 
-
+    /**
+     * 获取最大的List
+     * @param lists
+     * @return
+     */
     public int compareList(List<List<String>> lists) {
         int k = 0;
         int maxIndex = lists.get(0).size();//定义最大值为该数组的第一个数
@@ -424,6 +475,11 @@ public class TempMonitorPresent extends BasePresenter<TempMonitorContract.View, 
         return k;
     }
 
+    /**
+     * 设置曲线参数
+     * @param dataSets
+     * @param colors
+     */
     private void setParm(ArrayList<ILineDataSet> dataSets, int[] colors) {
         for (int i = 0; i < dataSets.size(); i++) {
             ((LineDataSet) dataSets.get(i)).enableDashedHighlightLine(10f, 5f, 0f);
@@ -449,6 +505,12 @@ public class TempMonitorPresent extends BasePresenter<TempMonitorContract.View, 
 
     }
 
+    /**
+     * 获取X轴坐标
+     * @param key
+     * @param type
+     * @return
+     */
     private String getXvalue(String key, int type) {
         String result = "";
         switch (type) {

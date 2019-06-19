@@ -27,6 +27,9 @@ public class HisOrderPresent extends BasePresenter<HisOrderContract.View, HisOrd
     public HisOrderPresent() {
     }
 
+    /**
+     * 获取历史工单
+     */
     @Override
     public void getHisOrderList(String username, int orderState, String orderType, EmptyLayout emptyLayout) {
         mModel.getHisOrderList(username, orderState, orderType, emptyLayout,  new INetListener<Object, Throwable, Object>() {

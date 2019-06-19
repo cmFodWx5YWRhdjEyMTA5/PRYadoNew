@@ -11,8 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ScrollView;
 
 /**
- * @author Zhenhua on 2018/03/19
- * @email zhshan@ctrip.com ^.^
+ * @author yuong on 2018/03/19
  */
 public class HeaderScrollHelper {
 

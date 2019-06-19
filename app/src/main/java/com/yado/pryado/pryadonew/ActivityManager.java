@@ -1,6 +1,7 @@
 package com.yado.pryado.pryadonew;
 
 import com.yado.pryado.pryadonew.base.BaseActivity;
+import com.yado.pryado.pryadonew.ui.login.LoginActivity;
 
 import java.util.Stack;
 
@@ -41,9 +42,29 @@ public class ActivityManager {
         activityStack.add(activity);
     }
 
+    public void popAllExcludeLogin() {
+        while (true) {
+            if (activityStack == null) {
+                break;
+            }
+            if (activityStack.size() ==0) {
+                break;
+            }
+            BaseActivity activity = currentActivity();
+            if (activity == null) {
+                break;
+            } else if (!(activity instanceof LoginActivity)) {
+                popActivity(activity);
+            }
+        }
+    }
+
     //退出栈中所有Activity
     public void popAllActivityExceptOne(Class cls) {
         while (true) {
+            if (activityStack.size() == 0) {
+                break;
+            }
             BaseActivity activity = currentActivity();
             if (activity == null) {
                 break;

@@ -37,7 +37,7 @@ import butterknife.Unbinder;
 public abstract class BaseActivity<T extends BaseContract.BasePresenter>  extends RxAppCompatActivity implements BaseContract.BaseView{
 
     private Unbinder mBind;
-    protected Context mContext;
+    public Context mContext;
 
     @Nullable
     @Inject
@@ -80,6 +80,7 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter>  extend
         initData();
     }
 
+
     /**
      * 填充布局
      *
@@ -87,10 +88,21 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter>  extend
      */
     public abstract int inflateContentView();
 
+    /**
+     * 初始化数据
+     */
     protected abstract void initData();
 
+    /**
+     * 是否注册EventBus
+     * @return
+     */
     protected abstract boolean isRegisterEventBus();
 
+    /**
+     * 是否需要注入Arouter
+     * @return
+     */
     protected abstract boolean isNeedInject();
 
     public Context getContext() {
@@ -149,6 +161,7 @@ public abstract class BaseActivity<T extends BaseContract.BasePresenter>  extend
                 .build();
     }
 
+    //注入View
     protected void initInjector(){}
 
     /**

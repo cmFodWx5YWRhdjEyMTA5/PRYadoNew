@@ -93,16 +93,29 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
     DeviceInfoListAdapter adapter;
     private TypeBean typeBean;
 
+    /**
+     * 是否需要注册EventBus
+     * @return
+     */
     @Override
     protected boolean isRegisterEventBus() {
         return false;
     }
 
+    /**
+     * 加载布局
+     * @return
+     */
     @Override
     public int getLayoutId() {
         return R.layout.fragment_temp_monitor_plan;
     }
 
+    /**
+     * 获取一个 TempMonitorPlanFragment实例
+     * @param pid
+     * @return
+     */
     public static TempMonitorPlanFragment newInstance(int pid) {
         Bundle bundle = new Bundle();
         bundle.putInt("pid", pid);
@@ -111,6 +124,12 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
         return fragment;
     }
 
+    /**
+     * 获取平面图的URl
+     * @param pid
+     * @param type
+     * @return
+     */
     private String getWebUrl(int pid, int type) {
 //        return "http://113.106.90.51:8008/Monitor/AppPlanInfo?pid=211";
         String url;
@@ -124,6 +143,9 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
         return url;
     }
 
+    /**
+     * 注入View
+     */
     @Override
     protected void initInjector() {
         mFragmentComponent.inject(this);
@@ -134,10 +156,14 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
 
     }
 
+    //是否隐藏 webview2
     public void isHide(boolean isShow) {
         webview2.setVisibility(isShow ? View.GONE : View.VISIBLE);
     }
 
+    /**
+     * 加载数据
+     */
     @Override
     protected void loadData() {
         assert getArguments() != null;
@@ -152,6 +178,9 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
         mPresenter.getDeviceInfoList(pid, 100, 1);
     }
 
+    /**
+     * 初始化WebView
+     */
     @SuppressLint({"WrongConstant", "SetJavaScriptEnabled", "AddJavascriptInterface"})
     private void initWebView() {
 
@@ -201,6 +230,9 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
         webview2.getSettings().setLoadWithOverviewMode(true);
     }
 
+    /**
+     * 设置WebView
+     */
     private void setView() {
         webview.loadUrl(getWebUrl(pid, PLAN_INFO));
         //设置Web视图
@@ -222,6 +254,10 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
         webview2.setWebChromeClient(new MyWebChromeClient());
     }
 
+    /**
+     * 刷新WebView
+     * @param pid
+     */
     public void refreshWebView(final int pid) {
         emptyLayout.setErrorType(EmptyLayout.NETWORK_LOADING);
         svContent.setVisibility(View.GONE);
@@ -235,6 +271,10 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
         mPresenter.getDeviceInfoList(pid, 100, 1);
     }
 
+    /**
+     * 设置并加载 浮窗Div
+     * @param string
+     */
     public void setStatusData(String string) {
         String[] split = string.split("\\^\\^\\^\\^");
         // 加载并显示HTML代码
@@ -254,10 +294,12 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
 
     }
 
+    //设置是否是非介入式类型Bean
     public void setTypeBean(TypeBean typeBean) {
         this.typeBean = typeBean;
     }
 
+    //显示或隐藏
     public void setShowOrHide(boolean b) {
         svContent.setVisibility(b ? View.VISIBLE : View.GONE);
         emptyLayout.setVisibility(b ? View.GONE : View.VISIBLE);
@@ -283,6 +325,9 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
         }
     }
 
+    /**
+     * 初始化痰喘
+     */
     private void initPopWindow() {
         if (popupWindow == null) {
             popupWindow = new CommonPopupWindow.Builder(context)
@@ -301,7 +346,9 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
 
     }
 
-
+    /**
+     * 初始化弹窗 View
+     */
     private void initPopView() {
         popView = LayoutInflater.from(context).inflate(R.layout.popup_item2, null);
         rv_devices = popView.findViewById(R.id.rv_devices);
@@ -335,6 +382,10 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
         });
     }
 
+    /**
+     * 设置设备信息列表
+     * @param listBean
+     */
     public void setDeviceInfoListBean(DeviceInfoListBean listBean) {
         if (listBean.getRows() != null && listBean.getRows().size() > 0) {
             if (mStations == null) {
@@ -368,6 +419,9 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
         }
     }
 
+    /**
+     * js调用Java接口
+     */
     public class JavaScriptInterface {
         /**
          * 与js交互时用到的方法，在js里直接调用的
@@ -379,7 +433,7 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
                 event = new NonIntrusiveEvent();
             }
             event.setDid(did);
-            event.setIsClick(1);
+            event.setIsClick(1);//是否点击
             if (mDids != null && mDids.size() > 0) {
                 int index = mDids.indexOf(did);
                 if (index >= 0) {
@@ -462,6 +516,9 @@ public class TempMonitorPlanFragment extends BaseFragment<TempMonitorPresent> im
         releaseWebView();
     }
 
+    /**
+     * 释放WEbView
+     */
     private void releaseWebView() {
         if (webview != null) {
             // 如果先调用destroy()方法，则会命中if (isDestroyed()) return;这一行代码，需要先onDetachedFromWindow()，再

@@ -76,31 +76,50 @@ public class AlertFragment extends BaseFragment<AlertPresent> implements AlertCo
 
     private String startDate, endDate;
 
+    /**
+     * 是否注册 EventBus
+     * @return
+     */
     @Override
     protected boolean isRegisterEventBus() {
         return true;
     }
 
+    /**
+     * 加载布局
+     * @return
+     */
     @Override
     public int getLayoutId() {
         return R.layout.fragment_alert;
     }
 
+    /**
+     * 注入View
+     */
     @Override
     protected void initInjector() {
         mFragmentComponent.inject(this);
     }
 
+    //初始化View
     @Override
     public void initView() {
 
     }
 
+    /**
+     * 加载数据
+     */
     @Override
     protected void loadData() {
+        assert getArguments() != null;
         type = getArguments().getInt(BUNDLE_Type);
-        getInternalDate();
-        initRecycerView();
+        assert mPresenter != null;
+        String date = mPresenter.getInternalDate(type);
+        startDate = date.split("\\*")[0];
+        endDate = date.split("\\*")[1];
+        initRecyclerView();
         initDialogView();
         emptyLayout.setErrorType(EmptyLayout.NETWORK_LOADING);
         assert mPresenter != null;
@@ -110,35 +129,21 @@ public class AlertFragment extends BaseFragment<AlertPresent> implements AlertCo
         initListener();
     }
 
-    private void getInternalDate() {
-        switch (type) {
-            case 0:
-                startDate = DateUtils.getStringDateShort() + " 00:00:00";
-                endDate = DateUtils.getStringDate();
-                break;
-            case 1:
-                startDate = DateUtils.startWeek(DateUtils.getNow()) + " 00:00:00";
-                endDate = DateUtils.getStringDate();
-                break;
-            case 2:
-                endDate = DateUtils.getStringDateMiddle() + ":00:00";
-                startDate = DateUtils.timeStamp2Date(Long.parseLong(DateUtils.getSupportBeginDayofMonth(DateUtils.strToDate(endDate))), null);
-                break;
-            default:
-                endDate = DateUtils.getPreOrNextDate(DateUtils.strToDate(DateUtils.getStringDateShort()), true) + " 23:59:59";
-                startDate = endDate.split(" ")[0] + " 00:00:00";
-                break;
-        }
-    }
-
-    private void initRecycerView() {
+    /**
+     * 初始化 RecyclerView
+     */
+    private void initRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         rvAlert.setLayoutManager(linearLayoutManager);
 //        rvAlert.addItemDecoration(new SimplePaddingDecoration(context));
         rvAlert.setAdapter(adapter);
     }
 
+    /**
+     * 初始化监听事件
+     */
     private void initListener() {
+        //下拉加载更多
         smartRefreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
@@ -158,7 +163,7 @@ public class AlertFragment extends BaseFragment<AlertPresent> implements AlertCo
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 AlertBean.RowsBean rowsBean = (AlertBean.RowsBean) adapter.getData().get(position);
-                if ((rowsBean.getAlarmCate().equals("带电状态") || rowsBean.getAlarmCate().equals("开关量"))) {
+                if ((rowsBean.getAlarmCate().equals("带电状态") || rowsBean.getAlarmCate().equals("开关量"))) {//这两种状态没有曲线
                     return;
                 }
                 envxVals.clear();
@@ -173,6 +178,10 @@ public class AlertFragment extends BaseFragment<AlertPresent> implements AlertCo
         });
     }
 
+    /**
+     * 显示Dialog
+     * @param rowsBean
+     */
     private void showDialog(AlertBean.RowsBean rowsBean) {
         if (dialogBuilder == null) {
             dialogBuilder = NiftyDialogBuilder.getInstance(context);
@@ -208,6 +217,10 @@ public class AlertFragment extends BaseFragment<AlertPresent> implements AlertCo
 
     }
 
+    /**
+     * 设置曲线数据
+     * @param hisData
+     */
     public void setLineDatas(HisData hisData) {
         if (hisData != null && hisData.getHisDevData().size() > 0) {
             assert mPresenter != null;
@@ -226,6 +239,9 @@ public class AlertFragment extends BaseFragment<AlertPresent> implements AlertCo
         progressBar.setVisibility(View.GONE);
     }
 
+    /**
+     * 初始化Dialog View
+     */
     private void initDialogView() {
         chartView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_his, null);
         lineChart = chartView.findViewById(R.id.lineChart);
@@ -291,7 +307,11 @@ public class AlertFragment extends BaseFragment<AlertPresent> implements AlertCo
         return new LineData(envxVals, dataSets);
     }
 
-
+    /**
+     * 获取一个 AlertFragment 实例
+     * @param type
+     * @return
+     */
     public static AlertFragment newInstance(int type) {
         Bundle bundle = new Bundle();
         bundle.putInt(BUNDLE_Type, type);
@@ -307,6 +327,10 @@ public class AlertFragment extends BaseFragment<AlertPresent> implements AlertCo
         }
     }
 
+    /**
+     * 重新联网请求
+     * @param pid
+     */
     public void onRefresh(int pid) {
         pageindex = 1;
         this.pid = pid;
@@ -320,6 +344,10 @@ public class AlertFragment extends BaseFragment<AlertPresent> implements AlertCo
         mPresenter.getAlertList_1(20, pageindex, startDate, endDate, pid, emptyLayout);
     }
 
+    /**
+     * 设置报警列表
+     * @param alertBean
+     */
     public void setAlertList(AlertBean alertBean) {
         int notice = 0;
         smartRefreshLayout.finishLoadmore();
@@ -346,10 +374,18 @@ public class AlertFragment extends BaseFragment<AlertPresent> implements AlertCo
         }
     }
 
+    /**
+     * 设置开始时间
+     * @param startDate
+     */
     public void setStartDate(String startDate) {
         this.startDate = startDate + " 00:00:00";
     }
 
+    /**
+     * 设置结束时间并加载数据
+     * @param endDate
+     */
     public void setEndDate(String endDate) {
         emptyLayout.setVisibility(View.VISIBLE);
         emptyLayout.setErrorType(EmptyLayout.NETWORK_LOADING);
