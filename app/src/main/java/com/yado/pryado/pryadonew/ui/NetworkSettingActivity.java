@@ -39,10 +39,7 @@ public class NetworkSettingActivity extends BaseActivity {
     RadioGroup radioGroupInternet;
     @BindView(R.id.btn_determine)
     Button btnDetermine;
-//    @BindView(R.id.pd_name_spinner)
-//    NiceSpinner pdNameSpinner;
 
-    //    private NetworkChecker mNetworkChecker;
     private int type;
 
     @Override
@@ -52,7 +49,6 @@ public class NetworkSettingActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-//        pdNameSpinner.setVisibility(View.GONE);
         name.setText(getResources().getString(R.string.net_setting));
         SharedPrefUtil sharedPrefUtil = SharedPrefUtil.getInstance(MyApplication.getInstance());
 
@@ -65,8 +61,6 @@ public class NetworkSettingActivity extends BaseActivity {
         } else {
             radioGroupInternet.check(R.id.radio_button_all_network);
         }
-
-//        mNetworkChecker = new NetworkChecker(this);
 
         initEvent();
     }

@@ -45,8 +45,6 @@ public class DeviceDetailActivity extends BaseActivity<DeviceDetailPresent> impl
     TabLayout tabLayout;
     @BindView(R.id.viewPager)
     ViewPager viewPager;
-//    @BindView(R.id.pd_name_spinner)
-//    NiceSpinner pdNameSpinner;
 
     private List<BaseFragment> fragments;
     private List<String> titles;
@@ -57,7 +55,6 @@ public class DeviceDetailActivity extends BaseActivity<DeviceDetailPresent> impl
     public String encode;
     @Autowired(name = "pid")
     public int pid;
-    //    private WeakReference<DeviceDetailBean2> detailBean;
     private DeviceDetailBean2 detailBean;
 
     private MyProgressDialog progressDialog;
@@ -125,7 +122,6 @@ public class DeviceDetailActivity extends BaseActivity<DeviceDetailPresent> impl
      */
     @Override
     protected void initData() {
-//        pdNameSpinner.setVisibility(View.GONE);
         tvPre.setText(R.string.back);
         if (!TextUtils.isEmpty(did) && did.contains(",")) {
             ARouter.getInstance().build(MyConstants.DEVICE_DETAIL2)

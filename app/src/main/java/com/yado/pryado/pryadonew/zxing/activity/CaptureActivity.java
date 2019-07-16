@@ -65,6 +65,7 @@ import com.yado.pryado.pryadonew.util.RealPathUtil;
 import com.yado.pryado.pryadonew.zxing.camera.CameraManager;
 import com.yado.pryado.pryadonew.zxing.decoding.CaptureActivityHandler;
 import com.yado.pryado.pryadonew.zxing.decoding.InactivityTimer;
+import com.yado.pryado.pryadonew.zxing.decoding.Intents;
 import com.yado.pryado.pryadonew.zxing.decoding.RGBLuminanceSource;
 import com.yado.pryado.pryadonew.zxing.view.FinderView;
 

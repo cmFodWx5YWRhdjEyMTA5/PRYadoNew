@@ -37,8 +37,6 @@ public class MyTodoActivity extends BaseActivity {
     TabLayout tabLayout;
     @BindView(R.id.id_vp)
     ViewPager idVp;
-//    @BindView(R.id.pd_name_spinner)
-//    NiceSpinner pdNameSpinner;
 
     private List<BaseFragment> fragments;
 
@@ -61,7 +59,6 @@ public class MyTodoActivity extends BaseActivity {
      */
     @Override
     protected void initData() {
-//        pdNameSpinner.setVisibility(View.GONE);
         initFragments();
         tvPre.setText(getResources().getString(R.string.back));
         name.setText(getResources().getString(R.string.upcoming));

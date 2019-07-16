@@ -28,7 +28,9 @@ import com.yado.pryado.pryadonew.MyApplication;
 import com.yado.pryado.pryadonew.MyConstants;
 import com.yado.pryado.pryadonew.R;
 import com.yado.pryado.pryadonew.base.BaseActivity;
+import com.yado.pryado.pryadonew.bean.AlertBean;
 import com.yado.pryado.pryadonew.bean.ListmapBean;
+import com.yado.pryado.pryadonew.bean.MsgEvent;
 import com.yado.pryado.pryadonew.bean.OrderList;
 import com.yado.pryado.pryadonew.bean.PullBean;
 import com.yado.pryado.pryadonew.bean.StatusBean;
@@ -41,6 +43,7 @@ import com.yado.pryado.pryadonew.ui.DialogActivity;
 import com.yado.pryado.pryadonew.ui.alert.AlertActivity;
 import com.yado.pryado.pryadonew.ui.login.LoginActivity;
 import com.yado.pryado.pryadonew.ui.todo.MyTodoActivity;
+import com.yado.pryado.pryadonew.util.DateUtils;
 import com.yado.pryado.pryadonew.util.SharedPrefUtil;
 import com.yado.pryado.pryadonew.util.UserLogoutUtil;
 import com.yado.pryado.pryadonew.util.Util;
@@ -55,6 +58,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class PollingService extends Service {
@@ -397,11 +401,94 @@ public class PollingService extends Service {
     class PollingThread extends Thread {
         @Override
         public void run() {
+            getAlarmNum();
             while (flag) {
                 startPolling();
                 SystemClock.sleep(seconds);
             }
         }
+    }
+
+    @SuppressLint("CheckResult")
+    private void getAlarmNum() {
+        final int type = 3;//TYPE_ALL
+        final int page = 1;
+        final int pid = 0;//ALL stations
+        String date = getInternalDate(type);
+        final String startDate = date.split("\\*")[0];
+        final String endDate = date.split("\\*")[1];
+        Log.e("tag", "rows = "+20 + ", page = "+1 + ", startDate = "+startDate + ", endDate = "+endDate + ", pid = "+pid);
+        PRRetrofit.getInstance(MyApplication.getInstance()).getApi().getAlertList(20, type, page, pid)  //获取total值
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        new Consumer<AlertBean>() {
+                               @Override
+                               public void accept(AlertBean alertBean) throws Exception {
+                                   Log.e("tag", "total = "+alertBean.getTotal());
+                                   PRRetrofit.getInstance(MyApplication.getInstance()).getApi().getAlertList(alertBean.getTotal(), type, page, pid)  //获取total条数据
+                                           .subscribeOn(Schedulers.io())
+                                           .unsubscribeOn(Schedulers.io())
+                                           .observeOn(AndroidSchedulers.mainThread())
+                                           .subscribe(
+                                                   new Consumer<AlertBean>() {
+                                                       @Override
+                                                       public void accept(AlertBean alertBean) throws Exception {
+                                                           int notice = 0;
+                                                           if (alertBean.getRows().size() > 0) {
+                                                               for (int i = 0; i < alertBean.getRows().size(); i++) {
+                                                                   if (alertBean.getRows().get(i).getAlarmConfirm().equals("未确认") && !alertBean.getRows().get(i).getALarmType().equals("恢复")) {
+                                                                       notice++;
+                                                                   }
+                                                               }
+                                                           }
+                                                           MsgEvent msgEvent = new MsgEvent();
+                                                           msgEvent.setAlarmNum(notice);
+                                                           EventBus.getDefault().post(msgEvent);
+                                                       }
+                                                   },
+                                                   new Consumer<Throwable>() {
+                                                       @Override
+                                                       public void accept(Throwable throwable) throws Exception {
+                                                           //error
+                                                       }
+                                                   });
+                               }
+                           },
+                        new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                //error
+                            }
+                        });
+    }
+
+    /**
+     * 获取间隔时间
+     */
+    public String getInternalDate(int type) {
+        String startDate, endDate;
+        switch (type) {
+            case 0:
+                startDate = DateUtils.getStringDateShort() + " 00:00:00";
+                endDate = DateUtils.getStringDate();
+                break;
+            case 1:
+                startDate = DateUtils.startWeek(DateUtils.getNow()) + " 00:00:00";
+                endDate = DateUtils.getStringDate();
+                break;
+            case 2:
+                endDate = DateUtils.getStringDateMiddle() + ":00:00";
+                startDate = DateUtils.timeStamp2Date(Long.parseLong(DateUtils.getSupportBeginDayofMonth(DateUtils.strToDate(endDate))), null);
+                break;
+            default:
+                endDate = DateUtils.getPreOrNextDate(DateUtils.strToDate(DateUtils.getStringDateShort()), true) + " 23:59:59";
+                startDate = endDate.split(" ")[0] + " 00:00:00";
+                break;
+        }
+        return startDate + "*" + endDate;
+
     }
 
     @Override

@@ -39,8 +39,6 @@ public class ChoiceVoiceActivity extends BaseActivity {
     ListView listView_names;
     @BindView(R.id.tv_pre)
     TextView tvPre;
-//    @BindView(R.id.pd_name_spinner)
-//    NiceSpinner pdNameSpinner;
     private String Sp_key = "ring";
     private VoiceNameAdapter mAdapter;
 
@@ -51,7 +49,6 @@ public class ChoiceVoiceActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-//        pdNameSpinner.setVisibility(View.GONE);
         tvShouye.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

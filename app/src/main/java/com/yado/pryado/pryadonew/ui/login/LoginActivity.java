@@ -195,8 +195,8 @@ public class LoginActivity extends BaseActivity<LoginPresent> implements LoginCo
                     isLogin = new WeakReference<>(true);
 //                    isLogin = true;
                     assert mPresenter != null;
-                    mPresenter.checkLogin(username.get(), password.get());
-//                    mPresenter.login(username.get(), password.get());//如果使用旧版请用这个登录
+//                    mPresenter.checkLogin(username.get(), password.get());
+                    mPresenter.login(username.get(), password.get());//如果使用旧版请用这个登录
                 }
             }
         });

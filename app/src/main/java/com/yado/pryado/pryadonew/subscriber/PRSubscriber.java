@@ -14,6 +14,7 @@ import com.yado.pryado.pryadonew.exception.ApiExceptionFactory;
 import com.yado.pryado.pryadonew.ui.widgit.EmptyLayout;
 import com.yado.pryado.pryadonew.ui.widgit.MyProgressDialog;
 import com.yado.pryado.pryadonew.util.LoginManager;
+import com.yado.pryado.pryadonew.util.NetWorkUtils;
 
 import java.util.List;
 
@@ -61,12 +62,16 @@ public class PRSubscriber<T> implements Observer<T> {
         if (!isBackground(MyApplication.getContext())) {
             switch (ApiExceptionFactory.getApiException(e).getCode()) {
                 case MyConstants.NETWORD_ERROR:
-                    ToastUtils.showShort(MyApplication.getContext().getString(R.string.server_connect_error));
+                    if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
+                        ToastUtils.showShort("请检查网络是否连接！");
+                    } else {
+                        ToastUtils.showShort(MyApplication.getContext().getString(R.string.server_connect_error));
+                    }
                     break;
                 case MyConstants.CONNECT_ERROR:
                     ToastUtils.showShort(MyApplication.getInstance().getString(R.string.timeout_error));
                 case MyConstants.ERROR404:
-    //                ToastUtils.showShort(MyApplication.getContext().getString(R.string.error404));
+//                    ToastUtils.showShort(MyApplication.getContext().getString(R.string.error404));
                     break;
                 default:
                     break;
@@ -97,7 +102,7 @@ public class PRSubscriber<T> implements Observer<T> {
 
     }
 
-    private  boolean isBackground(Context context) {
+    private boolean isBackground(Context context) {
         ActivityManager activityManager = (ActivityManager) context
                 .getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager

@@ -28,8 +28,11 @@ public class PRRetrofit {
 
     private PRRetrofit() {
         OkHttpClient client = new OkHttpClient.Builder()
+                .retryOnConnectionFailure(true)//默认重试一次，若需要重试N次，则要实现拦截器。
                 .addInterceptor(new AddCookiesInterceptor())
                 .addInterceptor(new GetCookiesInterceptor())
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
                 .connectTimeout(10, TimeUnit.SECONDS).build();
         Retrofit retrofit = new Retrofit.Builder()
                 .client(client)
@@ -38,7 +41,7 @@ public class PRRetrofit {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(SharedPrefUtil.getInstance(MyApplication.getInstance()).getString(MyConstants.BASE_URL, EadoUrl.BASE_URL_WEB))
                 .build();
-
+        Log.e("tag","baseUrl = "+ SharedPrefUtil.getInstance(MyApplication.getInstance()).getString(MyConstants.BASE_URL, EadoUrl.BASE_URL_WEB));
         //调用create就可以拿到NetApiService的实例，调用实例的方法就能拿到call，call.enqueue即可完成异步的请求。
         api = retrofit.create(PRApi.class);
     }
@@ -55,7 +58,7 @@ public class PRRetrofit {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(uri)
                 .build();
-
+        Log.e("tag","baseUrl1 = "+uri);
         //调用create就可以拿到NetApiService的实例，调用实例的方法就能拿到call，call.enqueue即可完成异步的请求。
         api = retrofit.create(PRApi.class);
     }

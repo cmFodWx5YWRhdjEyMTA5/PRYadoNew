@@ -51,8 +51,6 @@ public class ReceiveSettingActivity extends BaseActivity implements SwitchButton
     TextView name;
     @BindView(R.id.tv_pre)
     TextView tvPre;
-//    @BindView(R.id.pd_name_spinner)
-//    NiceSpinner pdNameSpinner;
 
     private ArrayList<String> ringList = new ArrayList<>();
     private RingtoneManager rm;

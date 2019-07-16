@@ -44,11 +44,8 @@ public class HisOrderActivity extends BaseActivity<HisOrderPresent> implements H
 
     @Inject
     OrderListAdapter adapter;//注入adapter
-//    @BindView(R.id.pd_name_spinner)
-//    NiceSpinner pdNameSpinner;
 
     private WeakReference<String> username;
-//    private String username;
 
 
     /**
@@ -73,7 +70,6 @@ public class HisOrderActivity extends BaseActivity<HisOrderPresent> implements H
      */
     @Override
     protected void initData() {
-//        pdNameSpinner.setVisibility(View.GONE);
         adapter.setContext(mContext);
         tvPre.setText(getResources().getString(R.string.back));
         name.setText(getResources().getString(R.string.his_order));

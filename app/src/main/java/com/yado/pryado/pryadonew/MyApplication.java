@@ -23,29 +23,15 @@ import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.tinker.entry.ApplicationLike;
 import com.tinkerpatch.sdk.TinkerPatch;
 import com.tinkerpatch.sdk.loader.TinkerPatchApplicationLike;
-import com.yado.pryado.pryadonew.bean.RoomListBean;
 import com.yado.pryado.pryadonew.di.component.ApplicationComponent;
 import com.yado.pryado.pryadonew.di.component.DaggerApplicationComponent;
 import com.yado.pryado.pryadonew.di.module.ApplicationModule;
 import com.yado.pryado.pryadonew.greendao.DaoMaster;
 import com.yado.pryado.pryadonew.greendao.DaoSession;
-import com.yado.pryado.pryadonew.net.PRRetrofit;
-import com.yado.pryado.pryadonew.subscriber.PRSubscriber;
-import com.yado.pryado.pryadonew.util.SharedPrefUtil;
-import com.yado.pryado.pryadonew.util.UserLogoutUtil;
 
-
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 public class MyApplication extends Application {
     private static Context context;

@@ -31,8 +31,6 @@ public class AffairActivity extends BaseActivity<AffairPresent> implements Affai
     TextView name;
     @BindView(R.id.ll_upcoming)
     LinearLayout llUpcoming;
-//    @BindView(R.id.pd_name_spinner)
-//    NiceSpinner pdNameSpinner;
 
     private int count;
     private QBadgeView badgeView;
@@ -51,7 +49,6 @@ public class AffairActivity extends BaseActivity<AffairPresent> implements Affai
      */
     @Override
     protected void initData() {
-//        pdNameSpinner.setVisibility(View.GONE);
         name.setText(getResources().getString(R.string.order));
         badgeView = new QBadgeView(mContext);
         assert mPresenter != null;

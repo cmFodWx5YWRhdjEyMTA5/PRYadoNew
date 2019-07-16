@@ -22,6 +22,7 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -46,6 +47,7 @@ import com.yado.pryado.pryadonew.MyApplication;
 import com.yado.pryado.pryadonew.MyConstants;
 import com.yado.pryado.pryadonew.R;
 import com.yado.pryado.pryadonew.base.BaseActivity;
+import com.yado.pryado.pryadonew.bean.MsgEvent;
 import com.yado.pryado.pryadonew.bean.Update;
 import com.yado.pryado.pryadonew.net.EadoUrl;
 import com.yado.pryado.pryadonew.service.PollingService;
@@ -53,9 +55,11 @@ import com.yado.pryado.pryadonew.ui.widgit.SmoothCheckBox;
 import com.yado.pryado.pryadonew.util.DialogUtil;
 import com.yado.pryado.pryadonew.util.DownloadListener;
 import com.yado.pryado.pryadonew.util.DownloadUtils;
+import com.yado.pryado.pryadonew.util.ServiceUtil;
 import com.yado.pryado.pryadonew.util.SharedPrefUtil;
 import com.yado.pryado.pryadonew.util.Util;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -186,10 +190,14 @@ public class MainActivity extends BaseActivity<MainPresent> implements MainContr
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestPermissions();
-        startService(new Intent(mContext, PollingService.class));
+        if (!ServiceUtil.isServiceRun(PollingService.class.getName())){
+            startService(new Intent(mContext, PollingService.class));
+        }
         //实例化角标
         badgeView1 = new QBadgeView(mActivityComponent.getActivityContext());
         badgeView2 = new QBadgeView(mActivityComponent.getActivityContext());
+
+        EventBus.getDefault().register(this);
     }
 
     /**
@@ -248,6 +256,18 @@ public class MainActivity extends BaseActivity<MainPresent> implements MainContr
             badgeView2.hide(false);
         }
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onGetMessage(MsgEvent message) {
+        Log.e("tag", "Subscribe: "+ message.getAlarmNum());
+//        SharedPrefUtil.getInstance(MyApplication.getInstance()).saveObject(MyConstants.counts_upcoming, message.getGongdanNum());
+        SharedPrefUtil.getInstance(MyApplication.getInstance()).saveObject(MyConstants.alert_num, message.getAlarmNum());
+        if (message.getAlarmNum() > 0) {
+            badgeView2.bindTarget(llAlert).setBadgeNumber(message.getAlarmNum());
+        } else {
+            badgeView2.hide(false);
+        }
     }
 
     /**
@@ -659,5 +679,7 @@ public class MainActivity extends BaseActivity<MainPresent> implements MainContr
         DownloadUtils.getInstance().reset();
 //        handler.removeCallbacksAndMessages(null);
         super.onDestroy();
+
+        EventBus.getDefault().unregister(this);
     }
 }

@@ -21,6 +21,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import retrofit2.HttpException;
+
 /**
  * Created by OnexZgj on 2018/9/11:09:37.
  * des:
@@ -64,6 +66,9 @@ public class LoginPresent extends BasePresenter<LoginContract.View, LoginModel> 
             public void failed(Throwable throwable) {
                 ToastUtils.showShort("登录失败！");
                 mView.hideLoadingDialog();
+                if (throwable instanceof HttpException) {
+                    ToastUtils.showShort("IP地址有错，请重新检查！");
+                }
             }
 
             @Override
@@ -78,6 +83,7 @@ public class LoginPresent extends BasePresenter<LoginContract.View, LoginModel> 
      */
     @Override
     public void login(final String username, final String password) {
+        mView.showLoadingDialog();
         mModel.login(username, password, new INetListener<Object, Throwable, Object>() {
             @Override
             public void success(Object o) {
@@ -87,7 +93,7 @@ public class LoginPresent extends BasePresenter<LoginContract.View, LoginModel> 
                     if (msg.contains("请检查用户名密码")) {
                         ToastUtils.showShort(msg);
                         mView.hideLoadingDialog();
-                    } else {//5rlc5akq3eog0peoiwjrhtd3☆1
+                    } else {
                         SharedPrefUtil.getInstance(MyApplication.getInstance()).saveObject("Sessionid", msg);
                         SharedPrefUtil.getInstance(MyApplication.getInstance()).saveObject(MyConstants.USERNAME, username);
                         SharedPrefUtil.getInstance(MyApplication.getInstance()).saveObject(MyConstants.PWD, password);
@@ -108,6 +114,9 @@ public class LoginPresent extends BasePresenter<LoginContract.View, LoginModel> 
             @Override
             public void failed(Throwable throwable) {
                 mView.hideLoadingDialog();
+                if (throwable instanceof HttpException) {
+                    ToastUtils.showShort("IP地址有错，请重新检查！！");
+                }
             }
 
             @Override

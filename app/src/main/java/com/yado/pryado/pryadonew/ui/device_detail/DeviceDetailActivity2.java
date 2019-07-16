@@ -46,8 +46,6 @@ public class DeviceDetailActivity2 extends BaseActivity<DeviceDetailPresent> imp
 
     @Autowired(name = "did")
     public String did;
-//    @BindView(R.id.pd_name_spinner)
-//    NiceSpinner pdNameSpinner;
     private WeakReference<String> did1, did2;
     //    private String did1, did2;
     private GetRealTask getRealTask;
@@ -69,7 +67,6 @@ public class DeviceDetailActivity2 extends BaseActivity<DeviceDetailPresent> imp
      */
     @Override
     protected void initData() {
-//        pdNameSpinner.setVisibility(View.GONE);
         name.setText("一多展示用柜");
         emptyLayout.setErrorType(EmptyLayout.NETWORK_LOADING);
         if (!TextUtils.isEmpty(did) && did.contains(",")) {

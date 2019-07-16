@@ -142,8 +142,6 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
     public String video_url;
     @Autowired(name = "TypeBean")
     TypeBean gragh;
-//    @BindView(R.id.pd_name_spinner)
-//    NiceSpinner pdNameSpinner;
 
     private WebViewClient client;
     private int pid;
@@ -267,7 +265,6 @@ public class RoomDetailActivity extends BaseActivity<RoomDetailPresent> implemen
     @Override
     protected void initData() {
         tvPre.setText(getString(R.string.back));
-//        pdNameSpinner.setVisibility(View.GONE);
         assert mPresenter != null;
         widthScreen = mPresenter.getScreenWidth(mContext);
         tvDate.setVisibility(View.VISIBLE);

@@ -40,8 +40,6 @@ public class FeedbackActivity extends BaseActivity {
     @BindView(R.id.company_url)
     TextView companyUrl;
     private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 1;
-//    @BindView(R.id.pd_name_spinner)
-//    NiceSpinner pdNameSpinner;
 
     @Override
     public int inflateContentView() {
@@ -50,7 +48,6 @@ public class FeedbackActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-//        pdNameSpinner.setVisibility(View.GONE);
         name.setText(getResources().getString(R.string.feedBack));
     }
 

@@ -33,8 +33,6 @@ public class AboutActivity extends BaseActivity {
     TextView companyUrl;
     @BindView(R.id.iv_logo)
     ImageView ivLogo;
-//    @BindView(R.id.pd_name_spinner)
-//    NiceSpinner pdNameSpinner;
 
     @Override
     public int inflateContentView() {

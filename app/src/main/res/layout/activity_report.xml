@@ -44,7 +44,6 @@
                     android:layout_marginLeft="@dimen/dimen_10dp"
                     android:layout_marginRight="@dimen/dimen_10dp"
                     android:layout_marginTop="@dimen/dimen_5dp"
-                    android:background="@drawable/selector_spiner"
                     android:textAlignment="center"
                     app:arrowTint="@color/white"
                     app:backgroundSelector="@color/blue3"

@@ -1,6 +1,7 @@
 package com.yado.pryado.pryadonew.ui.alert;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -138,6 +139,7 @@ public class AlertPresent extends BasePresenter<AlertContract.View, AlertModel> 
      */
     @Override
     public void getAlertList_1(int rows, int page, String startDate, String endDate, int pid, EmptyLayout emptyLayout) {
+//        Log.e("tag", "rows = "+rows + ", page = "+page + ", startDate = "+startDate + ", endDate = "+endDate + ", pid = "+pid);//tag: rows = 20page = 1startDate = 2019-07-16 00:00:00endDate = 2019-07-16 09:24:54pid = 0
         mModel.getAlertList_1(rows, page, startDate, endDate, pid, emptyLayout, new INetListener<Object, Throwable, Object>() {
             @Override
             public void success(Object o) {

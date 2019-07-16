@@ -19,8 +19,6 @@ public class FormActivity extends BaseActivity {
 
     @BindView(R.id.name)
     TextView name;
-//    @BindView(R.id.pd_name_spinner)
-//    NiceSpinner pdNameSpinner;
 
     @Override
     public int inflateContentView() {
@@ -29,7 +27,6 @@ public class FormActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-//        pdNameSpinner.setVisibility(View.GONE);
         name.setText(R.string.report_monitor);
     }
 

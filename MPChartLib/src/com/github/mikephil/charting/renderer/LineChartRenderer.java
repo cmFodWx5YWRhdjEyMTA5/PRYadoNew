@@ -162,8 +162,8 @@ public class LineChartRenderer extends LineRadarRenderer {
                 prev = dataSet.getEntryForIndex(j - 1);
                 cur = dataSet.getEntryForIndex(j);
 
-                final float cpx = (float)(prev.getXIndex())
-                        + (float)(cur.getXIndex() - prev.getXIndex()) / 2.0f;
+                final float cpx = (float) (prev.getXIndex())
+                        + (float) (cur.getXIndex() - prev.getXIndex()) / 2.0f;
 
                 cubicPath.cubicTo(
                         cpx, prev.getVal() * phaseY,
@@ -235,7 +235,7 @@ public class LineChartRenderer extends LineRadarRenderer {
                 prevPrev = dataSet.getEntryForIndex(j == 1 ? 0 : j - 2);
                 prev = dataSet.getEntryForIndex(j - 1);
                 cur = dataSet.getEntryForIndex(j);
-                if (cur.getVal()==0)continue;
+                if (cur.getVal() == 0) continue;
                 next = entryCount > j + 1 ? dataSet.getEntryForIndex(j + 1) : cur;
 
                 prevDx = (cur.getXIndex() - prevPrev.getXIndex()) * intensity;
@@ -342,7 +342,7 @@ public class LineChartRenderer extends LineRadarRenderer {
         int minx = Math.max(dataSet.getEntryIndex(entryFrom) - diff, 0);
         int maxx = Math.min(Math.max(minx + 2, dataSet.getEntryIndex(entryTo) + 1), entryCount);
 
-        final int count = (int)(Math.ceil((float)(maxx - minx) * phaseX + (float)(minx)));
+        final int count = (int) (Math.ceil((float) (maxx - minx) * phaseX + (float) (minx)));
 
         // more than 1 color
         if (dataSet.getColors().size() > 1) {
@@ -631,13 +631,13 @@ public class LineChartRenderer extends LineRadarRenderer {
             for (int j = minx,
                  count = (int) Math.ceil((maxx - minx) * phaseX + minx);
                  j < count;
-                 j ++) {
+                 j++) {
 
                 Entry e = dataSet.getEntryForIndex(j);
 
                 if (e == null) break;
                 //修改，不绘制为0点；
-                if (e.getVal()==0)
+                if (e.getVal() == 0)
                     continue;
 
                 circlesBuffer[0] = e.getXIndex();
@@ -657,7 +657,7 @@ public class LineChartRenderer extends LineRadarRenderer {
                 int circleColor = dataSet.getCircleColor(j);
 
                 mRenderPaint.setColor(circleColor);
-//这里是绘制折线图的点；控制为0的不绘制；
+                //这里是绘制折线图的点；控制为0的不绘制；
                 c.drawCircle(circlesBuffer[0], circlesBuffer[1], dataSet.getCircleRadius(),
                         mRenderPaint);
                 if (dataSet.isDrawCircleHoleEnabled()
